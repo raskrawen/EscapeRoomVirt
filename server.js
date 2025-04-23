@@ -31,6 +31,7 @@ io.on('connection', (socket) => {
             console.error('Error reading file:', err);
             return;
         }
+        console.log('File read successfully'); // Logs when the file is read successfully
         // Emit the HTML content to the client
         socket.emit('updateContent', data);
     });
@@ -42,7 +43,7 @@ io.on('connection', (socket) => {
 });
 
 // Defining the port number for the server
-const PORT = 3000;
+const PORT = 5500;
 
 // Starting the server and listening on the specified port
 server.listen(PORT, () => {
