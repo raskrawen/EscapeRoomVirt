@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
     console.log('A user connected'); // Logs when a user connects
 
     // Read the HTML file and send its content to the client
-    fs.readFile('public/level1.html', 'utf8', (err, data) => {
+    fs.readFile('levels/level1.html', 'utf8', (err, data) => {
         if (err) {
             console.error('Error reading file:', err);
             return;
