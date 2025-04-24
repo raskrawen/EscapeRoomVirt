@@ -24,10 +24,12 @@ app.use(express.static('public'));
 
 // Listening for a new client connection to the Socket.IO server
 io.on('connection', (socket) => {
+    let levelNumber = 1; // Initialize the level number
+
     console.log('A user connected'); // Logs when a user connects
 
         // Read the HTML file and send its content to the client
-    fs.readFile('public/level1.html', 'utf8', (err, data) => {
+    fs.readFile('levels/level1.html', 'utf8', (err, data) => {
         if (err) {
             console.error('Error reading file:', err);
             return;
@@ -37,9 +39,16 @@ io.on('connection', (socket) => {
         socket.emit('updateContent', data);
     });
 
+    //listen to level number from levels.
+    socket.on('level', (level) => {
+        console.log('Level received:', level); // Logs the received level
+        levelNumber = level; // Update the level number
+        socket.emit('updateLevel', levelNumber); // Emit the updated level number to the client
+    });
+
     // Listen for 'nextLevel' event from the client
     socket.on('nextLevel', (data) => {
-        console.log('Next level requested:', data.level);
+        console.log('Next level requested:', levelNumber);
         // Update the level and emit it to all clients
         io.emit('updateLevel', data.level);
     });

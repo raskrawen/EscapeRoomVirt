@@ -9,21 +9,19 @@
 </head>
 <h1>Welcome to Level 1</h1>
 <p>This is the first level of the Escape Room game.</p>
-<button id="startBtn">Start</button>
+<button id="Lvl2Btn">Level 2</button>
 <script src="http://127.0.0.1:5500/socket.io/socket.io.js"></script>
 <script>
-    // Check if socket is already defined
-    socket = window.socket || io();
+    socket = window.socket; // Use the global socket instance
     console.log('Level 1 script loaded');
     
     socket.on('connect', () => {
         console.log('Connected to server');
     });
 
-    document.getElementById('startBtn').addEventListener('click', () => {
-        console.log('Start button clicked');
-        // Emit an event to the server when the button is clicked  
-        socket.emit('message', 'Start'); // Sending "Start" to the server
-        console.log('Start message sent to server');
+    document.getElementById('Lvl2Btn').addEventListener('click', () => {
+        console.log('Level 2 button clicked');
+        socket.emit('level', '2'); // Sending "2" to the server
+        console.log('Level 2 message sent to server');
     });
 </script>
