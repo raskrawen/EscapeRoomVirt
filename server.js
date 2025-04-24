@@ -44,13 +44,25 @@ io.on('connection', (socket) => {
         console.log('Level received:', level); // Logs the received level
         levelNumber = level; // Update the level number
         socket.emit('updateLevel', levelNumber); // Emit the updated level number to the client
+        
+            console.log('Level 2 requested'); // Logs when level 2 is requested
+        fs.readFile('levels/level2.html', 'utf8', (err, data) => {
+            if (err) {
+                console.error('Error reading file:', err);
+                return;
+            }
+            console.log('File read successfully'); // Logs when the file is read successfully
+            // Emit the HTML content to the client
+            socket.emit('updateContent', data);
+        });
+    
     });
 
     // Listen for 'nextLevel' event from the client
     socket.on('nextLevel', (data) => {
         console.log('Next level requested:', levelNumber);
         // Update the level and emit it to all clients
-        io.emit('updateLevel', data.level);
+        //io.emit('updateLevel', data.level);
     });
 
     socket.on('message', (message) => {
