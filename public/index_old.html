@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Escape Game</title>
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div id="level">Niveau: 1</div>
+    <div id="timer">Tid: 10:00</div>
+  </header>
+
+  <div id="main">
+    <!-- Her vises dynamisk HTML-indhold -->
+  </div>
+
+  <footer>
+    <input type="text" id="messageInput" placeholder="Skriv en besked...">
+    <button id="sendBtn">Send</button>
+  </footer>
+
+    <script src="http://127.0.0.1:5500/socket.io/socket.io.js"></script>
+  <script>
+    console.log('Client script loaded');
+    window.socket = io(); // Declare socket globally
+    console.log('Global socket initialized');
+    let totalSeconds = 10 * 60; // 10 minutter i sekunder
+    const level = 0; // Startniveau   
+    const input = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    function sendMessage() {
+      const message = input.value.trim();
+      if (message) {
+        socket.emit('message', message);
+        input.value = '';
+      }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+
+
+    socket.on('updateContent', html => {
+    console.log('Received HTML content.');
+      const mainDiv = document.getElementById('main');
+    mainDiv.innerHTML = html;
+
+    // Dynamically execute scripts in the loaded HTML
+    const scripts = mainDiv.getElementsByTagName('script');
+    for (let script of scripts) {
+        const newScript = document.createElement('script');
+        newScript.textContent = script.textContent;
+        document.body.appendChild(newScript);
+        document.body.removeChild(newScript); // Clean up after execution
+    }
+});
+
+    socket.on('updateTimer', time => {
+      document.getElementById('timer').textContent = 'Tid: ' + time;
+    });
+
+    socket.on('updateLevel', level => {
+      console.log('Niveau opdateret til:', level);
+      document.getElementById('level').textContent = 'Niveau: ' + level;
+      socket.emit('nextLevel', level); // Send the updated level back to the server
+    });
+
+    function updateCountdown() {
+      const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+      const seconds = String(totalSeconds % 60).padStart(2, '0');
+      document.getElementById('timer').textContent = 'Tid: ' + minutes + ':' + seconds;
+
+      if (totalSeconds > 0) {
+        //console.log(totalSeconds);
+        totalSeconds--;
+        setTimeout(updateCountdown, 1000);
+      }
+    }
+
+    updateCountdown();
+  
+  </script>
+</body>
+</html>

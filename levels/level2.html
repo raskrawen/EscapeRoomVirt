@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<h1>Welcome to Level 2</h1>
+<p>This is the SECOND level of the Escape Room game.</p>
+<button id="Lvl3Btn">Level 3</button>
+<script src="http://127.0.0.1:5500/socket.io/socket.io.js"></script>
+<script>
+    socket = window.socket; // Use the global socket instance
+    console.log('Level 2 script loaded');
+    
+    socket.on('connect', () => {
+        console.log('Connected to server');
+    });
+
+    document.getElementById('Lvl3Btn').addEventListener('click', () => {
+        console.log('Level 3 button clicked');
+        socket.emit('level', '3'); // Sending "3" to the server
+        console.log('Level 3 message sent to server');
+    });
+</script>
