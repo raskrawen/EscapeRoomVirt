@@ -26,7 +26,8 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
-    
+    let totalSeconds = 10 * 60; // 10 minutter i sekunder
+    let level = 1; // Startniveau   
     const input = document.getElementById('messageInput');
     const sendBtn = document.getElementById('sendBtn');
 
@@ -43,6 +44,8 @@
       if (e.key === 'Enter') sendMessage();
     });
 
+    
+
     socket.on('updateContent', html => {
       document.getElementById('main').innerHTML = html;
     });
@@ -54,8 +57,6 @@
     socket.on('updateLevel', level => {
       document.getElementById('level').textContent = 'Niveau: ' + level;
     });
-
-    let totalSeconds = 10 * 60;
 
     function updateCountdown() {
       console.log(totalSeconds);

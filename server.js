@@ -1,6 +1,6 @@
 //vers 1.0.0
 // dato: april 2025
-//features: two levels, one user
+//features: one level, one user
 
 // Importing required modules
 const express = require('express'); // Express framework for handling HTTP requests and serving static files
@@ -24,6 +24,10 @@ app.use(express.static('public'));
 // Listening for a new client connection to the Socket.IO server
 io.on('connection', (socket) => {
     console.log('A user connected'); // Logs when a user connects
+
+    // Emit the current level to the client
+    const level = 4; // Example level value
+    socket.emit('updateLevel', level);
 
     // Read the HTML file and send its content to the client
     fs.readFile('levels/level1.html', 'utf8', (err, data) => {
