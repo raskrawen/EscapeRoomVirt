@@ -77,7 +77,6 @@
     socket.on('updateLevel', level => {
       console.log('Niveau opdateret til:', level);
       document.getElementById('level').textContent = 'Niveau: ' + level;
-      socket.emit('nextLevel', level); // Send the updated level back to the server
     });
 
     function updateCountdown() {

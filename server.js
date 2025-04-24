@@ -3,11 +3,10 @@
 //features: two users
 
 // Importing required modules
-const express = require('express'); // Express framework for handling HTTP requests and serving static files
-const http = require('http'); // Node.js HTTP module to create a server
-const { Server } = require('socket.io'); // Socket.IO for real-time, bidirectional communication
-const axios = require('axios'); // Axios for making HTTP requests (e.g., to external APIs)
-const fs = require('fs'); // File System module to read files
+const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
+const fs = require('fs');
 
 // Creating an Express application
 const app = express();
@@ -20,60 +19,55 @@ const io = new Server(server);
 
 // Serving static files from the 'public' directory
 app.use(express.static('public'));
-//app.use(express.static('levels'));
+
+// Room and client content mapping
+const roomName = 'escapeRoom';
+const clientContentMap = {};
 
 // Listening for a new client connection to the Socket.IO server
 io.on('connection', (socket) => {
-    let levelNumber = 1; // Initialize the level number
+    console.log(socket.id + ' connected');
 
-    console.log('A user connected'); // Logs when a user connects
+    // Add the client to the room
+    socket.join(roomName);
 
-        // Read the HTML file and send its content to the client
-    fs.readFile('levels/level1.html', 'utf8', (err, data) => {
+    // Assign content based on the number of clients in the room
+    const clientsInRoom = io.sockets.adapter.rooms.get(roomName);
+    const clientCount = clientsInRoom ? clientsInRoom.size : 0;
+
+    const contentFile = clientCount === 1 ? 'levels/level1.html' : 'levels/level2.html';
+    clientContentMap[socket.id] = contentFile;
+
+    // Read and send the assigned content to the client
+    fs.readFile(contentFile, 'utf8', (err, data) => {
         if (err) {
             console.error('Error reading file:', err);
             return;
         }
-        console.log('File read successfully'); // Logs when the file is read successfully
-        // Emit the HTML content to the client
+        console.log(`File ${contentFile} read successfully`);
         socket.emit('updateContent', data);
     });
 
-    //listen to level number from levels.
+    // Listen for level change requests
     socket.on('level', (level) => {
-        console.log('Level received:', level); // Logs the received level
-        levelNumber = level; // Update the level number
-        socket.emit('updateLevel', levelNumber); // Emit the updated level number to the client
-        
-            console.log('Level 2 requested'); // Logs when level 2 is requested
-        fs.readFile('levels/level2.html', 'utf8', (err, data) => {
+        console.log('Level received:', level);
+        const newContentFile = `levels/level${level}.html`;
+        clientContentMap[socket.id] = newContentFile;
+
+        fs.readFile(newContentFile, 'utf8', (err, data) => {
             if (err) {
                 console.error('Error reading file:', err);
                 return;
             }
-            console.log('File read successfully'); // Logs when the file is read successfully
-            // Emit the HTML content to the client
+            console.log(`File ${newContentFile} read successfully`);
             socket.emit('updateContent', data);
         });
-    
-    });
-
-    // Listen for 'nextLevel' event from the client
-    socket.on('nextLevel', (data) => {
-        console.log('Next level requested:', levelNumber);
-        // Update the level and emit it to all clients
-        //io.emit('updateLevel', data.level);
-    });
-
-    socket.on('message', (message) => {
-        console.log('Message received:', message); // Logs the received message
-        // Emit the message to all clients
-        //io.emit('message', message);
     });
 
     // Handle client disconnection
     socket.on('disconnect', () => {
         console.log('A user disconnected');
+        delete clientContentMap[socket.id];
     });
 });
 
@@ -82,5 +76,5 @@ const PORT = 5500;
 
 // Starting the server and listening on the specified port
 server.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`); // Logs the server URL
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
