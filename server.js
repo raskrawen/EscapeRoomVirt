@@ -1,6 +1,6 @@
-//vers 1.0.0
+//vers 1.1.0
 // dato: april 2025
-//features: two levels, one user
+//features: two users
 
 // Importing required modules
 const express = require('express'); // Express framework for handling HTTP requests and serving static files
