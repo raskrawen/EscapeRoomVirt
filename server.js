@@ -20,17 +20,14 @@ const io = new Server(server);
 
 // Serving static files from the 'public' directory
 app.use(express.static('public'));
+//app.use(express.static('levels'));
 
 // Listening for a new client connection to the Socket.IO server
 io.on('connection', (socket) => {
     console.log('A user connected'); // Logs when a user connects
 
-    // Emit the current level to the client
-    const level = 4; // Example level value
-    socket.emit('updateLevel', level);
-
-    // Read the HTML file and send its content to the client
-    fs.readFile('levels/level1.html', 'utf8', (err, data) => {
+        // Read the HTML file and send its content to the client
+    fs.readFile('public/level1.html', 'utf8', (err, data) => {
         if (err) {
             console.error('Error reading file:', err);
             return;
@@ -38,6 +35,19 @@ io.on('connection', (socket) => {
         console.log('File read successfully'); // Logs when the file is read successfully
         // Emit the HTML content to the client
         socket.emit('updateContent', data);
+    });
+
+    // Listen for 'nextLevel' event from the client
+    socket.on('nextLevel', (data) => {
+        console.log('Next level requested:', data.level);
+        // Update the level and emit it to all clients
+        io.emit('updateLevel', data.level);
+    });
+
+    socket.on('message', (message) => {
+        console.log('Message received:', message); // Logs the received message
+        // Emit the message to all clients
+        //io.emit('message', message);
     });
 
     // Handle client disconnection

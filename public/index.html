@@ -22,12 +22,12 @@
     <button id="sendBtn">Send</button>
   </footer>
 
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
+    <script src="http://127.0.0.1:5500/socket.io/socket.io.js"></script>
   <script>
-    const socket = io();
+    console.log('Client script loaded');
+    let socket = io();
     let totalSeconds = 10 * 60; // 10 minutter i sekunder
-    let level = 1; // Startniveau   
+    let level = 0; // Startniveau   
     const input = document.getElementById('messageInput');
     const sendBtn = document.getElementById('sendBtn');
 
@@ -44,22 +44,33 @@
       if (e.key === 'Enter') sendMessage();
     });
 
-    
+
 
     socket.on('updateContent', html => {
-      document.getElementById('main').innerHTML = html;
-    });
+    console.log('Received HTML content.');
+      const mainDiv = document.getElementById('main');
+    mainDiv.innerHTML = html;
+
+    // Dynamically execute scripts in the loaded HTML
+    const scripts = mainDiv.getElementsByTagName('script');
+    for (let script of scripts) {
+        const newScript = document.createElement('script');
+        newScript.textContent = script.textContent;
+        document.body.appendChild(newScript);
+        document.body.removeChild(newScript); // Clean up after execution
+    }
+});
 
     socket.on('updateTimer', time => {
       document.getElementById('timer').textContent = 'Tid: ' + time;
     });
 
     socket.on('updateLevel', level => {
+      console.log('Niveau opdateret til:', level);
       document.getElementById('level').textContent = 'Niveau: ' + level;
     });
 
     function updateCountdown() {
-      console.log(totalSeconds);
       const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
       const seconds = String(totalSeconds % 60).padStart(2, '0');
       document.getElementById('timer').textContent = 'Tid: ' + minutes + ':' + seconds;
