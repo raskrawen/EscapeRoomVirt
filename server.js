@@ -32,16 +32,14 @@ const sessionMiddleware = session({
   app.use(sessionMiddleware);
   
   // Share session with Socket.IO
-  const sharedSession = require('express-socket.io-session');
-  io.use(sharedSession(sessionMiddleware, { autoSave: true }));
+  const sharedSession = require('express-socket.io-session'); // Importing shared session middleware
+  io.use(sharedSession(sessionMiddleware, { autoSave: true })); // Automatically save session after each request
   
-  // Setup socket handlers
+  // Setup socket handlers from socketHandler.js
   setupSocketHandlers(io);
 
 // Serving static files from the 'public' directory
 app.use(express.static('public'));
-
-// Serve welcome_page.html using fs.readFile
 
 
 // Ensure teamId is only used after the client sends it
@@ -58,25 +56,7 @@ io.on('connection', (socket) => {
             socket.emit('updateContent', data);
         });
 
-    // Handle the joinTeam event to dynamically set the teamId
-    socket.on('joinTeam', ({ teamId }) => {
-        console.log('Team ID received from client:', teamId);
-
-        // Save teamId in the session
-        socket.handshake.session.teamId = teamId;
-        socket.handshake.session.save();
-
-        // Add the client to the team
-        socket.join(teamId);
-
-        // Assign content based on the number of clients in the team
-        const clientsInTeam = io.sockets.adapter.rooms.get(teamId);
-        const clientCount = clientsInTeam ? clientsInTeam.size : 0;
-        console.log('clients in team: ' + clientsInTeam.size);
-        console.log('end of joinTeam');
-    });
-
-        socket.on('teamReady', () => {   
+    socket.on('teamReady', () => {   
         const contentPath = clientCount === 1 ? 'levels/level1.html' : 'levels/level2.html';
         console.log('Content file to serve:', contentPath);
         fs.readFile(contentPath, 'utf8', (err, data) => {

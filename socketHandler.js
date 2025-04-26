@@ -6,12 +6,13 @@ const Player = require('./public/server/models/player');
 // Shared teams object
 const teams = {};
 
-function setupSocketHandlers(io) {
+function setupSocketHandlers(io) { // Setup socket handlers
   io.on('connection', (socket) => {
     const playerId = socket.handshake.session.id;
 
+    // Updated joinTeam logic to handle session and room assignment
     socket.on('joinTeam', ({ teamId }) => {
-      console.log('Player trying to join team: Player ID:', playerId, 'Team ID:', teamId);    
+      console.log('Player trying to join team: Player ID:', playerId, 'Team ID:', teamId);
       try {
         const newPlayer = new Player(playerId, socket.id);
 
@@ -27,14 +28,17 @@ function setupSocketHandlers(io) {
 
         team.addPlayer(newPlayer);
 
-        socket.handshake.session.teamId = teamId; // Store teamId in session
-        socket.handshake.session.save(); // Save session after modifying it
+        // Save teamId in the session
+        socket.handshake.session.teamId = teamId;
+        socket.handshake.session.save();
 
-        socket.join(teamId); // Join the team room
+        // Join the team room
+        socket.join(teamId);
 
+        // Emit team update
         io.to(teamId).emit('teamUpdate', {
           teamId,
-          players: Object.keys(team.players), // Send player IDs
+          players: Object.keys(team.players),
         });
 
         if (team.isTeamFull()) {
@@ -55,4 +59,4 @@ function setupSocketHandlers(io) {
   });
 }
 
-module.exports = { setupSocketHandlers, teams };
+module.exports = { setupSocketHandlers, teams }; // Export the teams object for use in other modules
