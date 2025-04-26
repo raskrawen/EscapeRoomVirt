@@ -21,7 +21,7 @@ function setupSocketHandlers(io) {
         const team = teams[teamId];
 
         if (team.isTeamFull()) {
-          socket.emit('teamFull');
+          socket.emit('teamReady', { message: 'Team is already full!' });
           return;
         }
 

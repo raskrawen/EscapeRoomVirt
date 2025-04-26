@@ -22,6 +22,7 @@ const server = http.createServer(app);
 // Initializing a Socket.IO server and attaching it to the HTTP server
 const io = new Server(server);
 
+const clientContentMap = {}; // Store content for each client
 // Session setup
 const sessionMiddleware = session({
     secret: 'your-secret-key',
@@ -71,28 +72,29 @@ io.on('connection', (socket) => {
         // Assign content based on the number of clients in the team
         const clientsInTeam = io.sockets.adapter.rooms.get(teamId);
         const clientCount = clientsInTeam ? clientsInTeam.size : 0;
-        console.log('clients in team: ' + clientsInTeam);
-
-        const contentFile = clientCount === 1 ? 'levels/level1.html' : 'levels/level2.html';
-        console.log('Content file to serve:', contentFile);
-        clientContentMap[socket.id] = contentFile;
+        console.log('clients in team: ' + clientsInTeam.size);
         console.log('end of joinTeam');
     });
 
-    // Listen for level change requests
-    socket.on('level', (level) => {
-        console.log('Level received:', level);
-        const newContentFile = `levels/level${level}.html`;
-        clientContentMap[socket.id] = newContentFile;
-
-        fs.readFile(newContentFile, 'utf8', (err, data) => {
+        socket.on('teamReady', () => {   
+        const contentPath = clientCount === 1 ? 'levels/level1.html' : 'levels/level2.html';
+        console.log('Content file to serve:', contentPath);
+        fs.readFile(contentPath, 'utf8', (err, data) => {
             if (err) {
                 console.error('Error reading file:', err);
                 return;
             }
-            console.log(`File ${newContentFile} read successfully`);
-            socket.emit('updateContent', data);
+            clientContentMap[socket.id] = data;
+            console.log(`File read successfully`);
+            socket.emit('updateContent', clientContentMap[socket.id]);
         });
+        });
+    
+
+    // Listen for level change requests
+    socket.on('changeLevel', (level) => {
+        console.log('Level received:', level);
+                
     });
 
     // Handle client disconnection
