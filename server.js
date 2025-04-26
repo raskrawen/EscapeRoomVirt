@@ -7,6 +7,10 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const fs = require('fs');
+const session = require('express-session');
+const socketio = require('socket.io');
+// from socketHandler.js:
+const { setupSocketHandlers } = require('./socketHandler');
 
 // Creating an Express application
 const app = express();
@@ -17,35 +21,56 @@ const server = http.createServer(app);
 // Initializing a Socket.IO server and attaching it to the HTTP server
 const io = new Server(server);
 
+// Session setup
+const sessionMiddleware = session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: true,
+  });
+  app.use(sessionMiddleware);
+  
+  // Share session with Socket.IO
+  const sharedSession = require('express-socket.io-session');
+  io.use(sharedSession(sessionMiddleware, { autoSave: true }));
+  
+  // Setup socket handlers
+  setupSocketHandlers(io);
+
 // Serving static files from the 'public' directory
 app.use(express.static('public'));
 
-// Room and client content mapping
-const roomName = 'escapeRoom';
-const clientContentMap = {};
-
-// Listening for a new client connection to the Socket.IO server
+// Ensure teamId is only used after the client sends it
 io.on('connection', (socket) => {
     console.log(socket.id + ' connected');
 
-    // Add the client to the room
-    socket.join(roomName);
-
-    // Assign content based on the number of clients in the room
-    const clientsInRoom = io.sockets.adapter.rooms.get(roomName);
-    const clientCount = clientsInRoom ? clientsInRoom.size : 0;
-
-    const contentFile = clientCount === 1 ? 'levels/level1.html' : 'levels/level2.html';
-    clientContentMap[socket.id] = contentFile;
-
-    // Read and send the assigned content to the client
-    fs.readFile(contentFile, 'utf8', (err, data) => {
+    // Serve welcome_page.html as the first dynamic content
+    fs.readFile('welcome_page.html', 'utf8', (err, data) => {
         if (err) {
-            console.error('Error reading file:', err);
+            console.error('Error reading welcome_page.html:', err);
             return;
         }
-        console.log(`File ${contentFile} read successfully`);
-        socket.emit('updateContent', data);
+        console.log('File welcome_page.html read successfully');
+        socket.emit('updateContent', data); // Send the welcome page to the client
+    });
+
+    // Handle the joinTeam event to dynamically set the teamId
+    socket.on('joinTeam', ({ teamId }) => {
+        console.log('Team ID received from client:', teamId);
+
+        // Save teamId in the session
+        socket.handshake.session.teamId = teamId;
+        socket.handshake.session.save();
+
+        // Add the client to the team
+        socket.join(teamId);
+
+        // Assign content based on the number of clients in the team
+        const clientsInTeam = io.sockets.adapter.rooms.get(teamId);
+        const clientCount = clientsInTeam ? clientsInTeam.size : 0;
+        console.log('clients in team: ' + clientsInTeam);
+
+        const contentFile = clientCount === 1 ? 'levels/level1.html' : 'levels/level2.html';
+        clientContentMap[socket.id] = contentFile;
     });
 
     // Listen for level change requests
@@ -67,7 +92,7 @@ io.on('connection', (socket) => {
     // Handle client disconnection
     socket.on('disconnect', () => {
         console.log('A user disconnected');
-        delete clientContentMap[socket.id];
+        //delete clientContentMap[socket.id];
     });
 });
 
