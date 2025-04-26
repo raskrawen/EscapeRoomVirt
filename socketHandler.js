@@ -48,6 +48,7 @@ function setupSocketHandlers(io) {
     });
 
     socket.on('disconnect', () => {
+      console.log('from socketHandler.js: Player disconnected:', playerId);
       console.log('Client disconnected:', socket.id);
       // Optional: remove player from teams
     });

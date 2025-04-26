@@ -9,6 +9,7 @@ const { Server } = require('socket.io');
 const fs = require('fs');
 const session = require('express-session');
 const socketio = require('socket.io');
+const path = require('path');
 // from socketHandler.js:
 const { setupSocketHandlers } = require('./socketHandler');
 
@@ -39,19 +40,22 @@ const sessionMiddleware = session({
 // Serving static files from the 'public' directory
 app.use(express.static('public'));
 
+// Serve welcome_page.html using fs.readFile
+
+
 // Ensure teamId is only used after the client sends it
 io.on('connection', (socket) => {
     console.log(socket.id + ' connected');
 
-    // Serve welcome_page.html as the first dynamic content
-    fs.readFile('welcome_page.html', 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading welcome_page.html:', err);
-            return;
-        }
-        console.log('File welcome_page.html read successfully');
-        socket.emit('updateContent', data); // Send the welcome page to the client
-    });
+    const filePath = path.join(__dirname, 'public', 'welcome_page.html');
+        fs.readFile(filePath, 'utf8', (err, data) => {
+            if (err) {
+                console.error('Error reading welcome_page.html:', err);
+                res.status(500).send('Internal Server Error');
+                return;
+            }
+            socket.emit('updateContent', data);
+        });
 
     // Handle the joinTeam event to dynamically set the teamId
     socket.on('joinTeam', ({ teamId }) => {
@@ -70,7 +74,9 @@ io.on('connection', (socket) => {
         console.log('clients in team: ' + clientsInTeam);
 
         const contentFile = clientCount === 1 ? 'levels/level1.html' : 'levels/level2.html';
+        console.log('Content file to serve:', contentFile);
         clientContentMap[socket.id] = contentFile;
+        console.log('end of joinTeam');
     });
 
     // Listen for level change requests
@@ -91,7 +97,7 @@ io.on('connection', (socket) => {
 
     // Handle client disconnection
     socket.on('disconnect', () => {
-        console.log('A user disconnected');
+        console.log('A user disconnected from server.js');
         //delete clientContentMap[socket.id];
     });
 });

@@ -1,7 +1,5 @@
-//Client-side Socket.IO code for the welcome_page.html
-
-// Use the already established global socket connection
-console.log('from client.js ', window.socket.id);
+// Use the existing global socket instance
+const socket = window.socket;
 
 // Handle the form submit where player chooses a team
 document.getElementById('teamForm').addEventListener('submit', (e) => {
@@ -9,15 +7,14 @@ document.getElementById('teamForm').addEventListener('submit', (e) => {
 
   // Get the team ID from the input field
   const teamId = document.getElementById('teamIdInput').value.trim();
-  console.log('teamId: ', teamId);
+
   if (!teamId) {
     alert('Please enter a team ID!');
     return;
   }
 
   // Send team ID to the server
-  window.socket.emit('joinTeam', { teamId });
-  console.log('teamId sendt til server: ', teamId);
+  socket.emit('joinTeam', { teamId });
 });
 
 // Listen for server responses:
@@ -37,10 +34,11 @@ socket.on('teamUpdate', (data) => {
 socket.on('teamReady', (data) => {
   console.log(data.message);
   // Redirect to game page automatically, or show a start button
-  window.location.href = 'levels/level1.html'; // Example: redirect to game
+  window.location.href = '/game.html'; // Example: redirect to game
 });
 
 // Handle general errors
 socket.on('errorJoiningTeam', (error) => {
   alert('Error: ' + error.message);
 });
+
