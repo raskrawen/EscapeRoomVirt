@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
             socket.emit('updateContent', data);
         });
 
-    socket.on('teamReady', () => {   
+ /*    socket.on('teamReady', () => { //may be redundant, handled in welcome_page.html  
         const contentPath = clientCount === 1 ? 'levels/level1.html' : 'levels/level2.html';
         console.log('Content file to serve:', contentPath);
         fs.readFile(contentPath, 'utf8', (err, data) => {
@@ -68,7 +68,7 @@ io.on('connection', (socket) => {
             console.log(`File read successfully`);
             socket.emit('updateContent', clientContentMap[socket.id]);
         });
-        });
+    }); */
     
 
     // Listen for level change requests

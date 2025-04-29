@@ -22,12 +22,6 @@ function setupSocketHandlers(io) { // Setup socket handlers
         }
         const team = teams[teamId]; // Get the team object
 
-        if (team.isTeamFull()) {
-          console.log('Team is full: ', teamId);
-          socket.emit('teamReady', { message: 'Team is already full!' });
-          return;
-        }
-
         team.addPlayer(newPlayer);
 
         // Save teamId in the session
@@ -44,8 +38,14 @@ function setupSocketHandlers(io) { // Setup socket handlers
         });
 
         if (team.isTeamFull()) {
-          io.to(teamId).emit('teamReady', { message: 'Team is ready!' });
+          console.log('Team is full: ', teamId);
+          socket.emit('teamReady', team.getPlayerCount());
+          return;
         }
+        /* if (team.isTeamFull()) {
+          // Notify all players in the team that the team is ready
+          io.to(teamId).emit('teamReady', team.getPlayerCount()); 
+        } */
 
       } catch (error) {
         console.error('Join error:', error.message);
