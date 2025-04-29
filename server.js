@@ -1,6 +1,6 @@
-//vers 1.1.0
+//vers 1.2.0
 // dato: april 2025
-//features: two users
+//features: two users. One welcome page
 
 // Importing required modules
 const express = require('express');
@@ -46,15 +46,14 @@ app.use(express.static('public'));
 io.on('connection', (socket) => {
     console.log(socket.id + ' connected');
 
-    const filePath = path.join(__dirname, 'public', 'welcome_page.html');
-        fs.readFile(filePath, 'utf8', (err, data) => {
-            if (err) {
-                console.error('Error reading welcome_page.html:', err);
-                res.status(500).send('Internal Server Error');
-                return;
-            }
-            socket.emit('updateContent', data);
-        });
+    const filePath = path.join(__dirname, 'public', 'index.html');
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading index.html:', err);
+            return;
+        }
+        socket.emit('updateContent', data);
+    });
 
  /*    socket.on('teamReady', () => { //may be redundant, handled in welcome_page.html  
         const contentPath = clientCount === 1 ? 'levels/level1.html' : 'levels/level2.html';
@@ -82,6 +81,43 @@ io.on('connection', (socket) => {
         console.log('A user disconnected from server.js');
         //delete clientContentMap[socket.id];
     });
+});
+
+// Serve game content to game.html
+io.on('connection', (socket) => {
+  
+    socket.on('requestGameContent', () => {
+    console.log('Requesting game content for player:', socket.id);
+    const teamId = socket.handshake.session.teamId;
+    const playerId = socket.id;
+
+    if (!teams[teamId]) {
+      socket.emit('error', { message: 'Team not found' });
+      return;
+    }
+
+    const team = teams[teamId];
+    const player = team.players[playerId];
+
+    if (!player) {
+      socket.emit('error', { message: 'Player not found in team' });
+      return;
+    }
+
+    // Serve different content based on player position
+    const playerIndex = Object.keys(team.players).indexOf(playerId);
+    const contentPath = playerIndex === 0 ? 'levels/level1.html' : 'levels/level2.html';
+
+    fs.readFile(path.join(__dirname, contentPath), 'utf8', (err, data) => {
+      if (err) {
+        console.error('Error reading file:', err);
+        socket.emit('error', { message: 'Failed to load game content' });
+        return;
+      }
+
+      socket.emit('gameContent', data);
+    });
+  });
 });
 
 // Defining the port number for the server

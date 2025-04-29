@@ -1,96 +1,45 @@
 <!DOCTYPE html>
-<html lang="da">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Escape Game</title>
-  
-  <link rel="stylesheet" href="style.css">
+  <title>Join Team</title>
+  <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
-  <div style="display: flex; height: 100vh; background-color: black; color: white;">
-    <!-- Left Column -->
-    <div id="main" style="flex: 0.75; padding: 20px; overflow-y: auto;">
-      <!-- Dynamically loaded HTML content will appear here -->
-    </div>
-
-    <!-- Right Column -->
-    <div style="flex: 0.25; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; border-left: 1px solid #444; position: relative;">
-      <!-- Top Section: Level Indicator and Timer -->
-      <div style="position: absolute; top: 10px; left: 10px; text-align: left;">
-        <div id="level" style="font-size: 14px;">Niveau: 1</div>
-      </div>
-      <div style="position: absolute; top: 10px; right: 10px; text-align: right;">
-        <div id="timer" style="font-size: 14px;">Tid: 10:00</div>
-      </div>
-
-      <!-- Bottom Section: Input Field and Button -->
-      <div style="margin-top: auto; display: flex; flex-direction: column; align-items: flex-end; gap: 10px;">
-        <button id="sendBtn" style="width: 20%; padding: 5px; font-size: 12px; background-color: #444; color: white; border: none; cursor: pointer; margin-bottom: 5px; border-radius: 5px;">Send</button>
-        <textarea id="messageInput" placeholder="Skriv en besked..." style="width: 90%; height: 90px; padding: 10px; font-size: 12px; background-color: #222; color: white; border: none; resize: none;"></textarea>
-      </div>
-    </div>
-  </div>
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    console.log('Client script loaded');
-    window.socket = io(); // Declare socket globally
-    console.log('Global socket initialized');
-    let totalSeconds = 10 * 60; // 10 minutter i sekunder
-    const level = 0; // Startniveau   
-    const input = document.getElementById('messageInput');
-    const sendBtn = document.getElementById('sendBtn');
-
-    function sendMessage() {
-      const message = input.value.trim();
-      if (message) {
-        socket.emit('message', message);
-        input.value = '';
-      }
-    }
-
-    sendBtn.addEventListener('click', sendMessage);
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Enter') sendMessage();
-    });
-
-    socket.on('updateContent', html => {
-      console.log('Received HTML content.');
-      const mainDiv = document.getElementById('main');
-      mainDiv.innerHTML = html;
-
-      // Dynamically execute scripts in the loaded HTML
-      const scripts = mainDiv.getElementsByTagName('script');
-      for (let script of scripts) {
-        const newScript = document.createElement('script');
-        newScript.textContent = script.textContent;
-        document.body.appendChild(newScript);
-        document.body.removeChild(newScript); // Clean up after execution
-      }
-    });
-
-    socket.on('updateTimer', time => {
-      document.getElementById('timer').textContent = 'Tid: ' + time;
-    });
-
-    socket.on('updateLevel', level => {
-      console.log('Niveau opdateret til:', level);
-      document.getElementById('level').textContent = 'Niveau: ' + level;
-    });
-
-    function updateCountdown() {
-      const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
-      const seconds = String(totalSeconds % 60).padStart(2, '0');
-      document.getElementById('timer').textContent = 'Tid: ' + minutes + ':' + seconds;
-
-      if (totalSeconds > 0) {
-        totalSeconds--;
-        setTimeout(updateCountdown, 1000);
-      }
-    }
-
-    updateCountdown();
-  </script>
+  <h1>Welcome to the Escape Room!</h1>
+  <form id="teamForm">
+    <input type="text" id="teamIdInput" placeholder="Enter team ID" required />
+    <button type="submit">Join Team</button>
+  </form>
 </body>
+<script>
+  // Initialize the socket globally
+  window.socket = io();
+  // Handle the form submit where player chooses a team
+  document.getElementById('teamForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Get the team ID from the input field
+    const teamId = document.getElementById('teamIdInput').value.trim();
+
+    if (!teamId) {
+      alert('Please enter a team ID!');
+      return;
+    }
+
+    // Send team ID to the server
+    socket.emit('joinTeam', { teamId });
+  });
+
+  // If the team is full, redirect to game.html
+  socket.on('teamReady', () => {
+    window.location.href = '/game.html';
+  });
+
+  // Handle general errors
+  socket.on('errorJoiningTeam', (error) => {
+    alert('Error: ' + error.message);
+  });
+</script>
 </html>
+
