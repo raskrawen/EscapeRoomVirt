@@ -17,11 +17,13 @@ function setupSocketHandlers(io) { // Setup socket handlers
         const newPlayer = new Player(playerId, socket.id);
 
         if (!teams[teamId]) {
+          console.log('Creating new team:', teamId);
           teams[teamId] = new Team(teamId);
         }
-        const team = teams[teamId];
+        const team = teams[teamId]; // Get the team object
 
         if (team.isTeamFull()) {
+          console.log('Team is full: ', teamId);
           socket.emit('teamReady', { message: 'Team is already full!' });
           return;
         }

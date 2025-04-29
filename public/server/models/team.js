@@ -14,6 +14,7 @@ class Team {
   
     getPlayerCount() {
       return Object.keys(this.players).length;
+      console.log('Player count on team: ', Object.keys(this.players).length);  
     }
   
     isTeamFull() {
