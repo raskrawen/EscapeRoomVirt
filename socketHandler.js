@@ -8,33 +8,32 @@ const teams = {};
 
 function setupSocketHandlers(io) { // Setup socket handlers
   io.on('connection', (socket) => {
-    const playerId = socket.handshake.session.id;
-
+    
     // Updated joinTeam logic to handle session and room assignment
-    socket.on('joinTeam', ({ teamId }) => {
-      console.log('Player trying to join team: Player ID:', playerId, 'Team ID:', teamId);
+    socket.on('joinTeam', ({ playerId, teamId, playerName }) => {
+      console.log('Player trying to join team: Player ID:', playerId, 'Team ID:', teamId, 'Player Name:', playerName);
       try {
-        const newPlayer = new Player(playerId, socket.id);
+        const newPlayer = new Player(playerId, socket.id, playerName);
 
         if (!teams[teamId]) {
           console.log('Creating new team:', teamId);
           teams[teamId] = new Team(teamId);
         }
-        const team = teams[teamId]; // Get the team object
+        const team = teams[teamId];
 
         team.addPlayer(newPlayer);
 
-        // Save teamId in the session
         socket.handshake.session.teamId = teamId;
         socket.handshake.session.save();
 
-        // Join the team room
         socket.join(teamId);
 
-        // Emit team update
         io.to(teamId).emit('teamUpdate', {
           teamId,
-          players: Object.keys(team.players),
+          players: Object.values(team.players).map(player => ({
+            id: player.playerId,
+            name: player.playerName
+          })),
         });
 
         if (team.isTeamFull()) {
@@ -42,7 +41,7 @@ function setupSocketHandlers(io) { // Setup socket handlers
           io.to(teamId).emit('teamReady', team.getPlayerCount());
           return;
         }
-        
+
       } catch (error) {
         console.error('Join error:', error.message);
         socket.emit('errorJoiningTeam', { message: error.message });
@@ -50,7 +49,7 @@ function setupSocketHandlers(io) { // Setup socket handlers
     });
 
     socket.on('disconnect', () => {
-      console.log('from socketHandler.js: Player disconnected:', playerId);
+      console.log('A client disconnected');
       console.log('Client disconnected:', socket.id);
       // Optional: remove player from teams
     });

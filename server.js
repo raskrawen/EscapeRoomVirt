@@ -45,8 +45,14 @@ app.use(express.static('public'));
 // Ensure teamId is only used after the client sends it
 io.on('connection', (socket) => {
     console.log(`${socket.id} connected`);
+
+    // Store socket.id in the session as playerId
+    socket.handshake.session.playerId = socket.id;
+    socket.handshake.session.save();
+
+    // Emit socketId to the client
     socket.emit('socketId', socket.id);
-    
+
     // Handle client disconnection
     socket.on('disconnect', () => {
         console.log(`${socket.id} disconnected`);

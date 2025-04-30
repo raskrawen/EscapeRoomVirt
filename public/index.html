@@ -8,29 +8,41 @@
 <body>
   <h1>Welcome to the Escape Room!</h1>
   <form id="teamForm">
-    <input type="text" id="teamIdInput" placeholder="Enter team ID" required />
+    <input type="text" id="playerNameInput" placeholder="dit navn" required />
+    <input type="text" id="teamIdInput" placeholder="team ID" required />
     <button type="submit">Join Team</button>
   </form>
 </body>
 <script>
-// Initialize the socket globally
+  // Initialize the socket globally
   window.socket = io();
-  // Save the socket.id directly to sessionStorage after socket is declared
-  sessionStorage.setItem('socketId', socket.id);
+
+  // Listen for socketId event from the server
+socket.on('socketId', (id) => {
+  console.log('Received socketId from server:', id);
+  sessionStorage.setItem('socketId', id); // Store the socketId in sessionStorage
+});
   // Handle the form submit where player chooses a team
   document.getElementById('teamForm').addEventListener('submit', (e) => {
     e.preventDefault();
 
-    // Get the team ID from the input field
+    // Get the player name and team ID from the input fields
+    const playerName = document.getElementById('playerNameInput').value.trim();
     const teamId = document.getElementById('teamIdInput').value.trim();
-
+    const playerId = sessionStorage.getItem('socketId'); // Retrieve playerId from sessionStorage
+    console.log('Player ID:', playerId); // Log the playerId for debugging
+    
+    if (!playerName) {
+      alert('Please enter name!');
+      return;
+    }
     if (!teamId) {
       alert('Please enter a team ID!');
       return;
     }
 
-    // Send team ID to the server
-    socket.emit('joinTeam', { teamId });
+    // Send team ID, playerName, and playerId to the server
+    socket.emit('joinTeam', { playerId, teamId, playerName, playerId });
   });
 
   // If the team is full, redirect to game.html
@@ -47,8 +59,6 @@
   socket.on('redirect', (data) => {
     window.location.href = data.url;
   });
-
-  
 </script>
 </html>
 
