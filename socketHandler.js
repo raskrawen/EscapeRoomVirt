@@ -39,14 +39,10 @@ function setupSocketHandlers(io) { // Setup socket handlers
 
         if (team.isTeamFull()) {
           console.log('Team is full: ', teamId);
-          socket.emit('teamReady', team.getPlayerCount());
+          io.to(teamId).emit('teamReady', team.getPlayerCount());
           return;
         }
-        /* if (team.isTeamFull()) {
-          // Notify all players in the team that the team is ready
-          io.to(teamId).emit('teamReady', team.getPlayerCount()); 
-        } */
-
+        
       } catch (error) {
         console.error('Join error:', error.message);
         socket.emit('errorJoiningTeam', { message: error.message });

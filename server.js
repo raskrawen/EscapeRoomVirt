@@ -44,79 +44,21 @@ app.use(express.static('public'));
 
 // Ensure teamId is only used after the client sends it
 io.on('connection', (socket) => {
-    console.log(socket.id + ' connected');
-
-    const filePath = path.join(__dirname, 'public', 'index.html');
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading index.html:', err);
-            return;
-        }
-        socket.emit('updateContent', data);
-    });
-
- /*    socket.on('teamReady', () => { //may be redundant, handled in welcome_page.html  
-        const contentPath = clientCount === 1 ? 'levels/level1.html' : 'levels/level2.html';
-        console.log('Content file to serve:', contentPath);
-        fs.readFile(contentPath, 'utf8', (err, data) => {
-            if (err) {
-                console.error('Error reading file:', err);
-                return;
-            }
-            clientContentMap[socket.id] = data;
-            console.log(`File read successfully`);
-            socket.emit('updateContent', clientContentMap[socket.id]);
-        });
-    }); */
+    console.log(`${socket.id} connected`);
+    socket.emit('socketId', socket.id);
     
-
-    // Listen for level change requests
-    socket.on('changeLevel', (level) => {
-        console.log('Level received:', level);
-                
-    });
-
     // Handle client disconnection
     socket.on('disconnect', () => {
-        console.log('A user disconnected from server.js');
-        //delete clientContentMap[socket.id];
+        console.log(`${socket.id} disconnected`);
     });
 });
 
-// Serve game content to game.html
+
+
+// Emit a redirection event to all connected clients when a team is ready
 io.on('connection', (socket) => {
-  
-    socket.on('requestGameContent', () => {
-    console.log('Requesting game content for player:', socket.id);
-    const teamId = socket.handshake.session.teamId;
-    const playerId = socket.id;
-
-    if (!teams[teamId]) {
-      socket.emit('error', { message: 'Team not found' });
-      return;
-    }
-
-    const team = teams[teamId];
-    const player = team.players[playerId];
-
-    if (!player) {
-      socket.emit('error', { message: 'Player not found in team' });
-      return;
-    }
-
-    // Serve different content based on player position
-    const playerIndex = Object.keys(team.players).indexOf(playerId);
-    const contentPath = playerIndex === 0 ? 'levels/level1.html' : 'levels/level2.html';
-
-    fs.readFile(path.join(__dirname, contentPath), 'utf8', (err, data) => {
-      if (err) {
-        console.error('Error reading file:', err);
-        socket.emit('error', { message: 'Failed to load game content' });
-        return;
-      }
-
-      socket.emit('gameContent', data);
-    });
+  socket.on('teamReady', () => {
+    io.emit('redirect', { url: '/game_temp.html' });
   });
 });
 

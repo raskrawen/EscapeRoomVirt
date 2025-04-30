@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <title>Game</title>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <h1>Escape Room Game</h1>
+  <div id="gameContent">Loading...</div>
+</body>
+<script>
+    //redirected from index.html
+  // Retrieve the socketId from sessionStorage
+  const socketId = sessionStorage.getItem('socketId');
+  if (socketId) {
+    // Reestablish the socket connection using the stored socketId
+    window.socket = io({ query: { socketId } });
+    console.log('Reconnected with socketId:', socketId);
+  } else {
+    console.log('Socket ID not found, redirecting to index.html');
+    window.location.href = '/index.html';
+  }
+  const socket = window.socket;
+</script>
