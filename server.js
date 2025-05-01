@@ -41,9 +41,8 @@ const sessionMiddleware = session({
 // Serving static files from the 'public' directory
 app.use(express.static('public'));
 
-
 // Ensure teamId is only used after the client sends it
-io.on('connection', (socket) => {
+
     console.log(`${socket.id} connected`);
 
     // Store socket.id in the session as playerId
@@ -55,14 +54,9 @@ io.on('connection', (socket) => {
 
     // Handle client disconnection
     socket.on('disconnect', () => {
-        console.log(`${socket.id} disconnected`);
-    });
-});
-
-
-
+        //console.log(`${socket.id} disconnected`);
+    
 // Emit a redirection event to all connected clients when a team is ready
-io.on('connection', (socket) => {
   socket.on('teamReady', () => {
     io.emit('redirect', { url: '/game_temp.html' });
   });

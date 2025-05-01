@@ -6,7 +6,7 @@ const Player = require('./public/server/models/player');
 // Shared teams object
 const teams = {};
 
-function setupSocketHandlers(io) { // Setup socket handlers
+function setupSocketHandlers(io) { // Setup socket handlers. In function because we need to pass io from server.js
   io.on('connection', (socket) => {
     
     // Updated joinTeam logic to handle session and room assignment
@@ -28,14 +28,6 @@ function setupSocketHandlers(io) { // Setup socket handlers
 
         socket.join(teamId);
 
-        io.to(teamId).emit('teamUpdate', {
-          teamId,
-          players: Object.values(team.players).map(player => ({
-            id: player.playerId,
-            name: player.playerName
-          })),
-        });
-
         if (team.isTeamFull()) {
           console.log('Team is full: ', teamId);
           io.to(teamId).emit('teamReady', team.getPlayerCount());
@@ -46,14 +38,18 @@ function setupSocketHandlers(io) { // Setup socket handlers
         console.error('Join error:', error.message);
         socket.emit('errorJoiningTeam', { message: error.message });
       }
-    });
+
+      socket.on('testConnection', (msg) => {
+        console.log('Test connection message:', msg);
+      });
 
     socket.on('disconnect', () => {
-      console.log('A client disconnected');
-      console.log('Client disconnected:', socket.id);
+      //console.log('A client disconnected');
+      //console.log('Client disconnected:', socket.id);
       // Optional: remove player from teams
     });
   });
+});
 }
 
 module.exports = { setupSocketHandlers, teams }; // Export the teams object for use in other modules
