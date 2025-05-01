@@ -42,7 +42,7 @@ const sessionMiddleware = session({
 app.use(express.static('public'));
 
 // Ensure teamId is only used after the client sends it
-
+io.on('connection', (socket) => {
     console.log(`${socket.id} connected`);
 
     // Store socket.id in the session as playerId
@@ -55,11 +55,8 @@ app.use(express.static('public'));
     // Handle client disconnection
     socket.on('disconnect', () => {
         //console.log(`${socket.id} disconnected`);
-    
-// Emit a redirection event to all connected clients when a team is ready
-  socket.on('teamReady', () => {
-    io.emit('redirect', { url: '/game_temp.html' });
-  });
+    });
+
 });
 
 // Defining the port number for the server

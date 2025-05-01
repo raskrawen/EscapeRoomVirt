@@ -30,6 +30,7 @@ function setupSocketHandlers(io) { // Setup socket handlers. In function because
 
         if (team.isTeamFull()) {
           console.log('Team is full: ', teamId);
+          //emit to all clients in the room:
           io.to(teamId).emit('teamReady', team.getPlayerCount());
           return;
         }
@@ -41,6 +42,25 @@ function setupSocketHandlers(io) { // Setup socket handlers. In function because
 
       socket.on('testConnection', (msg) => {
         console.log('Test connection message:', msg);
+      });
+
+      socket.on('getPlayerData', ({ playerId }) => {
+        // Search for the player in all teams
+        for (const teamId in teams) {
+          const team = teams[teamId];
+          if (team.players[playerId]) {
+            const player = team.players[playerId];
+            socket.emit('playerData', {
+              playerId: player.playerId,
+              playerName: player.playerName,
+              teamId: teamId,
+            });
+            return;
+          }
+        }
+      
+        // If the player is not found, send an error response
+        socket.emit('playerData', { error: 'Player not found' });
       });
 
     socket.on('disconnect', () => {

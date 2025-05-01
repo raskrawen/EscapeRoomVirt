@@ -46,9 +46,9 @@ socket.on('socketId', (id) => {
   });
 
   // If the team is full, redirect to game.html
-  //socket.on('teamReady', () => {
-  //  window.location.href = '/game_temp.html';
-  //});
+  socket.on('teamReady', () => {
+    window.location.href = '/game_temp.html';
+  });
 
   // Handle general errors
   socket.on('errorJoiningTeam', (error) => {

@@ -13,7 +13,7 @@
     //redirected from index.html
   //
   // Retrieve the socketId from sessionStorage
-  //console.log('Attempting to retrieve socketId from sessionStorage...');
+  console.log('Attempting to retrieve socketId from sessionStorage...');
   const socketId = sessionStorage.getItem('socketId');
   if (socketId) {
     // Reestablish the socket connection using the stored socketId
@@ -26,4 +26,24 @@
   const socket = window.socket;
   console.log('Socket connected:', socket.connected); // Log the socket connection status
   socket.emit('testConnection', { message: 'Hello from the client!' });
+
+  // Retrieve playerId from sessionStorage
+  const playerId = sessionStorage.getItem('socketId');
+
+  if (playerId) {
+    // Emit an event to request player data
+    socket.emit('getPlayerData', { playerId });
+  } else {
+    console.error('Player ID not found in sessionStorage');
+  }
+
+  // Listen for the player data response
+  socket.on('playerData', (data) => {
+    if (data && data.playerName) {
+      console.log('Player Name:', data.playerName);
+    } else {
+      console.error('Player data not found or invalid');
+    }
+  });
 </script>
+</html>
