@@ -42,6 +42,7 @@ const sessionMiddleware = session({
 app.use(express.static('public'));
 
 // Ensure teamId is only used after the client sends it
+//only a server side event:
 io.on('connection', (socket) => {
     console.log(`${socket.id} connected`);
 
