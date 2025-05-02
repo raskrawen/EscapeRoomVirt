@@ -17,12 +17,27 @@ const sessionMiddleware = session({
   saveUninitialized: true
 });
 
+// Log incoming requests
+app.use((req, res, next) => {
+    console.log(`Incoming request: ${req.method} ${req.url}`);
+    next();
+});
+
+// Log session data
 app.use(sessionMiddleware);
+console.log('Session middleware initialized');
+
 io.use(sharedSession(sessionMiddleware, { autoSave: true }));
+console.log('Socket.io shared session initialized');
 
+setupSocketHandler(io);
+
+// Log static file serving
 app.use(express.static(path.join(__dirname, '../public')));
+console.log('Serving static files from public directory');
 
-setupSocketHandler(io, sharedSession);
+
+console.log('Socket handler setup complete');
 
 server.listen(3000, () => {
   console.log('Server listening on http://localhost:3000');
