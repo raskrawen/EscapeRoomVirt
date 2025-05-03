@@ -1,4 +1,6 @@
 // --- models/Team.js ---
+const playersOnTeam = 2; // Number of players required to form a team
+
 class Team {
     constructor(teamId) {
       this.teamId = teamId;
@@ -16,7 +18,7 @@ class Team {
     }
   
     teamIsFull() {
-      return this.players.length >= 2;
+      return this.players.length >= playersOnTeam;
     }
   }
   
