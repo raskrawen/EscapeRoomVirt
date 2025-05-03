@@ -1,9 +1,9 @@
-version: 1.3.2
+version: 1.3.3
 dato: maj 2025
 features: 
     to brugere i hvert team. 
     Connection følger brugeren. den har samme session-id, ikke nødvendigvis samme socket-id.
-    landing page = index.html, redirect til game.html.
-    tests
+    landing page = index.html, 
 new features:
+    Displays lobby.html to game.html
     clean up
