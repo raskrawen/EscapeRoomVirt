@@ -2,7 +2,7 @@ version: 1.3.2
 dato: maj 2025
 features: 
     to brugere i hvert team. 
-    Connection følger brugeren. 
+    Connection følger brugeren. den har samme session-id, ikke nødvendigvis samme socket-id.
     landing page = index.html, redirect til game.html.
     tests
 new features:

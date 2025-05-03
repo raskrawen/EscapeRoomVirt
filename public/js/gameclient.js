@@ -1,4 +1,3 @@
-// --- public/js/gameClient.js ---
 const socket = io();
 
 socket.on('connect', () => {
