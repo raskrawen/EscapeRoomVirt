@@ -19,6 +19,7 @@ function setupSocketHandler(io) {
       const player = new Player(playerName, teamId, socket.id);
       socket.handshake.session.playerId = player.playerId;
       socket.handshake.session.save();
+      console.log('Session save method called:', typeof socket.handshake.session.save);
 
       // Add player to the global state
       players.set(player.playerId, player);
