@@ -10,20 +10,24 @@ function setupSocketHandler(io) {
     socket.on('joinTeam', ({ playerName, teamId }) => {
       console.log(`joinTeam event received: playerName=${playerName}, teamId=${teamId}`); // Log joinTeam event
       const player = new Player(playerName, teamId, socket.id);
+      console.log(`Creating new player: ${JSON.stringify(player)}`); // Log player creation
       socket.handshake.session.playerId = player.playerId;
       socket.handshake.session.save();
 
       players.set(player.playerId, player);
 
-      if (!teams.has(teamId)) teams.set(teamId, new Team(teamId));
+      if (!teams.has(teamId)) {
+        console.log(`Creating new team with teamId=${teamId}`); // Log team creation
+        teams.set(teamId, new Team(teamId));
+      }
       const team = teams.get(teamId);
       team.addPlayer(player);
 
-      console.log(`Player added: ${JSON.stringify(player)}`); // Log player data
-      console.log(`Team state: ${JSON.stringify(team)}`); // Log team state
+      console.log(`Player added to team: ${JSON.stringify(team)}`); // Log team state
 
       // Hvis holdet nu er fyldt, send redirect til game
       if (team.teamIsFull()) {
+        console.log(`Team is full. Redirecting players to game.`); // Log redirection
         team.players.forEach(p => {
           io.to(p.socketId).emit('redirect', { url: '/game.html' });
         });
@@ -36,12 +40,12 @@ function setupSocketHandler(io) {
       const playerId = socket.handshake.session.playerId;
       const player = players.get(playerId);
       if (player) {
+        console.log(`Sending player info: ${JSON.stringify(player)}`); // Log player info
         socket.emit('playerInfo', {
           playerName: player.playerName,
           playerId: player.playerId,
           teamId: player.teamId
         });
-        console.log(`Player info sent: ${JSON.stringify(player)}`); // Log player info
       }
     });
 
@@ -56,8 +60,10 @@ function setupSocketHandler(io) {
 
       const team = teams.get(player.teamId);
       if (team) {
+        console.log(`Removing player from team: ${playerId}`); // Log player removal
         team.players = team.players.filter(p => p.playerId !== playerId);
         if (team.players.length === 0) {
+          console.log(`Team is empty. Deleting team: ${player.teamId}`); // Log team deletion
           teams.delete(player.teamId);
         }
       }
