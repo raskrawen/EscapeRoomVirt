@@ -36,6 +36,9 @@ setupSocketHandler(io);
 app.use(express.static(path.join(__dirname, '../public')));
 console.log('Serving static files from public directory');
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+});
 
 console.log('Socket handler setup complete');
 
