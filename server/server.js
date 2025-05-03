@@ -23,6 +23,11 @@ io.use(sharedSession(sessionMiddleware, { autoSave: true }));
 // Server statiske filer fra /public
 app.use(express.static(path.join(__dirname, '../public')));
 
+// Tilføj en route for at servere index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+});
+
 // Tilslut socket-handler
 setupSocketHandler(io);
 
