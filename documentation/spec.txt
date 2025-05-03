@@ -6,4 +6,4 @@ features:
     landing page = index.html, 
 new features:
     Displays lobby.html to game.html
-    clean up
+    clean up players and teams
