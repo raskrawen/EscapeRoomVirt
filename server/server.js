@@ -36,9 +36,13 @@ setupSocketHandler(io);
 app.use(express.static(path.join(__dirname, '../public')));
 console.log('Serving static files from public directory');
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+});
 
 console.log('Socket handler setup complete');
 
-server.listen(3000, () => {
-  console.log('Server listening on http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
