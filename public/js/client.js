@@ -33,10 +33,14 @@ function setupGameView() {
 
 // Modtag redirect-signal fra serveren
 socket.on('redirect', ({ url }) => {
+  console.log(`Redirect event received: url=${url}`); // Log redirect event
   if (url === '/game.html') {
     loadView('/views/game.html', setupGameView);
   }
 });
 
 // Start med at vise lobbyen
-loadView('/views/lobby.html', setupLobbyView);
+loadView('/views/lobby.html', () => {
+  console.log('Lobby view loaded'); // Log view load
+  setupLobbyView();
+});
