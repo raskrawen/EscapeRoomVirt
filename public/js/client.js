@@ -18,14 +18,23 @@ function setupLobbyView() {
     startButton.disabled = true; // Disable the button to prevent multiple clicks
     const playerName = document.getElementById('playerName').value;
     const teamId = document.getElementById('teamId').value;
-    console.log(`Emitting joinTeam event with playerName=${playerName}, teamId=${teamId}`); // Log event data
-    socket.emit('joinTeam', { playerName, teamId });
 
-    // Add user feedback
-    const feedbackElement = document.createElement('p');
-    feedbackElement.id = 'feedbackMessage';
-    feedbackElement.textContent = 'Venter på flere deltagere...';
-    document.getElementById('viewContainer').appendChild(feedbackElement);
+    // Check if the team is full before joining
+    socket.emit('checkTeamStatus', { teamId }, (isFull) => {
+      if (isFull) { //isFull true/fasle from socketHandler callback
+        alert('Dette er team er optaget. Vælg et andet team id.');
+        startButton.disabled = false; // Re-enable the button
+      } else {
+        console.log(`Emitting joinTeam event with playerName=${playerName}, teamId=${teamId}`); // Log event data
+        socket.emit('joinTeam', { playerName, teamId });
+
+        // Add user feedback
+        const feedbackElement = document.createElement('p');
+        feedbackElement.id = 'feedbackMessage';
+        feedbackElement.textContent = 'Venter på flere deltagere...';
+        document.getElementById('viewContainer').appendChild(feedbackElement);
+      }
+    });
   });
 }
 

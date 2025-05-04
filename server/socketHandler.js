@@ -34,6 +34,19 @@ function setupSocketHandler(io) {
       }
     });
 
+    // Check if a team is full
+    socket.on('checkTeamStatus', ({ teamId }, callback) => {
+      console.log(`checkTeamStatus event received: teamId=${teamId}`); // Log checkTeamStatus event
+      const team = teams.get(teamId);
+      if (team && team.teamIsFull()) {
+        console.log(`Team ${teamId} is full.`); // Log team full status
+        callback(true); // Team is full. "true" send to client
+      } else {
+        console.log(`Team ${teamId} is not full.`); // Log team not full status
+        callback(false); // Team is not full. "false" send to client
+      }
+    });
+
     // Når klient anmoder om spillerinfo
     socket.on('requestPlayerInfo', () => {
       console.log(`requestPlayerInfo event received from socket: ${socket.id}`); // Log requestPlayerInfo event
