@@ -7,4 +7,5 @@ features:
 new features:
     Displays lobby.html to game.html in index.html
     clean up players and teams
-    test for cleanup
+    feedback in lobby.
+    test for cleanup and save player data
