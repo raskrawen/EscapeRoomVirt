@@ -12,6 +12,11 @@ class Team {
     }
   }
 
+  // Fjern spiller fra holdet
+  removePlayer(playerId) {
+    this.players = this.players.filter(player => player.playerId !== playerId);
+  }
+
   getPlayerCount() {
     return this.players.length;
   }

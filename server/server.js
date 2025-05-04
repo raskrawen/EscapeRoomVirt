@@ -1,3 +1,5 @@
+// start server.js by running `node server/server.js` (or node server.js)
+
 const express = require('express');
 const http = require('http');
 const socketio = require('socket.io');
@@ -33,5 +35,5 @@ setupSocketHandler(io);
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+  console.log(`Server listening on port ${PORT}, http://localhost:${PORT}`);
 });
