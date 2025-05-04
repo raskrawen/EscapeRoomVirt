@@ -12,12 +12,20 @@ function loadView(url, callback) {
 
 // Opsæt lobby-logik efter view er indlæst
 function setupLobbyView() {
-  document.getElementById('startButton').addEventListener('click', () => {
+  const startButton = document.getElementById('startButton');
+  startButton.addEventListener('click', () => {
     console.log('Start button clicked'); // Log start button click
+    startButton.disabled = true; // Disable the button to prevent multiple clicks
     const playerName = document.getElementById('playerName').value;
     const teamId = document.getElementById('teamId').value;
     console.log(`Emitting joinTeam event with playerName=${playerName}, teamId=${teamId}`); // Log event data
     socket.emit('joinTeam', { playerName, teamId });
+
+    // Add user feedback
+    const feedbackElement = document.createElement('p');
+    feedbackElement.id = 'feedbackMessage';
+    feedbackElement.textContent = 'Venter på flere deltagere...';
+    document.getElementById('viewContainer').appendChild(feedbackElement);
   });
 }
 
