@@ -27,9 +27,9 @@ function setupSocketHandler(io) {
 
       // Hvis holdet nu er fyldt, send redirect til game
       if (team.teamIsFull()) {
-        console.log(`Team is full. Redirecting players to game.`); // Log redirection
+        console.log(`Team is full. Redirecting players.`); // Log redirection
         team.players.forEach(p => {
-          io.to(p.socketId).emit('redirect', { url: '/game.html' });
+          io.to(p.socketId).emit('redirect', { view: 'game' });
         });
       }
     });
