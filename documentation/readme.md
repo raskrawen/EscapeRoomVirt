@@ -4,9 +4,9 @@ start server by "nodemon server/server.js" og "node server/server.js".
 
 features: 
 1.3.4 new features:
-    feedback and reset when a third player tries to join a team.
+    feedback and reset joinTeam when a third player tries to join a team.
 
-1.3.3 new features
+1.3.3 new features:
     Displays lobby.html to game.html in index.html
     clean up players and teams
     feedback in lobby.
