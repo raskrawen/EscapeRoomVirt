@@ -1,69 +1,24 @@
-const socket = io();
+export const socket = io();
 
-// Funktion til at hente HTML-visning og tilknytte logik
-function loadView(url, callback) {
-  fetch(url)
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById('viewContainer').innerHTML = html;
-      if (callback) callback(); // Kald setup-funktion når view er indlæst
-    });
+export async function loadTask(taskName) {
+  const html = await fetch(`/views/${taskName}.html`).then(r => r.text());
+  document.getElementById("viewContainer").innerHTML = html;
+
+  const module = await import(`/js/${taskName}.js`);
+  module.init(); // fx init funktion i hver modul
 }
 
-// Opsæt lobby-logik efter view er indlæst
-function setupLobbyView() {
-  const startButton = document.getElementById('startButton');
-  startButton.addEventListener('click', () => {
-    console.log('Start button clicked'); // Log start button click
-    startButton.disabled = true; // Disable the button to prevent multiple clicks
-    const playerName = document.getElementById('playerName').value;
-    const teamId = document.getElementById('teamId').value;
-
-    // Check if the team is full before joining
-    socket.emit('checkTeamStatus', { teamId }, (isFull) => {
-      if (isFull) { //isFull true/fasle from socketHandler callback
-        alert('Dette er team er optaget. Vælg et andet team id.');
-        startButton.disabled = false; // Re-enable the button
-      } else {
-        console.log(`Emitting joinTeam event with playerName=${playerName}, teamId=${teamId}`); // Log event data
-        socket.emit('joinTeam', { playerName, teamId });
-
-        // Add user feedback
-        const feedbackElement = document.createElement('p');
-        feedbackElement.id = 'feedbackMessage';
-        feedbackElement.textContent = 'Venter på flere deltagere...';
-        document.getElementById('viewContainer').appendChild(feedbackElement);
-      }
-    });
-  });
-}
-
-// Opsæt game-logik efter redirect
-function setupGameView() {
-  console.log('Setting up game view'); // Log game view setup
-  socket.emit('requestPlayerInfo');
-  console.log('Emitting requestPlayerInfo event'); // Log event emission
-  socket.on('playerInfo', ({ playerName, playerId, teamId }) => {
-    console.log(`Received playerInfo event with data: playerName=${playerName}, playerId=${playerId}, teamId=${teamId}`); // Log received data
-    document.getElementById('info').innerHTML = `
-      <p><strong>Navn:</strong> ${playerName}</p>
-      <p><strong>Player ID:</strong> ${playerId}</p>
-      <p><strong>Team ID:</strong> ${teamId}</p>
-    `;
-  });
-}
-
-// Modtag redirect-signal fra serveren
+// Emit appropiate events and call loadTask when redirect is received
+//SHOULD NOT TAKE A URL AS PARAMETER, BUT A VIEW NAME INSTEAD
 socket.on('redirect', ({ url }) => {
   console.log(`Redirect event received: url=${url}`); // Log redirect event
   if (url === '/game.html') {
     console.log('Redirecting to game view'); // Log redirection
-    loadView('/views/game.html', setupGameView);
+    loadTask('game');
   }
 });
 
-// Start med at vise lobbyen
-loadView('/views/lobby.html', () => {
-  console.log('Lobby view loaded'); // Log view load
-  setupLobbyView();
-});
+// Start with the lobby view
+loadTask('lobby');
+
+

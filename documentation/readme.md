@@ -4,7 +4,10 @@ start server by "nodemon server/server.js" og "node server/server.js".
 
 features: 
 1.3.4 new features:
-    feedback and reset joinTeam when a third player tries to join a team.
+    -feedback and reset joinTeam when a third player tries to join a team.
+    -save socket.id in player-objects (need to send client specific msg to socket).
+    -
+
 
 1.3.3 new features:
     Displays lobby.html to game.html in index.html
