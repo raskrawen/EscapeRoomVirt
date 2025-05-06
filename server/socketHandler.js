@@ -13,19 +13,18 @@ function setupSocketHandler(io) {
       console.log(`Creating new player: ${JSON.stringify(player)}`); // Log player creation
       socket.handshake.session.playerId = player.playerId;
       socket.handshake.session.save();
-      const team = teams.get(teamId);
-      const playerNumberOnTeam = team ? team.getPlayerCount() + 1 : 1; // Spillernummer på holdet
-      player.playerNumberOnTeam = playerNumberOnTeam; // Opdater spillernummer på holdet
-      //player data done.
-      
-      players.set(player.playerId, player);
-
-      if (!teams.has(teamId)) {
+      if (!teams.has(teamId)) { // Hvis holdet ikke findes, opret det
         console.log(`Creating new team with teamId=${teamId}`); // Log team creation
         teams.set(teamId, new Team(teamId));
       }
+      const team = teams.get(teamId); // Find hold og gem i lokalt team objekt
+      const playerNumberOnTeam = team.getPlayerCount(teamId); // Spillernummer på holdet
+      player.playerNumberOnTeam = playerNumberOnTeam; // Opdater spillernummer på holdet
+      //player data done.
       
-      team.addPlayer(player);
+      players.set(player.playerId, player); // Gem spiller i state
+      
+      team.addPlayer(player); // Tilføj spiller til holdet
 
       console.log(`Player added to team: ${JSON.stringify(team)}`); // Log team state
 
@@ -61,7 +60,8 @@ function setupSocketHandler(io) {
         socket.emit('playerInfo', {
           playerName: player.playerName,
           playerId: player.playerId,
-          teamId: player.teamId
+          teamId: player.teamId,
+          playerNumberOnTeam: player.playerNumberOnTeam
         });
       }
     });
