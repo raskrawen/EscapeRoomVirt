@@ -1,9 +1,12 @@
 version: 1.3.4
 dato: maj 2025
 Start server by: "nodemon server/server.js" og "node server/server.js".
-Overwrite main branch by: 
+Overwrite main branch by: change to main. Merge from vERversx.y.z
 
 features: 
+1.3.5:
+    -playerNumberOnTeam.
+    
 1.3.4 new features:
     -feedback and reset joinTeam when a third player tries to join a team.
     -save socket.id in player-objects (need to send client specific msg to socket).
