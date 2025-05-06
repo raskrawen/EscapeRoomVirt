@@ -8,6 +8,7 @@ class Player {
     this.playerName = playerName;
     this.teamId = teamId;
     this.socketId = socketId;
+    this.playerNumberOnTeam = -1; // initialiseret spillernummer på holdet.
   }
 }
 

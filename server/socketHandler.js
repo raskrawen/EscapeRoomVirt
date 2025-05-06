@@ -13,14 +13,18 @@ function setupSocketHandler(io) {
       console.log(`Creating new player: ${JSON.stringify(player)}`); // Log player creation
       socket.handshake.session.playerId = player.playerId;
       socket.handshake.session.save();
-
+      const team = teams.get(teamId);
+      const playerNumberOnTeam = team ? team.getPlayerCount() + 1 : 1; // Spillernummer på holdet
+      player.playerNumberOnTeam = playerNumberOnTeam; // Opdater spillernummer på holdet
+      //player data done.
+      
       players.set(player.playerId, player);
 
       if (!teams.has(teamId)) {
         console.log(`Creating new team with teamId=${teamId}`); // Log team creation
         teams.set(teamId, new Team(teamId));
       }
-      const team = teams.get(teamId);
+      
       team.addPlayer(player);
 
       console.log(`Player added to team: ${JSON.stringify(team)}`); // Log team state
