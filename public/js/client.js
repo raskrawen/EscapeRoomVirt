@@ -1,20 +1,24 @@
-export const socket = io();
+const socket = io();
+
+// Make sure listener is added ONCE and early
+socket.on('connect', () => {
+  console.log('Socket connected:', socket.id);
+});
+
+socket.on('redirect', ({ view }) => {
+  console.log('Redirect event in client.js to:', view);
+  loadTask(view);
+});
+
+export { socket };
 
 export async function loadTask(taskName) {
   const html = await fetch(`/views/${taskName}.html`).then(r => r.text());
   document.getElementById("viewContainer").innerHTML = html;
 
   const module = await import(`/js/${taskName}.js`);
-  module.init(); // fx init funktion i hver modul
+  module.init();
 }
 
-// Emit appropiate events and call loadTask when redirect is received
-socket.on('redirect', ({ view }) => {
-  console.log('Redirect event to game.'); // Log redirect event
-    loadTask(view); // Load the new view
-});
-
-// Start with the lobby view
+// Load initial view
 loadTask('lobby');
-
-
