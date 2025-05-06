@@ -21,6 +21,19 @@ class Team {
     return this.players.length;
   }
 
+  getPlayerCount(teamId) {
+    return this.players.filter(player => player.teamId === teamId).length;
+  }
+
+  getPlayerNumber(playerId) {
+    for (let i = 0; i < this.players.length; i++) {
+      if (this.players[i].playerId === playerId) {
+        return i + 1; // Returner spillerens nummer (1-baseret)
+      }
+    }
+    return -1; // Returner -1 hvis spilleren ikke findes på holdet  
+  }
+
   // Et team er fuldt ved 2 spillere
   teamIsFull() {
     return this.players.length >= 2;

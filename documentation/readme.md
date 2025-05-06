@@ -1,12 +1,13 @@
 version: 1.3.4
 dato: maj 2025
-start server by "nodemon server/server.js" og "node server/server.js".
+Start server by: "nodemon server/server.js" og "node server/server.js".
+Overwrite main branch by: 
 
 features: 
 1.3.4 new features:
     -feedback and reset joinTeam when a third player tries to join a team.
     -save socket.id in player-objects (need to send client specific msg to socket).
-    -
+    -import lobby.html and game.html into index.html.
 
 
 1.3.3 new features:

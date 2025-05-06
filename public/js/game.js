@@ -4,6 +4,7 @@ export function init() {
   console.log('Setting up game view'); // Log game view setup
   socket.emit('requestPlayerInfo');
   console.log('Emitting requestPlayerInfo event'); // Log event emission
+  
   socket.on('playerInfo', ({ playerName, playerId, teamId }) => {
     console.log(`Received playerInfo event with data: playerName=${playerName}, playerId=${playerId}, teamId=${teamId}`); // Log received data
     document.getElementById('info').innerHTML = `
