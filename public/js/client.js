@@ -9,9 +9,8 @@ export async function loadTask(taskName) {
 }
 
 // Emit appropiate events and call loadTask when redirect is received
-//SHOULD NOT TAKE A URL AS PARAMETER, BUT A VIEW NAME INSTEAD
 socket.on('redirect', ({ view }) => {
-  console.log('Redirect event to: ${view}'); // Log redirect event
+  console.log('Redirect event to game.'); // Log redirect event
     loadTask(view); // Load the new view
 });
 
