@@ -1,6 +1,9 @@
 version: 1.3.4
 dato: maj 2025
 Start server by: "nodemon server/server.js" og "node server/server.js".
+
+Overwrite 'main' by "Force Push" (to default branch set by "git branch --set-upstream-to=origin/main") 
+OR:
 Overwrite main branch by: change to main. Merge from vERversx.y.z
 
 features: 
@@ -12,8 +15,6 @@ features:
     -feedback and reset joinTeam when a third player tries to join a team.
     -save socket.id in player-objects (need to send client specific msg to socket).
     -import lobby.html and game.html into index.html.
-
-
 1.3.3 new features:
     Displays lobby.html to game.html in index.html
     clean up players and teams
@@ -25,4 +26,4 @@ features:
     landing page = index.html, 
 
 
-    Overwrite 'main' by "Force Push" (to default branch set by "git branch --set-upstream-to=origin/main")
+    
