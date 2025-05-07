@@ -7,10 +7,12 @@ OR:
 Overwrite main branch by: change to main. Merge from vERversx.y.z
 
 features: 
+1.3.6:
+    -XState machine implementeret. 2 states.
+
 1.3.5:
     -playerNumberOnTeam.
-    -display two different pages: game.html and task1.html.
-    
+    -display two different pages: game.html and task1.html.  
 1.3.4 new features:
     -feedback and reset joinTeam when a third player tries to join a team.
     -save socket.id in player-objects (need to send client specific msg to socket).
