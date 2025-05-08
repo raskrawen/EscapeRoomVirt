@@ -8,10 +8,15 @@ class Team {
     this.teamId = teamId;
     this.players = [];
     this.stateService = createActor(teamMachine, {
-      input: () => ({
-        team: this // Giver FSM adgang til team-objektet via self.getSnapshot().context.team
-      })
-    });
+      //test:
+      context: { team: this }
+      /*input: () => {
+        console.log('FSM context injected:', this); // Skal udskrives
+        return { team: this };
+    }
+//        ({ team: this // Giver FSM adgang til team-objektet via self.getSnapshot().context.team})
+    */
+   });
     this.stateService.start();
   }
 

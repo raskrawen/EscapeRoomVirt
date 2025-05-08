@@ -15,7 +15,11 @@ const teamMachine = createMachine({
       on: {
         READY: {
           target: 'task1',
-          cond: 'teamIsFull' // Navn på guard-funktion
+          //cond: 'teamIsFull' // Navn på guard-funktion
+          cond: (context, event) => {
+            console.log('THIS GUARD RUNS');
+            return false;
+          }
         }
       },
       meta: {
@@ -33,7 +37,9 @@ const teamMachine = createMachine({
   guards: {
     // Guard-funktion: bruger team-objektet gemt i context
     teamIsFull: (context, event) => {
-      return context.team?.teamIsFull?.() === true;
+        console.log('teamIsFull guard called with context:', context); // Log context for debugging
+        console.log('result of teamIsFull:', context.team?.teamIsFull?.()); // Log result of teamIsFull 
+        return context.team?.teamIsFull?.() === true;
     }
   }
 });
