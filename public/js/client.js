@@ -20,5 +20,5 @@ export async function loadTask(taskName) { //asynk funktion fordi vi venter på 
   module.init();
 }
 
-// Load initial view
-loadTask('lobby');
+// Load initial view. Loades via 
+//loadTask('lobby');

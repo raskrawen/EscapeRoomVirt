@@ -19,13 +19,13 @@ const teamMachine = createMachine({
         }
       },
       meta: {
-        html: 'lobby.html'
+        html: 'lobby'
       }
     },
     task1: {
       type: 'final',
       meta: {
-        html: 'task1.html'
+        html: 'task1'
       }
     }
   }

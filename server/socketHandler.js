@@ -7,8 +7,8 @@ const { teams, players } = require('./state');
 function setupSocketHandler(io) {
   io.on('connection', (socket) => {
     console.log(`New client connected: ${socket.id}`); // Log connection
-    // Vis lobby med det samme (SLET I CLIENT:js?)
-    socket.emit('redirect', { view: 'lobby.html' });
+    // Vis lobby med det samme. redirect defineret i client.js
+    socket.emit('redirect', { view: 'lobby' });
 
     // Når klient sender joinTeam, opret spiller og tilføj til team
     socket.on('joinTeam', ({ playerName, teamId }) => {
@@ -113,10 +113,11 @@ function setupSocketHandler(io) {
 }
 
     // Funktion til at sende redirect til alle spillere.
+    // Redirect defineret i client.js
     // Kaldes når FSM skifter state og der er en ny view at vise.
     function redirectTeamView(io, team) {
       const state = team.stateService.getSnapshot();
-      const view = state.machine.states[state.value].meta?.html;
+      const view = state.machine.states[state.value].meta?.html; // Hent meta.html fra FSM state
 
       if (!view) return;
 
