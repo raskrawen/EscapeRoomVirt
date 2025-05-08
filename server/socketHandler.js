@@ -7,6 +7,8 @@ const { teams, players } = require('./state');
 function setupSocketHandler(io) {
   io.on('connection', (socket) => {
     console.log(`New client connected: ${socket.id}`); // Log connection
+    // Vis lobby med det samme (SLET I CLIENT:js?)
+    socket.emit('redirect', { view: 'lobby.html' });
 
     // Når klient sender joinTeam, opret spiller og tilføj til team
     socket.on('joinTeam', ({ playerName, teamId }) => {
@@ -30,23 +32,32 @@ function setupSocketHandler(io) {
 
       console.log(`Player added to team: ${JSON.stringify(team)}`); // Log team state
 
-      // Hvis holdet nu er fyldt, send redirect til game
+      // Send READY uanset hvad – FSM vurderer via guard
+      team.stateService.send({ type: 'READY' });
+
+      // Vis view baseret på FSM’s aktuelle state. Defineret nedenfor.
+      redirectTeamView(io, team);
+
+     /* // Hvis holdet nu er fyldt, send redirect til game
       if (team.teamIsFull()) {
         console.log(`Team is full. Redirecting players.`); // Log redirection
         //team.players.forEach(p => {
         //  io.to(p.socketId).emit('redirect', { view: 'game' });
         //});
 
+        //SKAL NOK UD:
         const views = ['game', 'task1', 'view3', 'view4'];
         team.players.forEach((p, index) => {
           const view = views[index];
           console.log(`Redirecting player ${p.socketId} to view: ${view}`); // Log redirection
           io.to(p.socketId).emit('redirect', { view }); // to client.js
         });
-      }
+      } */
     });
 
-    // Check if a team is full
+    
+
+    // Check if a team is full. Emit from lobby.js
     socket.on('checkTeamStatus', ({ teamId }, callback) => {
       console.log(`checkTeamStatus event received: teamId=${teamId}`); // Log checkTeamStatus event
       const team = teams.get(teamId);
@@ -100,5 +111,20 @@ function setupSocketHandler(io) {
     });
   });
 }
+
+    // Funktion til at sende redirect til alle spillere.
+    // Kaldes når FSM skifter state og der er en ny view at vise.
+    function redirectTeamView(io, team) {
+      const state = team.stateService.getSnapshot();
+      const view = state.machine.states[state.value].meta?.html;
+
+      if (!view) return;
+
+      team.players.forEach(p => {
+        console.log(`Redirecting player ${p.socketId} to view: ${view}`);
+        io.to(p.socketId).emit('redirect', { view });
+      });
+    }
+
 
 module.exports = { setupSocketHandler };

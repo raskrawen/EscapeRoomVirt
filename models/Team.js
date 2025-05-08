@@ -1,10 +1,18 @@
 // --- models/Team.js ---
+const { createActor } = require('xstate');
+const teamMachine = require('./teamMachine');
 const maxPlayersOnTeam = 2; // Maksimalt antal spillere på et hold
 
 class Team {
   constructor(teamId) {
     this.teamId = teamId;
     this.players = [];
+    this.stateService = createActor(teamMachine, {
+      input: () => ({
+        team: this // Giver FSM adgang til team-objektet via self.getSnapshot().context.team
+      })
+    });
+    this.stateService.start();
   }
 
   // Tilføj spiller hvis der stadig er plads på holdet
@@ -30,6 +38,10 @@ class Team {
   // Et team er fuldt ved 2 spillere
   teamIsFull() {
     return this.players.length >= maxPlayersOnTeam;
+  }
+
+  getState() {
+    return this.stateService.getSnapshot().value;
   }
 }
 
