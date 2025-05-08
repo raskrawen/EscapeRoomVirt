@@ -15,11 +15,10 @@ const teamMachine = createMachine({
       on: {
         READY: {
           target: 'task1',
-          //cond: 'teamIsFull' // Navn på guard-funktion
-          cond: (context, event) => {
-            console.log('THIS GUARD RUNS');
-            return false;
-          }
+          cond: 'teamIsFull' // Navn på guard-funktion
+        },
+        UPDATE_TEAM: {
+          actions: 'updateTeamContext' // Update team context when this event is received
         }
       },
       meta: {
@@ -32,14 +31,29 @@ const teamMachine = createMachine({
         html: 'task1'
       }
     }
+  },
+  actions: {
+    updateTeamContext: (context, event) => {
+      console.log('Updating team context with:', event.team); // Log the update
+      context.team = event.team; // Update the team in context
+    }
   }
 }, {
   guards: {
     // Guard-funktion: bruger team-objektet gemt i context
     teamIsFull: (context, event) => {
         console.log('teamIsFull guard called with context:', context); // Log context for debugging
-        console.log('result of teamIsFull:', context.team?.teamIsFull?.()); // Log result of teamIsFull 
-        return context.team?.teamIsFull?.() === true;
+        if (!context.team) {
+            console.log('Context.team is null or undefined');
+            return false;
+        }
+        if (typeof context.team.teamIsFull !== 'function') {
+            console.log('teamIsFull is not a function on context.team:', context.team);
+            return false;
+        }
+        const result = context.team.teamIsFull();
+        console.log('Result of teamIsFull:', result);
+        return result === true;
     }
   }
 });

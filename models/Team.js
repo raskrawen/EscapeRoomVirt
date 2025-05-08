@@ -42,7 +42,7 @@ class Team {
 
   // Et team er fuldt ved 2 spillere
   teamIsFull() {
-    return this.players.length >= maxPlayersOnTeam;
+    return this.players.length >= 2;
   }
 
   getState() {

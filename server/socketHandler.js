@@ -33,7 +33,9 @@ function setupSocketHandler(io) {
       console.log(`Player added to team: ${JSON.stringify(team)}`); // Log team state
 
       // Send READY uanset hvad – FSM vurderer via guard
+      team.stateService.send({ type: 'UPDATE_TEAM', team }); // Dispatch UPDATE_TEAM event to update team context
       team.stateService.send({ type: 'READY' });
+      
 
       // Vis view baseret på FSM’s aktuelle state. Defineret nedenfor.
       redirectTeamView(io, team);

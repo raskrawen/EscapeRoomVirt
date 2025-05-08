@@ -9,7 +9,7 @@ Overwrite main branch by: change to main. Merge from vERversx.y.z
 features: 
 1.3.6:
     -XState machine implementeret. 2 states.
-
+    NOT WORKING. Guard function is never called.
 1.3.5:
     -playerNumberOnTeam.
     -display two different pages: game.html and task1.html.  
