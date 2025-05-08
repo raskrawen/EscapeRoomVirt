@@ -1,3 +1,5 @@
+// sockerHandler.js står for at håndtere socket.io events og kommunikationen mellem server og klient.
+// Den håndterer tilslutning af spillere, tilføjelse af spillere til hold, tjek af holdstatus og håndtering af frakobling af spillere.
 const Player = require('../models/Player');
 const Team = require('../models/Team');
 const { teams, players } = require('./state');

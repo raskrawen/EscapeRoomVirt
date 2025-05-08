@@ -1,4 +1,6 @@
 // --- models/Team.js ---
+const maxPlayersOnTeam = 2; // Maksimalt antal spillere på et hold
+
 class Team {
   constructor(teamId) {
     this.teamId = teamId;
@@ -27,7 +29,7 @@ class Team {
 
   // Et team er fuldt ved 2 spillere
   teamIsFull() {
-    return this.players.length >= 2;
+    return this.players.length >= maxPlayersOnTeam;
   }
 }
 
