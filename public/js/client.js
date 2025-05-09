@@ -17,7 +17,7 @@ export async function loadTask(taskName) { //asynk funktion fordi vi venter på 
   document.getElementById("viewContainer").innerHTML = html;
 
   const module = await import(`/js/${taskName}.js`);
-  module.init();
+  module.init(); //kalder init funktionen i det loaded module
 }
 
 // Load initial view

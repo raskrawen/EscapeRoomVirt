@@ -30,6 +30,7 @@ class Team {
 
   // Et team er fuldt ved 2 spillere
   teamIsFull() {
+    console.log(`Team.js: teamIsFull.`);
     return this.players.length >= 2;
   }
 

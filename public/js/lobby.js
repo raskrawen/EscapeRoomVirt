@@ -1,6 +1,6 @@
 import { socket } from './client.js';
 
-export function init() {
+export function init() { // Initialize the lobby view from client.js
   const startButton = document.getElementById('startButton');
   startButton.addEventListener('click', () => {
     console.log('Start button clicked'); // Log start button click
@@ -9,12 +9,14 @@ export function init() {
     const teamId = document.getElementById('teamId').value;
 
     // Check if the team is full before joining
+    // Emit checkTeamStatus (socketHandler) event to server
     socket.emit('checkTeamStatus', { teamId }, (isFull) => {
       if (isFull) { // isFull true/false from socketHandler callback
         alert('Dette team er optaget. Vælg et andet team id.');
         startButton.disabled = false; // Re-enable the button
       } else {
         console.log(`Emitting joinTeam event with playerName=${playerName}, teamId=${teamId}`); // Log event data
+        // Emit joinTeam (socketHandler) event to server
         socket.emit('joinTeam', { name, teamId }, (response) => {
           if (response.status === 'ok') {
             console.log('Du er tilmeldt holdet!');

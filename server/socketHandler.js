@@ -53,6 +53,9 @@ function setupSocketHandler(io) {
     socket.on('checkTeamStatus', ({ teamId }, callback) => {
       console.log(`checkTeamStatus event received: teamId=${teamId}`); // Log checkTeamStatus event
       const team = teams.get(teamId);
+      const a = team.teamIsFull();
+      console.log('SH56: is team full?', a);
+      console.log('SH57: does team exist?', team);
       if (team && team.teamIsFull()) {
         console.log(`Team ${teamId} is full.`); // Log team full status
         callback(true); // Team is full. "true" send to client
