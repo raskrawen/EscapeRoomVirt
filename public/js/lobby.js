@@ -10,14 +10,15 @@ export function init() { // Initialize the lobby view from client.js
 
     // Check if the team is full before joining
     // Emit checkTeamStatus (socketHandler) event to server
-    socket.emit('checkTeamStatus', { teamId }, (isFull) => {
+    /*socket.emit('checkTeamStatus', { teamId }, (isFull) => {
       if (isFull) { // isFull true/false from socketHandler callback
         alert('Dette team er optaget. Vælg et andet team id.');
         startButton.disabled = false; // Re-enable the button
       } else {
         console.log(`Emitting joinTeam event with playerName=${playerName}, teamId=${teamId}`); // Log event data
         // Emit joinTeam (socketHandler) event to server
-        socket.emit('joinTeam', { name, teamId }, (response) => {
+        */
+        socket.emit('joinTeam', { playerName, teamId }, (response) => {
           if (response.status === 'ok') {
             console.log('Du er tilmeldt holdet!');
           } else {
@@ -31,6 +32,5 @@ export function init() { // Initialize the lobby view from client.js
         feedbackElement.textContent = 'Venter på flere deltagere...';
         document.getElementById('viewContainer').appendChild(feedbackElement);
       }
-    });
-  });
-}
+    );
+  }

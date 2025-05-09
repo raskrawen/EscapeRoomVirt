@@ -6,53 +6,70 @@ function setupSocketHandler(io) {
   io.on('connection', (socket) => {
     console.log(`New client connected: ${socket.id}`); // Log connection
 
-    // Når klient sender joinTeam, opret spiller og tilføj til team
-    socket.on('joinTeam', ({ name, teamId }, callback) => {
-      if (!name || !teamId) {
-        return callback({ status: 'error', message: 'Navn og team ID er påkrævet' });
-      }
-      console.log(`joinTeam event received: playerName=${playerName}, teamId=${teamId}`); // Log joinTeam event
-      const player = new Player(playerName, teamId, socket.id);
-      console.log(`Creating new player: ${JSON.stringify(player)}`); // Log player creation
-      socket.handshake.session.playerId = player.playerId;
-      socket.handshake.session.save();
-      if (!teams.has(teamId)) { // Hvis holdet ikke findes, opret det
-        console.log(`Creating new team with teamId=${teamId}`); // Log team creation
-        teams.set(teamId, new Team(teamId));
-      }
-      const team = teams.get(teamId); // Find hold og gem i lokalt team objekt
-      const playerNumberOnTeam = team.getPlayerCount(teamId); // Spillernummer på holdet
-      player.playerNumberOnTeam = playerNumberOnTeam; // Opdater spillernummer på holdet
-      //player data done.
-      
-      players.set(player.playerId, player); // Gem spiller i state
-      
-      team.addPlayer(player); // Tilføj spiller til holdet
+    
+    // Når lobby sender joinTeam, opret spiller og tilføj til team
+    socket.on('joinTeam', ({ playerName, teamId }, callback) => {
+  console.log(`joinTeam event received: playerName=${playerName}, teamId=${teamId}`);
 
-      console.log(`Player added to team: ${JSON.stringify(team)}`); // Log team state
+  if (!playerName || !teamId) {
+    return callback({ status: 'error', message: 'Navn og team ID er påkrævet' });
+  }
 
-      // Hvis holdet nu er fyldt, send redirect til game
-      if (team.teamIsFull()) {
-        console.log(`Team is full. Redirecting players.`); // Log redirection
-        //team.players.forEach(p => {
-        //  io.to(p.socketId).emit('redirect', { view: 'game' });
-        //});
-        const fsm = team.fsm;
-        //const nextState = fsm.transition('NEXT'); // Upcomming state
-        fsm.send('NEXT');
-        const targetHtml = team.getCurrentView(); // returnerer f.eks. 'task1'
+  // Hent eksisterende team, eller opret et nyt
+  let team = teams.get(teamId);
+  if (!team) {
+    console.log(`Creating new team with teamId=${teamId}`);
+    team = new Team(teamId); // Team opretter selv sin fsm
+    teams.set(teamId, team);
+  } else {
+    console.log(`Team with teamId=${teamId} already exists`);
+  }
 
-        team.players.forEach( p => {
-        // Send redirect til alle sockets i team-rummet
-           io.to(p.socketId).emit('redirect', targetHtml); // to client.js
-        });
-      }
+  // Opret spiller og tildel nummer
+  const player = new Player(playerName, teamId, socket.id);
+  player.playerNumberOnTeam = team.getPlayerCount(teamId);
+  players.set(player.playerId, player);
+
+  // Gem spiller-id i session
+  socket.handshake.session.playerId = player.playerId;
+  socket.handshake.session.save();
+
+  // Tilføj spiller til holdet
+  team.addPlayer(player);
+  console.log(`Player added to team: ${JSON.stringify(player)}`);
+
+  // Tjek om holdet nu er fyldt → redirect
+  if (team.teamIsFull()) {
+    console.log(`Team is full. Redirecting players.`);
+
+    // FSM transition
+    const fsm = team.fsm;
+    if (!fsm || typeof fsm.send !== 'function') {
+      console.error(`FSM mangler eller er forkert på team ${teamId}`);
+      return;
+    }
+
+    fsm.send('NEXT');
+    const targetHtml = team.getCurrentView(); // fx 'task1'
+
+    // Send redirect til alle spillere på holdet
+    team.players.forEach(p => {
+      io.to(p.socketId).emit('redirect', targetHtml);
     });
+  } else {
+    console.log(`Team is not full yet.`);
+  }
+});
+
 
     // Check if a team is full
     socket.on('checkTeamStatus', ({ teamId }, callback) => {
       console.log(`checkTeamStatus event received: teamId=${teamId}`); // Log checkTeamStatus event
       const team = teams.get(teamId);
+      if (!team) {
+      console.warn(`teamId ${teamId} not found in teams Map`);
+      return callback(false);
+    }
       const a = team.teamIsFull();
       console.log('SH56: is team full?', a);
       console.log('SH57: does team exist?', team);

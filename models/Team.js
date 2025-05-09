@@ -1,6 +1,7 @@
 // --- models/Team.js ---
 const { createTeamFSM } = require('./fsm');
 
+
 class Team {
   constructor(teamId) {
     this.teamId = teamId;
@@ -30,7 +31,7 @@ class Team {
 
   // Et team er fuldt ved 2 spillere
   teamIsFull() {
-    console.log(`Team.js: teamIsFull.`);
+    console.log(`Team.js: teamIsFull tested.`);
     return this.players.length >= 2;
   }
 
