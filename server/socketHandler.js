@@ -7,7 +7,10 @@ function setupSocketHandler(io) {
     console.log(`New client connected: ${socket.id}`); // Log connection
 
     // Når klient sender joinTeam, opret spiller og tilføj til team
-    socket.on('joinTeam', ({ playerName, teamId }) => {
+    socket.on('joinTeam', ({ name, teamId }, callback) => {
+      if (!name || !teamId) {
+        return callback({ status: 'error', message: 'Navn og team ID er påkrævet' });
+      }
       console.log(`joinTeam event received: playerName=${playerName}, teamId=${teamId}`); // Log joinTeam event
       const player = new Player(playerName, teamId, socket.id);
       console.log(`Creating new player: ${JSON.stringify(player)}`); // Log player creation
@@ -34,12 +37,14 @@ function setupSocketHandler(io) {
         //team.players.forEach(p => {
         //  io.to(p.socketId).emit('redirect', { view: 'game' });
         //});
+        const fsm = team.fsm;
+        //const nextState = fsm.transition('NEXT'); // Upcomming state
+        fsm.send('NEXT');
+        const targetHtml = team.getCurrentView(); // returnerer f.eks. 'task1'
 
-        const views = ['game', 'task1', 'view3', 'view4'];
-        team.players.forEach((p, index) => {
-          const view = views[index];
-          console.log(`Redirecting player ${p.socketId} to view: ${view}`); // Log redirection
-          io.to(p.socketId).emit('redirect', { view }); // to client.js
+        team.players.forEach( p => {
+        // Send redirect til alle sockets i team-rummet
+           io.to(p.socketId).emit('redirect', targetHtml); // to client.js
         });
       }
     });

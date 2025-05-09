@@ -15,7 +15,13 @@ export function init() {
         startButton.disabled = false; // Re-enable the button
       } else {
         console.log(`Emitting joinTeam event with playerName=${playerName}, teamId=${teamId}`); // Log event data
-        socket.emit('joinTeam', { playerName, teamId });
+        socket.emit('joinTeam', { name, teamId }, (response) => {
+          if (response.status === 'ok') {
+            console.log('Du er tilmeldt holdet!');
+          } else {
+            alert('Fejl: ' + response.message);
+          }
+        });
 
         // Add user feedback
         const feedbackElement = document.createElement('p');

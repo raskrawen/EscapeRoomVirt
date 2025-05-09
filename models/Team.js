@@ -1,8 +1,11 @@
 // --- models/Team.js ---
+const { createTeamFSM } = require('./fsm');
+
 class Team {
   constructor(teamId) {
     this.teamId = teamId;
     this.players = [];
+    this.fsm = createTeamFSM(); // Ny FSM pr. team
   }
 
   // Tilføj spiller hvis der stadig er plads på holdet
@@ -29,6 +32,14 @@ class Team {
   teamIsFull() {
     return this.players.length >= 2;
   }
+
+getCurrentView() {
+    const stateName = this.fsm.current;
+    return this.fsm.machine.meta[stateName].html; // returnerer fx 'task1'
+  }
+
 }
+
+
 
 module.exports = Team;

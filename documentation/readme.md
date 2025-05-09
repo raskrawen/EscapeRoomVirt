@@ -9,7 +9,7 @@ Overwrite main branch by: change to main. Merge from vERversx.y.z
 features: 
 1.3.7:
     -robot3 FSM implementation
-
+    -error feedback for jointeam.
 1.3.6: 
     XState fsm. Not working.
 1.3.5:
