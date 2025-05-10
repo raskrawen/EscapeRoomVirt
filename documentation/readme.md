@@ -5,7 +5,7 @@ Start server by: "nodemon server/server.js" og "node server/server.js".
 Overwrite 'main' by "Force Push" (to default branch set by "git branch --set-upstream-to=origin/main") 
 OR:
 Overwrite main branch by: change to main. Merge from vERversx.y.z
-
+xxxxxxx
 features:
 1.3.8:
     -state pattern implemnented.
