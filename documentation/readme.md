@@ -6,11 +6,15 @@ Overwrite 'main' by "Force Push" (to default branch set by "git branch --set-ups
 OR:
 Overwrite main branch by: change to main. Merge from vERversx.y.z
 
-features: 
+features:
+1.3.8:
+    -state pattern implemnented.
+    
+1.3.7: robot3, not working
+1.3.6: XState, not working
 1.3.5:
     -playerNumberOnTeam.
     -display two different pages: game.html and task1.html.
-    
 1.3.4 new features:
     -feedback and reset joinTeam when a third player tries to join a team.
     -save socket.id in player-objects (need to send client specific msg to socket).
