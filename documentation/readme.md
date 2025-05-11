@@ -2,18 +2,14 @@ version: 1.3.8
 dato: maj 2025
 Start server by: "nodemon server/server.js" og "node server/server.js".
 
-check status: git status
-Overwrite 'main' by "Force Push" (to default branch set by "git branch --set-upstream-to=origin/main" reset by "git branch --set-upstream-to=origin/vERvers1.3.8")
-
-OR:
-Overwrite main branch by: change to main. Merge from vERversx.y.z
 
 1.3.5 and 1.3.8 has mixed files.
 
 features:
+1.3.9:
+    refactor state pattern implementation.
 1.3.8: 
-    -state pattern implemnented.
-    
+    -state pattern implemnented.    
 1.3.7: robot3, not working
 1.3.6: XState, not working
 1.3.5:

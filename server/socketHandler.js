@@ -9,7 +9,7 @@ function setupSocketHandler(io) {
     // Når klient sender joinTeam, opret spiller og tilføj til team
     socket.on('joinTeam', ({ playerName, teamId }) => {
       console.log(`joinTeam event received: playerName=${playerName}, teamId=${teamId}`); // Log joinTeam event
-      const player = new Player(playerName, teamId, socket.id);
+      const player = new Player(playerName, teamId, socket.id, socket);
       console.log(`Creating new player: ${JSON.stringify(player)}`); // Log player creation
       socket.handshake.session.playerId = player.playerId;
       socket.handshake.session.save();
