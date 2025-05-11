@@ -25,10 +25,10 @@ class Team {
 
   // Tilføj spiller hvis der stadig er plads på holdet
   addPlayer(player) {
-    if (!this.teamIsFull()) {
       this.players.push(player);
+      this.handleEvent('PLAYER_ADDED'); // Send event til state-maskinen (LobbyState)
+      console.log(`T30: Spiller ${player.playerName} tilføjet til hold ${this.teamId}`);
     }
-  }
 
   // Fjern spiller fra holdet
   removePlayer(playerId) {

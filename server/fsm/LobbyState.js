@@ -17,13 +17,16 @@ class LobbyState extends BaseState {
 
   onEvent(event, data) {
     // Når teamet er fuldt, skiftes der til næste opgave
-    if (event === 'teamIsFull') {
-      if (this.team.teamIsFull()) {
-        this.team.setState(new Task1State(this.team));
-      }
+    console.log(`LobbyState: modtaget event ${event}`);
+    if (event === 'PLAYER_ADDED') {
+      console.log('LobbyState: Spiller tilføjet');
+    }
+    if (event === 'PLAYER_ADDED' && this.team.teamIsFull()) {
+      this.team.setState(new Task1State(this.team));
     }
   }
 
+  
   exit() {
     console.log(`Team ${this.team.teamId} forlader lobby-state`);
   }

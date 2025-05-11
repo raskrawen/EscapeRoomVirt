@@ -6,6 +6,8 @@ Start server by: "nodemon server/server.js" og "node server/server.js".
 1.3.5 and 1.3.8 has mixed files.
 
 features:
+1.3.10:
+    refactor for SRP (single respons-pattern)
 1.3.9:
     refactor state pattern implementation.
 1.3.8: 
