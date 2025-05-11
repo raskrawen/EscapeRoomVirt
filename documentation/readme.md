@@ -1,6 +1,9 @@
 version: 1.3.4
 dato: maj 2025
 Start server by: "nodemon server/server.js" og "node server/server.js".
+git branch
+got status
+git push origin refactor-branch:main --force
 
 Overwrite 'main' by "Force Push" (to default branch set by "git branch --set-upstream-to=origin/main") 
 OR:
