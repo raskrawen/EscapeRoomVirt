@@ -18,6 +18,9 @@ function setupSocketHandler(io) {
         teams.set(teamId, new Team(teamId));
       }
       const team = teams.get(teamId); // Find hold og gem i lokalt team objekt
+      if (!team) {
+        console.log(`SH1:Team ${teamId} not found.`); // Log team not found status
+      }
       const playerNumberOnTeam = team.getPlayerCount(teamId); // Spillernummer på holdet
       player.playerNumberOnTeam = playerNumberOnTeam; // Opdater spillernummer på holdet
       //player data done.
@@ -25,29 +28,23 @@ function setupSocketHandler(io) {
       players.set(player.playerId, player); // Gem spiller i state
       
       team.addPlayer(player); // Tilføj spiller til holdet
-
-      console.log(`Player added to team: ${JSON.stringify(team)}`); // Log team state
-
+      
+      console.log(`Player added to team: ${team.teamId}`); // Log team state
+      const playerCount = team.getPlayerCount(teamId); // Hent antal spillere på holdet
+      console.log(`Total players on team: ${playerCount}`); // Log player addition
       // Hvis holdet nu er fyldt, send redirect til game
       if (team.teamIsFull()) {
-        console.log(`Team is full. Redirecting players.`); // Log redirection
-        //team.players.forEach(p => {
-        //  io.to(p.socketId).emit('redirect', { view: 'game' });
-        //});
-
-        const views = ['game', 'task1', 'view3', 'view4'];
-        team.players.forEach((p, index) => {
-          const view = views[index];
-          console.log(`Redirecting player ${p.socketId} to view: ${view}`); // Log redirection
-          io.to(p.socketId).emit('redirect', { view }); // to client.js
-        });
+        team.handleEvent('teamIsFull'); // Send event til state-maskinen
+        console.log(`SH34: Team ${teamId} is full. Redirecting players to game.`); // Log team full status
       }
     });
 
     // Check if a team is full
     socket.on('checkTeamStatus', ({ teamId }, callback) => {
-      console.log(`checkTeamStatus event received: teamId=${teamId}`); // Log checkTeamStatus event
+      console.log(`SH: checkTeamStatus event received: teamId=${teamId}`); // Log checkTeamStatus event
       const team = teams.get(teamId);
+      //let noOfPlayers = team.getPlayerCount(); // Get number of players on the team
+      //console.log(`SH: Number of players in team ${teamId}: ${noOfPlayers}`); // Log number of players
       if (team && team.teamIsFull()) {
         console.log(`Team ${teamId} is full.`); // Log team full status
         callback(true); // Team is full. "true" send to client
