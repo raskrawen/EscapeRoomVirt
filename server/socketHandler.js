@@ -10,7 +10,7 @@ function setupSocketHandler(io) {
     socket.on('joinTeam', ({ playerName, teamId }) => {
       console.log(`joinTeam event received: playerName=${playerName}, teamId=${teamId}`); // Log joinTeam event
       const player = new Player(playerName, teamId, socket.id, socket);
-      console.log(`Creating new player: ${JSON.stringify(player)}`); // Log player creation
+      console.log(`Creating new player.`); // Log player creation
       socket.handshake.session.playerId = player.playerId;
       socket.handshake.session.save();
       if (!teams.has(teamId)) { // Hvis holdet ikke findes, opret det
