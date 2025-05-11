@@ -60,7 +60,7 @@ function setupSocketHandler(io) {
       const playerId = socket.handshake.session.playerId;
       const player = players.get(playerId);
       if (player) {
-        console.log(`Sending player info: ${JSON.stringify(player)}`); // Log player info
+        console.log(`SH: Sending player info for: ${player.playerName}`); // Log player info
         socket.emit('playerInfo', {
           playerName: player.playerName,
           playerId: player.playerId,

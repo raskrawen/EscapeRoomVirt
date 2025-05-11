@@ -51,7 +51,9 @@ class Team {
 
   // Send redirect-kommando til alle spillere
   broadcastRedirect(html) {
+    console.log(`T54: Team ${this.teamId} sender redirect spillere`);
     this.players.forEach(player => {
+      console.log(`T56: Sender ${player.playerName} ${html}`);
       player.socket.emit('redirect', html);
     });
   }

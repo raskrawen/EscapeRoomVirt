@@ -10,7 +10,7 @@ class Task1State extends BaseState {
   }
 
   enter() {
-    console.log(`Team ${this.team.id} starter Task 1`);
+    console.log(`T1S: Team ${this.team.teamId} starter ${this.meta.html}`);
     this.team.broadcastRedirect(this.meta.html); // Fortæl klienterne at task1 skal vises
   }
 
@@ -19,7 +19,7 @@ class Task1State extends BaseState {
   }
 
   exit() {
-    console.log(`Team ${this.team.id} forlader Task 1`);
+    console.log(`Team ${this.team.teamId} forlader Task 1`);
   }
 }
 

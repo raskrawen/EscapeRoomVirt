@@ -5,7 +5,7 @@ socket.on('connect', () => {
   console.log('Socket connected:', socket.id);
 });
 
-socket.on('redirect', ({ view }) => { //event fra socketHandler
+socket.on('redirect', ( view ) => { //event fra socketHandler
   console.log('Redirect event in client.js to:', view);
   loadTask(view);
 });

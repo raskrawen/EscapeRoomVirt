@@ -7,7 +7,7 @@ const Task1State = require('./Task1State.js');
 class LobbyState extends BaseState {
   constructor(team) {
     super(team);
-    this.meta = { html: 'task1' }; 
+    this.meta = { html: 'lobby' }; //this page
   }
 
   enter() {
