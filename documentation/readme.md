@@ -2,7 +2,7 @@ version: 1.3.4
 dato: maj 2025
 Start server by: "nodemon server/server.js" og "node server/server.js".
 
-Overwrite 'main' by "Force Push" (to default branch set by "git branch --set-upstream-to=origin/main") 
+Overwrite 'main' by "Force Push" (to default branch set by "git branch --set-upstream-to=origin/main" and the reset with "git branch --set-upstream-to=origin/vERvers1.3.5 vERvers1.3.5") 
 OR:
 Overwrite main branch by: change to main. Merge from vERversx.y.z
 
