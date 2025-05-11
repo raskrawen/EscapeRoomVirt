@@ -5,9 +5,11 @@ Start server by: "nodemon server/server.js" og "node server/server.js".
 Overwrite 'main' by "Force Push" (to default branch set by "git branch --set-upstream-to=origin/main") 
 OR:
 Overwrite main branch by: change to main. Merge from vERversx.y.z
-xxxxxxx
+
+1.3.5 and 1.3.8 has mixed files.
+
 features:
-1.3.8:
+1.3.8: 
     -state pattern implemnented.
     
 1.3.7: robot3, not working
