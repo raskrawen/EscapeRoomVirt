@@ -1,4 +1,39 @@
-/* Define a global font style */
+/* Global stil */
 body {
-  font-family: Arial, sans-serif; /* Replace with your preferred font */
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  color: white;
+}
+
+/* Topbånd */
+#topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+  background-color: black;
+  border-bottom: 1px solid white;
+  padding: 0 10px;
+}
+
+/* Knapper */
+#topBar button {
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+#topBar button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* View-container */
+#viewContainer {
+  padding: 20px;
 }

@@ -22,3 +22,13 @@ export async function loadTask(taskName) { //asynk funktion fordi vi venter på 
 
 // Load initial view
 loadTask('lobby');
+
+document.getElementById("backButton").addEventListener("click", () => {
+      console.log("Tilbage-knap trykket");
+      // navigation logic her
+    });
+
+    document.getElementById("forwardButton").addEventListener("click", () => {
+      console.log("Frem-knap trykket");
+      // navigation logic her
+    });
