@@ -1,5 +1,5 @@
+// Lytter efter server-events og opdaterer klientens view.
 const socket = io();
-
 // Make sure listener is added ONCE and early
 socket.on('connect', () => {
   console.log('Socket connected:', socket.id);
@@ -23,7 +23,7 @@ export async function loadTask(taskName) { //asynk funktion fordi vi venter på 
 // Load initial view
 loadTask('lobby');
 
-document.getElementById("backButton").addEventListener("click", () => {
+/*document.getElementById("backButton").addEventListener("click", () => {
       console.log("Tilbage-knap trykket");
       // navigation logic her
     });
@@ -32,3 +32,4 @@ document.getElementById("backButton").addEventListener("click", () => {
       console.log("Frem-knap trykket");
       // navigation logic her
     });
+    */

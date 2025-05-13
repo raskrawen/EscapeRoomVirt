@@ -1,4 +1,4 @@
-// --- models/Player.js ---
+// --- models/Player.js --- // Repræsenterer en spiller med socket og navn.
 const { v4: uuidv4 } = require('uuid');
 
 class Player {
