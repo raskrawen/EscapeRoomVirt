@@ -6,7 +6,7 @@ class Team {
     this.teamId = teamId;
     this.players = [];
     this.maxPlayers = 2;        // Antal spillere som udløser næste state (kan justeres)
-    this.visitedStates = new Set(); // Sæt til at holde styr på besøgte states
+    this.visitedStates = new Set(); // Sæt til at holde styr på besøgte states. Kun en kopi af hvert navn
     this.setState(new LobbyState(this)); // Start i lobby
   }
 
