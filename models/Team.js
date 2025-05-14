@@ -6,7 +6,7 @@ class Team {
     this.teamId = teamId;
     this.players = [];
     this.maxPlayers = 2;        // Antal spillere som udløser næste state (kan justeres)
-    this.visitedStates = new Set(); // Sæt til at holde styr på besøgte states. Kun en kopi af hvert navn
+    this.teamVisitedStates = new Set(); // Sæt til at holde styr på besøgte states. Kun en kopi af hvert navn
     this.setState(new LobbyState(this)); // Start i lobby
   }
 
@@ -14,8 +14,8 @@ class Team {
   setState(state) {
     if (this.state?.exit) this.state.exit();  // Kør exit på tidligere state
     this.state = state;                       // Opdater state
-    this.visitedStates.add(state.constructor.name);       // ← Registrér besøgt state
-    console.log('T18: Set = ', this.visitedStates); // Log besøgte states
+    this.teamVisitedStates.add(state.constructor.name);       // ← Registrér besøgt state
+    console.log('T18: Team visited: ', this.teamVisitedStates); // Log besøgte states
     this.state.enter();                       // Kør enter på ny state
   }
 

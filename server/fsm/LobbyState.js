@@ -13,6 +13,7 @@ class LobbyState extends BaseState {
   enter() {
     console.log(`Team ${this.team.teamId} går ind i lobby-state`);
     this.team.broadcastRedirect('lobby'); // Vis lobby for alle spillere
+    // set playerCurrentState for each player if player is in state
   }
 
   onEvent(event, data) {
