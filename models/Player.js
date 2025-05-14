@@ -14,7 +14,9 @@ class Player {
     //this.playerVisitedStates = new Set(); // Sæt til at holde styr på besøgte states. Kun en kopi af hvert navn
   }
 
-  
+getPlayerId() {
+    return this.playerId;
+  }
 
 }
 

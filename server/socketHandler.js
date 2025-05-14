@@ -14,6 +14,7 @@ function setupSocketHandler(io) {
       const player = new Player(playerName, teamId, socket.id, socket);
       console.log(`Creating new player.`); // Log player creation
       let playerUUId = player.playerId; // UUID for player
+      console.log(`Player UUID: ${playerUUId}`); // Log player UUID
       socket.emit('playerUUId', playerUUId); // Send UUID to client to save in localStorage
       if (!teams.has(teamId)) { // Hvis holdet ikke findes, opret det
         console.log(`Creating new team with teamId=${teamId}`); // Log team creation
@@ -57,9 +58,14 @@ function setupSocketHandler(io) {
     });
 
     // Når klient anmoder om spillerinfo
-    socket.on('requestPlayerInfo', () => {
+    socket.on('requestPlayerInfo', (playerId) => {
       console.log(`requestPlayerInfo event received from socket: ${socket.id}`); // Log requestPlayerInfo event
-      const playerId = socket.handshake.session.playerId;
+      console.log('SH: Player ID:', playerId); // Log player Id
+      if (!playerId) {
+        console.log('Player ID is undefined or null.'); // Log player ID status
+        return;
+      }
+      //const playerId = playerId;
       const player = players.get(playerId);
       if (player) {
         console.log(`SH: Sending player info for: ${player.playerName}`); // Log player info
@@ -69,18 +75,17 @@ function setupSocketHandler(io) {
           teamId: player.teamId,
           playerNumberOnTeam: player.playerNumberOnTeam
         });
+      } else {
+        console.log('Player not found in players map.'); // Log player not found status
       }
     });
 
     // Når klient disconnecter: ryd op i spiller og hold
-    socket.on('disconnect', () => {
-      console.log(`Client disconnected: ${socket.id}`); // Log disconnection
-      const playerId = socket.handshake.session?.playerId;
+    socket.on('disconnectFromClient', (playerId) => {
+      console.log(`SH: Client disconnected: ${socket.id}`); // Log disconnection
       if (!playerId) return;
-
       const player = players.get(playerId);
       if (!player) return;
-
       const team = teams.get(player.teamId);
       if (team) {
         console.log(`Removing player from team: ${playerId}`); // Log player removal
@@ -90,7 +95,6 @@ function setupSocketHandler(io) {
           teams.delete(player.teamId);
         }
       }
-
       players.delete(playerId);
       console.log(`Player removed: ${playerId}`); // Log player removal
       console.log(`Player ${playerId} slettet`);

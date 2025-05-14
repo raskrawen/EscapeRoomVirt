@@ -7,14 +7,8 @@ socket.on('connect', () => {
 
 socket.on('playerUUId', (playerUUId) => {
   console.log('Player UUID received from server:', playerUUId);
-  let uuid = localStorage.getItem('playerUUId');
-  if (!uuid) {
   localStorage.setItem('playerUUId', playerUUId); // Gem UUID i localStorage
   console.log('Player UUID saved to localStorage:', localStorage.getItem('playerUUId'));
-}
-else {
-  console.log('Player UUID already in localStorage.');
-}
 });
 
 socket.on('redirect', ( view ) => { //event fra socketHandler
@@ -34,6 +28,17 @@ export async function loadTask(taskName) { //asynk funktion fordi vi venter på 
 
 // Load initial view
 loadTask('lobby');
+
+socket.on('disconnect', () => {
+  const playerUUId = localStorage.getItem('playerUUId');
+  if (!playerUUId) {
+    console.log('Player UUID not found in localStorage.');
+    return;
+  }
+  console.log('Player disconnected with UUID:', playerUUId);
+  socket.emit('disconnectFromClient', playerUUId);
+});
+
 
 /*document.getElementById("backButton").addEventListener("click", () => {
       console.log("Tilbage-knap trykket");
