@@ -44,7 +44,13 @@ class Team {
   }*/ 
 
   getPlayerCount(teamId) {
-    return this.players.filter(player => player.teamId === teamId).length;
+    let count = 0;
+    for (const player of this.players) {
+      if (player.teamId === teamId) {
+        count++;
+      }
+    }
+    return count;
   }
 
   // Et team er fuldt ved 2 spillere

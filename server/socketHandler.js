@@ -11,19 +11,30 @@ function setupSocketHandler(io) {
     // Når klient sender joinTeam, opret spiller og tilføj til team
     socket.on('joinTeam', ({ playerName, teamId, playerId }) => {
       let player;
+
       if (playerId && players.has(playerId)) {
         // Reconnecting client
         console.log(`Reconnecting player with ID: ${playerId}`);
         player = players.get(playerId);
-        player.socket = socket; // Update the socket reference to socket ID} else {
-        } else {
-        // New player
-        //console.log(`Creating new player.`);
+        player.socket = socket; // Update the socket reference
+
+        // Ensure the player is still part of the same team
+        if (teamId && teams.has(teamId)) {
+          const team = teams.get(teamId);
+          if (!team.players.some(p => p.playerId === playerId)) {
+            team.addPlayer(player);
+            console.log(`Re-added player ${playerId} to team ${teamId}`);
+          }
+        }
+      } else {
+        // New client
+        console.log(`Creating new player.`);
         player = new Player(playerName, teamId, socket.id, socket);
         players.set(player.playerId, player); // Save new player in state
         socket.emit('playerUUId', player.playerId); // Send new UUID to client
-        console.log(`Player created with uuid: ${player.playerId}`); // Log player UUID
+        console.log(`Player created with UUID: ${player.playerId}`);
       }
+
       if (!teams.has(teamId)) {
         console.log(`Creating new team with teamId=${teamId}`);
         teams.set(teamId, new Team(teamId));
@@ -38,7 +49,7 @@ function setupSocketHandler(io) {
       player.playerNumberOnTeam = team.getPlayerCount(teamId);
       team.addPlayer(player);
 
-      console.log(`Player added to team: ${team.teamId}`);
+      console.log(`Player added to teamId: ${team.teamId}`);
       const playerCount = team.getPlayerCount(teamId);
       console.log(`Total players on team: ${playerCount}`);
 
@@ -87,23 +98,38 @@ function setupSocketHandler(io) {
     });
 
     // Når klient disconnecter: ryd op i spiller og hold
-    socket.on('disconnectFromClient', (playerId) => {
+    socket.on('disconnect', () => {
       console.log(`SH: Client disconnected: ${socket.id}`); // Log disconnection
-      if (!playerId) return;
-      const player = players.get(playerId);
-      if (!player) return;
+      // Find the player associated with this socket ID
+      let player;
+      for (const p of players.values()) {
+      if (p.socket.id === socket.id) {
+        player = p;
+        break;
+      }
+      }
+      if (!player || !player.playerId) return;
       const team = teams.get(player.teamId);
+
       if (team) {
-        console.log(`Removing player from team: ${playerId}`); // Log player removal
-        team.players = team.players.filter(p => p.playerId !== playerId);
-        if (team.players.length === 0) {
-          console.log(`Team is empty. Deleting team: ${player.teamId}`); // Log team deletion
-          teams.delete(player.teamId);
+      console.log(`Removing player ${player.playerId} from team, with ${team.getPlayerCount(player.teamId)} players`); // Log player removal
+      for (let i = 0; i < team.players.length; i++) {
+        if (team.players[i].playerId === player.playerId) {
+          team.players.splice(i, 1);
+          break;
         }
       }
-      players.delete(playerId);
-      console.log(`Player removed: ${playerId}`); // Log player removal
-      console.log(`Player ${playerId} slettet`);
+      console.log('Players left on team:', team.getPlayerCount(player.teamId)); // Log players on team
+      
+
+      if (team.players.length === 0) {
+        console.log(`Team is empty. Keeping team: ${player.teamId}`); // Log team retention
+      }
+      }
+
+      // Keep player in memory but mark as disconnected
+      player.socket = null;
+      console.log(`Player marked as disconnected: ${player.playerId}`); // Log player disconnection
     });
   });
 }
