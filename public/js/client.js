@@ -5,6 +5,14 @@ socket.on('connect', () => {
   console.log('Socket connected:', socket.id);
 });
 
+socket.on('playerUUId', (playerUUId) => {
+  let uuid = localStorage.getItem('playerUUId');
+  if (!uuid) {
+  localStorage.setItem('playerUUId', playerUUId); // Gem UUID i localStorage
+  console.log('Player UUID saved to localStorage:', localStorage.getItem('playerUUId'));
+}
+});
+
 socket.on('redirect', ( view ) => { //event fra socketHandler
   console.log('Redirect event in client.js to:', view);
   loadTask(view);

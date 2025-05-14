@@ -13,8 +13,8 @@ function setupSocketHandler(io) {
       console.log(`joinTeam event received: playerName=${playerName}, teamId=${teamId}`); // Log joinTeam event
       const player = new Player(playerName, teamId, socket.id, socket);
       console.log(`Creating new player.`); // Log player creation
-      socket.handshake.session.playerId = player.playerId;
-      socket.handshake.session.save();
+      let playerUUId = player.playerId; // UUID for player
+      socket.emit('playerUUId', playerUUId); // Send UUID to client to save in localStorage
       if (!teams.has(teamId)) { // Hvis holdet ikke findes, opret det
         console.log(`Creating new team with teamId=${teamId}`); // Log team creation
         teams.set(teamId, new Team(teamId));
