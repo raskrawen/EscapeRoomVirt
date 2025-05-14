@@ -15,7 +15,8 @@ export function init() {
         startButton.disabled = false; // Re-enable the button
       } else {
         console.log(`Emitting joinTeam event with playerName=${playerName}, teamId=${teamId}`); // Log event data
-        socket.emit('joinTeam', { playerName, teamId });
+        const playerId = localStorage.getItem('playerUUId');
+        socket.emit('joinTeam', { playerName, teamId, playerId });
 
         // Add user feedback
         const feedbackElement = document.createElement('p');

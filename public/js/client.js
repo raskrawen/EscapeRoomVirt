@@ -1,3 +1,5 @@
+import { startTimer } from './timer.js';
+
 // Lytter efter server-events og opdaterer klientens view.
 const socket = io();
 // Make sure listener is added ONCE and early
@@ -29,6 +31,12 @@ export async function loadTask(taskName) { //asynk funktion fordi vi venter på 
 // Load initial view
 loadTask('lobby');
 
+// Initialize the countdown timer
+const timerDisplay = document.getElementById('timer');
+startTimer(10 * 60, timerDisplay);
+
+
+
 socket.on('disconnect', () => {
   const playerUUId = localStorage.getItem('playerUUId');
   if (!playerUUId) {
@@ -36,7 +44,7 @@ socket.on('disconnect', () => {
     return;
   }
   console.log('Player disconnected with UUID:', playerUUId);
-  socket.emit('disconnectFromClient', playerUUId);
+  //socket.emit('disconnectFromClient', playerUUId);
 });
 
 

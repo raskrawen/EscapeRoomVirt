@@ -9,36 +9,42 @@ function setupSocketHandler(io) {
     console.log(`New client connected: ${socket.id}`); // Log connection
 
     // Når klient sender joinTeam, opret spiller og tilføj til team
-    socket.on('joinTeam', ({ playerName, teamId }) => {
-      console.log(`joinTeam event received: playerName=${playerName}, teamId=${teamId}`); // Log joinTeam event
-      const player = new Player(playerName, teamId, socket.id, socket);
-      console.log(`Creating new player.`); // Log player creation
-      let playerUUId = player.playerId; // UUID for player
-      console.log(`Player UUID: ${playerUUId}`); // Log player UUID
-      socket.emit('playerUUId', playerUUId); // Send UUID to client to save in localStorage
-      if (!teams.has(teamId)) { // Hvis holdet ikke findes, opret det
-        console.log(`Creating new team with teamId=${teamId}`); // Log team creation
+    socket.on('joinTeam', ({ playerName, teamId, playerId }) => {
+      let player;
+      if (playerId && players.has(playerId)) {
+        // Reconnecting client
+        console.log(`Reconnecting player with ID: ${playerId}`);
+        player = players.get(playerId);
+        player.socket = socket; // Update the socket reference to socket ID} else {
+        } else {
+        // New player
+        //console.log(`Creating new player.`);
+        player = new Player(playerName, teamId, socket.id, socket);
+        players.set(player.playerId, player); // Save new player in state
+        socket.emit('playerUUId', player.playerId); // Send new UUID to client
+        console.log(`Player created with uuid: ${player.playerId}`); // Log player UUID
+      }
+      if (!teams.has(teamId)) {
+        console.log(`Creating new team with teamId=${teamId}`);
         teams.set(teamId, new Team(teamId));
       }
-      const team = teams.get(teamId); // Find hold og gem i lokalt team objekt
+
+      const team = teams.get(teamId);
       if (!team) {
-        console.log(`SH1:Team ${teamId} not found.`); // Log team not found status
+        console.log(`SH1: Team ${teamId} not found.`);
+        return;
       }
-      const playerNumberOnTeam = team.getPlayerCount(teamId); // Spillernummer på holdet
-      player.playerNumberOnTeam = playerNumberOnTeam; // Opdater spillernummer på holdet
-      //player data done.
-      
-      players.set(player.playerId, player); // Gem spiller i state
-      
-      team.addPlayer(player); // Tilføj spiller til holdet
-      
-      console.log(`Player added to team: ${team.teamId}`); // Log team state
-      const playerCount = team.getPlayerCount(teamId); // Hent antal spillere på holdet
-      console.log(`Total players on team: ${playerCount}`); // Log player addition
-      // Hvis holdet nu er fyldt, send redirect til game
+
+      player.playerNumberOnTeam = team.getPlayerCount(teamId);
+      team.addPlayer(player);
+
+      console.log(`Player added to team: ${team.teamId}`);
+      const playerCount = team.getPlayerCount(teamId);
+      console.log(`Total players on team: ${playerCount}`);
+
       if (team.teamIsFull()) {
-        team.handleEvent('teamIsFull'); // Send event til state-maskinen
-        console.log(`SH34: Team ${teamId} is full. Redirecting players to game.`); // Log team full status
+        team.handleEvent('teamIsFull');
+        console.log(`SH34: Team ${teamId} is full. Redirecting players to game.`);
       }
     });
 
