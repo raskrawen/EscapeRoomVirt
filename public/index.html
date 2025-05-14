@@ -1,14 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="da">
 <head>
+  <meta charset="UTF-8" />
   <title>Escape Room</title>
   <link rel="stylesheet" href="styles.css">
   <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
-  <!-- Container hvor lobby/game views indlæses dynamisk -->
-  <div id="viewContainer"></div>
+  <!-- Topbånd med frem og tilbage knapper 
+  <div id="topBar">
+    <button id="backButton">Tilbage</button>
+    <button id="forwardButton"> Frem </button>
+  </div>
+-->
   
+  <!-- Container hvor lobby/game views indlæses -->
+  <div id="viewContainer"></div>
+
   <script type="module" src="/js/client.js"></script>
+
 </body>
 </html>
