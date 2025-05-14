@@ -6,10 +6,14 @@ socket.on('connect', () => {
 });
 
 socket.on('playerUUId', (playerUUId) => {
+  console.log('Player UUID received from server:', playerUUId);
   let uuid = localStorage.getItem('playerUUId');
   if (!uuid) {
   localStorage.setItem('playerUUId', playerUUId); // Gem UUID i localStorage
   console.log('Player UUID saved to localStorage:', localStorage.getItem('playerUUId'));
+}
+else {
+  console.log('Player UUID already in localStorage.');
 }
 });
 
