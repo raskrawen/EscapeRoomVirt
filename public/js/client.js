@@ -1,4 +1,4 @@
-import { startTimer } from './timer.js';
+
 
 // Lytter efter server-events og opdaterer klientens view.
 const socket = io();
@@ -8,10 +8,8 @@ socket.on('connect', () => {
 });
 
 socket.on('playerUUId', (playerUUId) => {
-  console.log('Player UUID received from server:', playerUUId);
   localStorage.setItem('playerUUId', playerUUId); // Gem UUID i localStorage
-  console.log('Player UUID saved to localStorage:', localStorage.getItem('playerUUId'));
-});
+  });
 
 socket.on('redirect', ( view ) => { //event fra socketHandler
   console.log('Redirect event in client.js to:', view);
@@ -31,30 +29,17 @@ export async function loadTask(taskName) { //asynk funktion fordi vi venter på 
 // Load initial view
 loadTask('lobby');
 
-// Initialize the countdown timer
-const timerDisplay = document.getElementById('timer');
-startTimer(10 * 60, timerDisplay);
-
-
-
-socket.on('disconnect', () => {
-  const playerUUId = localStorage.getItem('playerUUId');
-  if (!playerUUId) {
-    console.log('Player UUID not found in localStorage.');
-    return;
-  }
-  console.log('Player disconnected with UUID:', playerUUId);
-  //socket.emit('disconnectFromClient', playerUUId);
+// Listen for timer updates from the server
+socket.on('timerUpdate', ({ remainingTime }) => {
+  //console.log('Timer update received:', remainingTime);
+  const minutes = Math.floor(remainingTime / 60);
+  const seconds = remainingTime % 60;
+  const formattedTime = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  document.getElementById('timer').textContent = 'Tid: ' + formattedTime;
 });
 
+socket.on('timerFinished', () => {
+  console.log('Timer has finished.');
+  // Handle timer completion (e.g., redirect to another view)
+});
 
-/*document.getElementById("backButton").addEventListener("click", () => {
-      console.log("Tilbage-knap trykket");
-      // navigation logic her
-    });
-
-    document.getElementById("forwardButton").addEventListener("click", () => {
-      console.log("Frem-knap trykket");
-      // navigation logic her
-    });
-    */

@@ -3,10 +3,13 @@
 const Player = require('../models/Player');
 const Team = require('../models/Team');
 const { teams, players } = require('./state');
+const TimerManager = require('./TimerManager');
 
 function setupSocketHandler(io) {
   io.on('connection', (socket) => {
     console.log(`New client connected: ${socket.id}`); // Log connection
+
+
 
     // Når klient sender joinTeam, opret spiller og tilføj til team
     socket.on('joinTeam', ({ playerName, teamId }) => {
@@ -78,10 +81,15 @@ function setupSocketHandler(io) {
       }
     });
 
+    
+
+
+
     // Når klient disconnecter: ryd op i spiller og hold
     socket.on('disconnect', () => {
       console.log(`SH: Client disconnected: ${socket.id}`); // Log disconnection
       // Find the player associated with this socket ID
+      // maybe a player is never created?
       let player;
       for (const p of players.values()) {
       if (p.socket.id === socket.id) {

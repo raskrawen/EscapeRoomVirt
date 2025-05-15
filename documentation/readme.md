@@ -10,7 +10,8 @@ git push origin refactor-branch:main --force
 
 features:
 1.3.11:
-
+    refactor: remove uuid identification on reconnect.
+    UUid is only availible on the client-side
 1.3.10:
     refactor for SRP (single responsibility-pattern): Team
 1.3.9:
