@@ -2,7 +2,8 @@
 // Repræsenterer første opgave i spillet efter lobbyen
 
 const BaseState = require('./BaseState.js');
-const TimerManager = require('../TimerManager');
+const Task2State = require('./Task2State.js');
+const TimerManager = require('../TimerManager.js'); // Importer TimerManager
 
 class Task1State extends BaseState {
   constructor(team) {
@@ -15,12 +16,14 @@ class Task1State extends BaseState {
     this.team.broadcastRedirect(this.meta.html); // Fortæl klienterne at task1 skal vises 
     // Start the timer for the team
     const duration = 600; // 10 minutes in seconds
-    
     TimerManager.startTimer(this.team.teamId, duration);
   }
 
   onEvent(event, data) {
-    // Her kan du senere udvide til fx 'task1Done' → næste state
+    if (event === 'TASK1_COMPLETED') {
+      console.log(`Team ${this.team.teamId} completed Task 1`);
+      this.team.setState(new Task2State(this.team)); // Skift til næste state
+    }
   }
 
   exit() {

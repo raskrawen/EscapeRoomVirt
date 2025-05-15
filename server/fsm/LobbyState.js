@@ -19,7 +19,7 @@ class LobbyState extends BaseState {
   onEvent(event, data) {
     // Når teamet er fuldt, skiftes der til næste opgave
     console.log(`LobbyState: modtaget event ${event}`);
-    if (event === 'PLAYER_ADDED') {
+    if (event === 'PLAYER_ADDED') { //from Team.js
       console.log('LobbyState: Spiller tilføjet');
     }
     if (event === 'PLAYER_ADDED' && this.team.teamIsFull()) {

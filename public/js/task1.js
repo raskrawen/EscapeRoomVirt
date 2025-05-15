@@ -1,7 +1,7 @@
-import { socket } from './client.js';
+import { socket } from './client.js'; // Import socket from client.js
 
-export function init() {
-  document.getElementById('task_content').innerHTML = 'Hello from task1.js'; // Log task1.js setup
+export function init() { // running when task1.js is loaded
+  //document.getElementById('task_content').innerHTML = 'Hello from task1.js'; // Log task1.js setup
   console.log('Setting up TASK1 view'); // Log game view setup
   socket.emit('requestPlayerInfo', localStorage.getItem('playerUUId')); // to SH
   console.log('Emitting requestPlayerInfo event'); // Log event emission
@@ -15,4 +15,21 @@ export function init() {
       <p><strong>Player Number on Team:</strong> ${playerNumberOnTeam}</p>
     `;
   });
+}
+  document.querySelector('button#submit_button').addEventListener('click', handleSubmit);
+
+  function handleSubmit() {
+  //const team = teams.get(teamId); // Get the team object
+  const teamId = localStorage.getItem('teamId'); // Retrieve teamId from localStorage
+  const team = socket.teams.get(teamId); // Get the team object from socket
+  if (!team) {
+    console.error('Team not found'); // Log error if team is not found
+    return;
+  }
+  console.log('Submit button clicked'); // Log submit button click
+  if (document.getElementById('task1_input').value === '123') {
+    console.log('Correct answer'); // Log correct answer
+    team.handleEvent('TASK1_COMPLETED'); // Emit task completion event
+    console.log('Emitting TASK1_COMPLETED event'); // Log event emission
+  }
 }

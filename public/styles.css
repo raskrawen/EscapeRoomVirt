@@ -47,6 +47,21 @@ body {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
+#button {
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+#button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+
 /* View-container */
 #viewContainer {
   padding: 20px;

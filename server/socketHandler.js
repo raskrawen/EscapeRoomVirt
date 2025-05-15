@@ -87,7 +87,6 @@ function setupSocketHandler(io) {
     
 
 
-
     // Når klient disconnecter: ryd op i spiller og hold
     socket.on('disconnect', () => {
       console.log(`SH: Client disconnected: ${socket.id}`); // Log disconnection
@@ -95,7 +94,7 @@ function setupSocketHandler(io) {
       // maybe a player is never created?
       let player;
       for (const p of players.values()) {
-      if (p.socket.id === socket.id) {
+      if (p.socket && p.socket.id === socket.id) {
         player = p;
         break;
       }
