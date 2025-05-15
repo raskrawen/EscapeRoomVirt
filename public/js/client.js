@@ -29,6 +29,16 @@ export async function loadTask(taskName) { //asynk funktion fordi vi venter på 
 // Load initial view
 loadTask('lobby');
 
+
+socket.on('displayTeamId', (teamId) => {
+  if (teamId) {
+    document.getElementById('teamIdBox').textContent = 'Holdnavn: ' + teamId;
+  } else {
+    console.error('Received empty teamId from server.');
+  }
+});
+
+
 // Listen for timer updates from the server
 socket.on('timerUpdate', ({ remainingTime }) => {
   //console.log('Timer update received:', remainingTime);

@@ -32,15 +32,18 @@ function setupSocketHandler(io) {
 
       player.playerNumberOnTeam = team.getPlayerCount(teamId);
       team.addPlayer(player);
-
+      
       console.log(`Player added to teamId: ${team.teamId}`);
       const playerCount = team.getPlayerCount(teamId);
       console.log(`Total players on team: ${playerCount}`);
 
+      socket.emit('displayTeamId', teamId); // Send teamId to client
+      
       if (team.teamIsFull()) {
         team.handleEvent('teamIsFull');
         console.log(`SH34: Team ${teamId} is full. Redirecting players to game.`);
       }
+
     });
 
     // Check if a team is full

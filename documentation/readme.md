@@ -10,6 +10,9 @@ git push origin refactor-branch:main --force
 
 features:
 1.3.11:
+    topBar display teamId.
+    topBar in six fields.
+    timer implemented.
     refactor: remove uuid identification on reconnect.
     UUid is only availible on the client-side
 1.3.10:

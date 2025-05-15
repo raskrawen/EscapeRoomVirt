@@ -27,6 +27,11 @@ body {
   text-align: center;
 }
 
+#teamIdBox {
+  font-size: 14px;
+  text-align: center;
+}
+
 /* Knapper */
 #topBar button {
   background-color: transparent;
