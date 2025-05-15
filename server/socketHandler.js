@@ -9,31 +9,12 @@ function setupSocketHandler(io) {
     console.log(`New client connected: ${socket.id}`); // Log connection
 
     // Når klient sender joinTeam, opret spiller og tilføj til team
-    socket.on('joinTeam', ({ playerName, teamId, playerId }) => {
-      let player;
-
-      if (playerId && players.has(playerId)) {
-        // Reconnecting client
-        console.log(`Reconnecting player with ID: ${playerId}`);
-        player = players.get(playerId);
-        player.socket = socket; // Update the socket reference
-
-        // Ensure the player is still part of the same team
-        if (teamId && teams.has(teamId)) {
-          const team = teams.get(teamId);
-          if (!team.players.some(p => p.playerId === playerId)) {
-            team.addPlayer(player);
-            console.log(`Re-added player ${playerId} to team ${teamId}`);
-          }
-        }
-      } else {
-        // New client
-        console.log(`Creating new player.`);
-        player = new Player(playerName, teamId, socket.id, socket);
-        players.set(player.playerId, player); // Save new player in state
-        socket.emit('playerUUId', player.playerId); // Send new UUID to client
-        console.log(`Player created with UUID: ${player.playerId}`);
-      }
+    socket.on('joinTeam', ({ playerName, teamId }) => {
+      console.log(`Creating new player.`);
+      const player = new Player(playerName, teamId, socket.id, socket);
+      players.set(player.playerId, player); // Save new player in state
+      socket.emit('playerUUId', player.playerId); // Send new UUID to client
+      console.log(`Player created with UUID: ${player.playerId}`);
 
       if (!teams.has(teamId)) {
         console.log(`Creating new team with teamId=${teamId}`);

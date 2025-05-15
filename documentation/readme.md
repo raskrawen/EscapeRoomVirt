@@ -9,8 +9,10 @@ git push origin refactor-branch:main --force
 1.3.5 and 1.3.8 has mixed files.
 
 features:
+1.3.11:
+
 1.3.10:
-    refactor for SRP (single respons-pattern)
+    refactor for SRP (single responsibility-pattern): Team
 1.3.9:
     refactor state pattern implementation.
 1.3.8: 

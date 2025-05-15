@@ -13,10 +13,9 @@ export function init() {
       if (isFull) { // isFull true/false from socketHandler callback
         alert('Dette team er optaget. Vælg et andet team id.');
         startButton.disabled = false; // Re-enable the button
-      } else {
+      } else { // Team is not full, proceed to join
         console.log(`Emitting joinTeam event with playerName=${playerName}, teamId=${teamId}`); // Log event data
-        const playerId = localStorage.getItem('playerUUId');
-        socket.emit('joinTeam', { playerName, teamId, playerId });
+        socket.emit('joinTeam', { playerName, teamId });
 
         // Add user feedback
         const feedbackElement = document.createElement('p');
