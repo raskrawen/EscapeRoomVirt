@@ -6,10 +6,8 @@ const { teams, players } = require('./state');
 const TimerManager = require('./TimerManager');
 
 function setupSocketHandler(io) {
-  io.on('connection', (socket) => {
+  io.on('connection', (socket) => { // Håndterer socket-forbindelse
     console.log(`New client connected: ${socket.id}`); // Log connection
-
-
 
     // Når klient sender joinTeam, opret spiller og tilføj til team
     socket.on('joinTeam', ({ playerName, teamId }) => {
@@ -43,7 +41,6 @@ function setupSocketHandler(io) {
         team.handleEvent('teamIsFull');
         console.log(`SH34: Team ${teamId} is full. Redirecting players to game.`);
       }
-
     });
 
     // Check if a team is full
@@ -84,7 +81,21 @@ function setupSocketHandler(io) {
       }
     });
 
-    
+    // Når task1 er afsluttet
+  socket.on('task1Completed', ({ playerId }) => {
+  const player = players.get(playerId);
+  if (!player) {
+    console.log('task1Completed: Player not found for playerId', playerId);
+    return;
+  }
+  const team = teams.get(player.teamId);
+  if (!team) {
+    console.log('task1Completed: Team not found for teamId', player.teamId);
+    return;
+  }
+  team.handleEvent('TASK1_COMPLETED');
+  console.log(`task1Completed: Team ${team.teamId} transitioned to task 2.`);
+});
 
 
     // Når klient disconnecter: ryd op i spiller og hold

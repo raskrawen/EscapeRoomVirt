@@ -1,15 +1,15 @@
 version: 1.3.10
 dato: maj 2025
 Start server by: "nodemon server/server.js" og "node server/server.js".
-git branch
-got status
-git push origin refactor-branch:main --force
+git status
+git push origin new_branch:main --force 
 
 
 1.3.5 and 1.3.8 has mixed files.
 
 features:
 1.3.11:
+    transition to task 2 possible.
     topBar display teamId.
     topBar in six fields.
     timer implemented.
