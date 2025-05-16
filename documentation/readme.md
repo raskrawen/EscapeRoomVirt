@@ -2,14 +2,17 @@ version: 1.3.10
 dato: maj 2025
 Start server by: "nodemon server/server.js" og "node server/server.js".
 git status
-git push origin new_branch:main --force 
+
+1. git push origin new_branch:main --force (This will overwrite the remote main branch with the contents/history of your local new_branch.)
+2. Switch to main branch. Run pull (gets the remote main to local VS code)
 
 
-1.3.5 and 1.3.8 has mixed files.
 
 features:
+1.3.12: 
+
 1.3.11:
-    transition to task 3 with two view.
+    transition to task 3 with two different views.
     transition to task 2 possible.
     topBar display teamId.
     topBar in six fields.
@@ -20,8 +23,8 @@ features:
     refactor for SRP (single responsibility-pattern): Team
 1.3.9:
     refactor state pattern implementation.
-1.3.8: 
-    -state pattern implemnented.    
+1.3.8: (1.3.5 and 1.3.8 has mixed files.)
+    -state pattern implemented.    
 1.3.7: robot3, not working
 1.3.6: XState, not working
 1.3.5:
