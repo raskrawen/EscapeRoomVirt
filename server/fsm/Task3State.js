@@ -6,7 +6,7 @@ const BaseState = require('./BaseState.js');
 class Task3State extends BaseState {
   constructor(team) {
     super(team);
-    this.meta = { html: 'task3a' }; // HTML der skal vises til spillerne
+    this.meta = { html: ['task3a' , 'task3b'] }; // HTML der skal vises til spillerne
   }
 
   enter() {

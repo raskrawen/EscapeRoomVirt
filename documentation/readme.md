@@ -9,6 +9,7 @@ git push origin new_branch:main --force
 
 features:
 1.3.11:
+    transition to task 3 with two view.
     transition to task 2 possible.
     topBar display teamId.
     topBar in six fields.

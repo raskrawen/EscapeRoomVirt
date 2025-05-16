@@ -61,10 +61,18 @@ class Team {
   // Send redirect-kommando til alle spillere
   broadcastRedirect(html) {
     console.log(`T54: Team ${this.teamId} sender redirect spillere`);
+    if (Array.isArray(html)) {
+    this.players.forEach((player, idx) => {
+      const view = html[idx] || html[0]; // fallback to first if not enough views
+      console.log(`T56: Sender ${player.playerName} ${view}`);
+      player.socket.emit('redirect', view);
+    });
+  } else {
     this.players.forEach(player => {
       console.log(`T56: Sender ${player.playerName} ${html}`);
-      player.socket.emit('redirect', html);
+      player.socket.emit('redirect', html); //emit to client
     });
+  }
   }
 
 
