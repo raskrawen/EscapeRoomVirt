@@ -2,7 +2,7 @@
 // Repræsenterer den indledende lobby-state, hvor spillere samles
 
 const BaseState = require('./BaseState.js');
-const Task1State = require('./Task1State.js');
+const Task1State = require('./Task1State.js'); //next state import
 
 class LobbyState extends BaseState {
   constructor(team) {

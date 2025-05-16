@@ -98,6 +98,23 @@ function setupSocketHandler(io) {
 });
 
 
+  // Når task2 er afsluttet
+  socket.on('task2Completed', ({ playerId }) => {
+  const player = players.get(playerId);
+  if (!player) {
+    console.log('task2Completed: Player not found for playerId', playerId);
+    return;
+  }
+  const team = teams.get(player.teamId);
+  if (!team) {
+    console.log('task2Completed: Team not found for teamId', player.teamId);
+    return;
+  }
+  team.handleEvent('TASK2_COMPLETED');
+  console.log(`task2Completed: Team ${team.teamId} transitioned to task 3.`);
+});
+
+
     // Når klient disconnecter: ryd op i spiller og hold
     socket.on('disconnect', () => {
       console.log(`SH: Client disconnected: ${socket.id}`); // Log disconnection

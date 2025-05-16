@@ -2,6 +2,7 @@
 // Repræsenterer anden opgave i spillet
 
 const BaseState = require('./BaseState.js');
+const Task3State = require('./Task3State.js');
 
 class Task2State extends BaseState {
   constructor(team) {
@@ -10,13 +11,16 @@ class Task2State extends BaseState {
   }
 
   enter() {
-    console.log(`T1S: Team ${this.team.teamId} starter ${this.meta.html}`);
+    console.log(`T2S: Team ${this.team.teamId} starter ${this.meta.html}`);
     this.team.broadcastRedirect(this.meta.html); // Fortæl klienterne at task1 skal vises 
     
   }
 
-  onEvent(event, data) {
-    // Her kan du senere udvide til fx 'task2Done' → næste state
+  onEvent(event, data) { // from socketHandler
+    if (event === 'TASK2_COMPLETED') {
+      console.log(`Team ${this.team.teamId} completed Task 2`);
+      this.team.setState(new Task3State(this.team)); // Skift til næste state
+    }
   }
 
   exit() {

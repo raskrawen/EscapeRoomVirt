@@ -2,7 +2,7 @@
 // Repræsenterer første opgave i spillet efter lobbyen
 
 const BaseState = require('./BaseState.js');
-const Task2State = require('./Task2State.js');
+const Task2State = require('./Task2State.js'); //next state import
 const TimerManager = require('../TimerManager.js'); // Importer TimerManager
 
 class Task1State extends BaseState {
@@ -19,7 +19,7 @@ class Task1State extends BaseState {
     TimerManager.startTimer(this.team.teamId, duration);
   }
 
-  onEvent(event, data) {
+  onEvent(event, data) { // from socketHandler
     if (event === 'TASK1_COMPLETED') {
       console.log(`Team ${this.team.teamId} completed Task 1`);
       this.team.setState(new Task2State(this.team)); // Skift til næste state
