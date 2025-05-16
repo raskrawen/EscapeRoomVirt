@@ -2,7 +2,7 @@ version: 1.3.10
 dato: maj 2025
 Start server by: "nodemon server/server.js" og "node server/server.js".
 git status
-git push origin new_branch:main --force 
+git push origin new_branch:main --force (This will overwrite the remote main branch with the contents/history of your local new_branch.)
 
 
 1.3.5 and 1.3.8 has mixed files.
