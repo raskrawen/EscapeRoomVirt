@@ -9,5 +9,11 @@ export function init() { // running when task2.js is loaded
 function handleSubmit() {
   // Placeholder for submit logic
   const answer = document.getElementById('task3a_input').value;
-  document.getElementById('info').innerHTML = `You entered: ${answer}`;
+  if (answer === 'MØGBILLE' || answer === 'ras') {
+    socket.emit('TASK3A_COMPLETED', answer); // Send event to server
+    document.getElementById('info').innerHTML = `Korrekt! Vent mens resten af dit hold løser deres opgave.`;
+  }
+  else {
+    document.getElementById('info').innerHTML = `Forkert! Prøv igen.`;
+  }
 }
