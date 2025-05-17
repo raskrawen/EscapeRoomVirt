@@ -10,7 +10,7 @@ git status
 
 features:
 1.3.12: 
-
+    learninglabs assignment added to task3a.
 1.3.11:
     transition to task 3 with two different views.
     transition to task 2 possible.

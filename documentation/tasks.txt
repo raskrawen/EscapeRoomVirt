@@ -1,0 +1,11 @@
+task1: Bestem komplementær sekvens i DNA (indtast sekvens) + find en kasse/pose med: 
+* papir med genetisk kode (indtast kode for at sikre, at den er fundet)
+* lineal
+* noget som ikke skal bruges
+* klodser til DNA model
+* ?
+
+task2: byg en model af DNA og mål afstanden mellem to baser (indtast afstanden i hele cm) 
+
+task3a: Find noget fysisk eller byg et puslespil
+task3b: En teoretisk opgave fx navngiv dele i en celle?
