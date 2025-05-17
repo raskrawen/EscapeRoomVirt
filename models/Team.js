@@ -65,7 +65,7 @@ class Team {
     this.players.forEach((player, idx) => {
       const view = html[idx] || html[0]; // fallback to first if not enough views
       console.log(`T56: Sender ${player.playerName} ${view}`);
-      player.socket.emit('redirect', view);
+      player.socket.emit('redirect', view); //emit to client
     });
   } else {
     this.players.forEach(player => {

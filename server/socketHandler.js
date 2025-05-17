@@ -38,7 +38,7 @@ function setupSocketHandler(io) {
       socket.emit('displayTeamId', teamId); // Send teamId to client
       
       if (team.teamIsFull()) {
-        team.handleEvent('teamIsFull');
+        team.handleEvent('teamIsFull'); //to Team.js
         console.log(`SH34: Team ${teamId} is full. Redirecting players to game.`);
       }
     });

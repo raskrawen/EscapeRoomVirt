@@ -15,7 +15,7 @@ export function init() {
         startButton.disabled = false; // Re-enable the button
       } else { // Team is not full, proceed to join
         console.log(`Emitting joinTeam event with playerName=${playerName}, teamId=${teamId}`); // Log event data
-        socket.emit('joinTeam', { playerName, teamId });
+        socket.emit('joinTeam', { playerName, teamId }); //to socketHadler
 
         // Add user feedback
         const feedbackElement = document.createElement('p');
