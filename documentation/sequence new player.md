@@ -10,6 +10,7 @@ sequenceDiagram
     participant Task1State
 
     note over client.js:loadTask(lobby.html)
+    client.js->>lobby.js:load lobby.html
     note over lobby.js:user enters player and team names
     lobby.js->>socketHandler:check team status (full?)
     socketHandler-->>lobby.js:true/false
