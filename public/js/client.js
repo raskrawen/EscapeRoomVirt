@@ -26,7 +26,7 @@ export async function loadTask(taskName) { //asynk funktion fordi vi venter på 
 }
 
 // Load initial view
-loadTask('lobby');
+loadTask('start');
 
 
 socket.on('displayTeamId', (teamId) => {
