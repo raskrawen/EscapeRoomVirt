@@ -11,7 +11,7 @@ function handleSubmit() {
   const answer = document.getElementById('task3b_input').value;
   if (answer === 'KØLLESVÆRMER' || answer === 'ras') {
     socket.emit('TASK3B_COMPLETED', answer); // Send event to server
-    document.getElementById('info').innerHTML = `Korrekt! Vent mens resten af dit hold løser deres opgave.`;
+    document.getElementById('info').innerHTML = `Korrekt! Hjælp resten af dit hold med at løse opgaver.`;
   }
   else {
     document.getElementById('info').innerHTML = `Forkert! Prøv igen.`;

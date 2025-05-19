@@ -16,6 +16,7 @@ class Task3State extends BaseState {
   }
 
   onEvent(event, data) { // from socketHandler
+    super.onEvent(event, data); // This will handle TIMEOUT in BaseState
     if (event === 'TASK3_COMPLETED') {
       console.log(`Team ${this.team.teamId} completed Task 3`);
       this.team.setState(new Task4State(this.team)); // Skift til næste state

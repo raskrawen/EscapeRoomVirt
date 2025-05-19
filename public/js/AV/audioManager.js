@@ -32,3 +32,28 @@ export function fadeOutAudio(duration = 1000) {
     }
   }, duration * step);
 }
+
+export function fadeOutAudioAndPlay(name, duration = 1000) {
+  if (!currentAudio) {
+    // If no audio is playing, just play the new audio after a silent wait
+    setTimeout(() => {
+      playAudio(name);
+    }, duration);
+    return;
+  }
+  const step = 0.05;
+  let vol = currentAudio.volume;
+  const fadeInterval = setInterval(() => {
+    vol = Math.max(0, vol - step);
+    currentAudio.volume = vol;
+    if (vol === 0) {
+      currentAudio.pause();
+      clearInterval(fadeInterval);
+      currentAudio.volume = 1; // reset for next play
+      // Wait for the silent duration, then play the new audio
+      setTimeout(() => {
+        playAudio(name);
+      }, duration);
+    }
+  }, duration * step);
+}

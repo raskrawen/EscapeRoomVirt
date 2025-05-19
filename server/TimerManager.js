@@ -5,7 +5,7 @@ class TimerManager {
     this.teamTimers = new Map(); // Store timers for each team
   }
 
-  startTimer(teamId, duration, io) {
+  startTimer(teamId, duration, io) { //called in Tas1State.js
     if (this.teamTimers.has(teamId)) {
       console.log(`Timer for team ${teamId} is already running.`);
       return;
@@ -33,9 +33,12 @@ class TimerManager {
 
         // Notify all clients on the team that the timer has finished
         if (team) {
-          team.players.forEach(player => {
+          console.log('calling team.handleEvent');
+          team.handleEvent('TIMEOUT');
+          /*team.players.forEach(player => {
             player.socket.emit('timerFinished');
-          });
+          });*/
+
         }
       }
     }, 1000);

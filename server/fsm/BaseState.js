@@ -15,7 +15,14 @@ class BaseState {
   exit() {}
 
   // Kaldes når et event sendes til denne state
-  onEvent(event, data) {}
+  onEvent(event, data) {
+  console.log(`BaseState: modtaget event ${event}`);
+    if (event === 'TIMEOUT') {
+    const TimeoutState = require('./TimeoutState.js');
+    this.team.setState(new TimeoutState(this.team));
+  }
+}
+
 }
 
 module.exports = BaseState;

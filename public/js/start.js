@@ -11,7 +11,7 @@ export function init() {
 
   playBtn.addEventListener('click', () => {
     audio.loop = true; // Loop the audio
-    playAudio('buzzing'); // Play the audio
+    playAudio('intro_music'); // Play the audio
     info.innerHTML = "Historien afspilles. Du kan nu fortsætte.";
     continueBtn.disabled = false;
     playBtn.disabled = true;

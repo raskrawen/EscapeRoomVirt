@@ -15,11 +15,19 @@ class Task1State extends BaseState {
     console.log(`T1S: Team ${this.team.teamId} starter ${this.meta.html}`);
     this.team.broadcastRedirect(this.meta.html); // Fortæl klienterne at task1 skal vises 
     // Start the timer for the team
-    const duration = 600; // 10 minutes in seconds
+    const duration = 10; // 600 = 10 minutes in seconds
     TimerManager.startTimer(this.team.teamId, duration);
   }
 
   onEvent(event, data) { // from socketHandler
+    super.onEvent(event, data); // This will handle TIMEOUT in BaseState
+    
+    /*if (event === 'TIMEOUT') {
+    console.log(`T1S: Team er gået i timeout-state`);
+      const TimeoutState = require('./TimeoutState.js');
+    this.team.setState(new TimeoutState(this.team));
+    }*/
+
     if (event === 'TASK1_COMPLETED') {
       console.log(`Team ${this.team.teamId} completed Task 1`);
       this.team.setState(new Task2State(this.team)); // Skift til næste state

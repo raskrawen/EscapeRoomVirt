@@ -21,7 +21,7 @@ class Team {
     this.state.enter();                       // Kør enter på ny state
   }
 
-    // Send event til state-maskinen
+    // Send event til state-maskinen i det aktuelle state.
   handleEvent(event, data) {
     if (this.state?.onEvent) {
       this.state.onEvent(event, data);

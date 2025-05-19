@@ -1,5 +1,5 @@
 import { socket } from './client.js';
-import { playAudio, pauseAudio, fadeOutAudio } from './AV/audioManager.js';
+import { playAudio, pauseAudio, fadeOutAudio, fadeOutAudioAndPlay } from './AV/audioManager.js';
 
 
 export function init() {
@@ -9,7 +9,8 @@ export function init() {
 
   const startButton = document.getElementById('startButton');
   //fadeOutAudio(1000); // Fade out any currently playing audio
-  playAudio('critter'); // Play the critter audio
+  fadeOutAudioAndPlay('critter', 5000);
+  //playAudio('critter'); // Play the critter audio
 
   startButton.addEventListener('click', () => {
     console.log('Start button clicked'); // Log start button click
