@@ -1,6 +1,9 @@
 import { socket } from './client.js';
 
 export function init() {
+  const audio = new Audio('../audio/title.mp3');
+  audio.loop = true;
+  audio.play();
   const startButton = document.getElementById('startButton');
   startButton.addEventListener('click', () => {
     console.log('Start button clicked'); // Log start button click
