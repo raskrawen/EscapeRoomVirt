@@ -61,6 +61,26 @@ body {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Cross-browser reset for input and button elements */
+input, button {
+  padding: 10px;
+  font-family: inherit;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background: #222;
+  color: #fff;
+}
+
+/* Disabled input and button styles */
+input:disabled, button:disabled {
+  opacity: 0.5;
+  background: #444;
+  color: #bbb;
+  cursor: not-allowed;
+  border: 1px solid #888;
+}
 
 /* View-container */
 #viewContainer {
@@ -70,6 +90,21 @@ body {
 #lobby {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 20px;
+  align-items: flex-start; /* Align items to the left */
+  padding: 30px;
 }
+
+/* Remove any previous input/button styles for lobby */
+#lobby input, #lobby button {
+  padding: 10px;
+  font-family: inherit;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background: #222;
+  color: #fff;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
