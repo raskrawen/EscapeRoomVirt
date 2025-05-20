@@ -9,7 +9,7 @@ export function init() {
 
   const startButton = document.getElementById('startButton');
   //fadeOutAudio(1000); // Fade out any currently playing audio
-  fadeOutAudioAndPlay('critter', 5000);
+  //fadeOutAudioAndPlay('critter', 5000);
   //playAudio('critter'); // Play the critter audio
 
   startButton.addEventListener('click', () => {

@@ -15,9 +15,16 @@ export function init() {
     info.innerHTML = "Historien afspilles. Du kan nu fortsætte.";
     continueBtn.disabled = false;
     playBtn.disabled = true;
-    // Call this when you want the bug to crawl (e.g., after audio starts)
-  //  animateBug();
-
+    //indlæs en .txt fil med historien og vis i id=storyInfo
+    fetch('../js/story.txt')
+      .then(response => response.text())
+      .then(data => {
+        info.innerHTML = data; // Display the story text
+      })
+      .catch(error => {
+        console.error('Error loading story:', error);
+        info.innerHTML = "Fejl ved indlæsning af historien.";
+      });
   });
 
   continueBtn.addEventListener('click', () => {
