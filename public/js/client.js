@@ -16,9 +16,34 @@ socket.on('redirect', ( view ) => { //event fra socketHandler
 
 export { socket };
 
-export async function loadTask(taskName) { //asynk funktion fordi vi venter på at html og js er loaded
-  const html = await fetch(`/views/${taskName}.html`).then(r => r.text()); //venter på at html er loaded
+export async function loadTask(taskName) {
+  const html = await fetch(`/views/${taskName}.html`).then(r => r.text());
   document.getElementById("viewContainer").innerHTML = html;
+
+  // Wait for all images in the new content to load
+  const images = Array.from(document.getElementById("viewContainer").getElementsByTagName("img"));
+  if (images.length > 0) {
+    let loaded = 0;
+    images.forEach(img => {
+      if (img.complete) {
+        loaded++;
+      } else {
+        img.onload = img.onerror = () => {
+          loaded++;
+          if (loaded === images.length) {
+            //loadingOverlay in index-html
+            document.getElementById("loadingOverlay").style.display = "none";
+          }
+        };
+      }
+    });
+    if (loaded === images.length) {
+      document.getElementById("loadingOverlay").style.display = "none";
+    }
+  } else {
+    document.getElementById("loadingOverlay").style.display = "none";
+  }
+
   const module = await import(`/js/${taskName}.js`);
   module.init();
 }

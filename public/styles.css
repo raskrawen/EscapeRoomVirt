@@ -1,5 +1,6 @@
 /* Global stil */
 body {
+  overflow: auto;
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
@@ -106,5 +107,13 @@ input:disabled, button:disabled {
   color: #fff;
   margin-bottom: 10px;
   display: inline-block;
+}
+
+#storyInfo {
+  overflow: auto;
+  max-height: 50vh;
+  font-size: 16px; /* or any size you prefer, e.g. 18px */
+
+  /* Optionally, add padding or background for readability */
 }
 
