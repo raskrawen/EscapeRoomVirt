@@ -5,6 +5,7 @@
   <title>Escape Room</title>
   <link rel="stylesheet" href="styles.css">
   <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="/js/client.js"></script>
 </head>
 <body>
   <!-- Header with countdown timer -->  <div id="topBar">
@@ -12,25 +13,28 @@
       <tr>
         <td id="section1"></td>
         <td id="section2"></td>
-        <td id="section3"></td>
         <td id="teamIdBox"></td>
         <td id="timer"></td>
+        <td id="info">
+          <button id="infoButton" style="background-color: black; color: white; border: none; padding: 10px; cursor: pointer;">Info</button>
+        </td></td>
         <td id="section6"></td>
       </tr>
     </table>
   </div>
 
-  <!-- Topbånd med frem og tilbage knapper 
-  <div id="topBar">
-    <button id="backButton">Tilbage</button>
-    <button id="forwardButton"> Frem </button>
-  </div>
--->
+  
   
   <!-- Container hvor lobby/game views indlæses -->
   <div id="viewContainer"></div>
 
-  <script type="module" src="/js/client.js"></script>
-
+  <script>
+    // Attach the modal function to the button for non-module context
+    document.addEventListener('DOMContentLoaded', function() {
+      import('./js/client.js').then(mod => {
+        document.getElementById('infoButton').onclick = mod.showInfoModal;
+      });
+    });
+  </script>
 </body>
 </html>

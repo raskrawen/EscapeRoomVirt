@@ -1,5 +1,3 @@
-
-
 // Lytter efter server-events og opdaterer klientens view.
 const socket = io();
 // Make sure listener is added ONCE and early
@@ -51,4 +49,14 @@ socket.on('timerFinished', () => {
   console.log('Timer has finished.');
   // Handle timer completion (e.g., redirect to another view)
 });
+
+export async function showInfoModal() {
+  const html = await fetch('/views/info.html').then(r => r.text());
+  const modal = document.createElement('div');
+  modal.id = 'infoModal';
+  modal.innerHTML = html + '<button id="closeInfo">Luk</button>';
+  modal.style = 'position:fixed; top:10%; left:10%; width:80vw; background:#222; color:#fff; z-index:2000; padding:2em; border-radius: 12px; box-shadow: 0 0 20px #000;';
+  document.body.appendChild(modal);
+  document.getElementById('closeInfo').onclick = () => modal.remove();
+}
 
