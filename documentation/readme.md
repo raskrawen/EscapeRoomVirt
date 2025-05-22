@@ -10,9 +10,10 @@ git status
 
 features:
 1.4.0:
+    info page
     landing page, start.html (not a state since there is no team yet)
+    images
     audio, audioManager.js
-    insects (to come)
 1.3.12: 
     learninglabs assignment added to task3a.
 1.3.11:
