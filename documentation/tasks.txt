@@ -9,3 +9,12 @@ task2: byg en model af DNA og mål afstanden mellem to baser (indtast afstanden 
 
 task3a: Find noget fysisk eller byg et puslespil
 task3b: En teoretisk opgave fx navngiv dele i en celle?
+
+
+Et forsøg er gået galt.
+Dagbogs-noter.
+rekonstruer et forsøg med melorme. Forsøg med variabelkontrol -der skal en af hver ting i et glas.
+Sammengligne insektarters egenskaber.
+Forstå/fortolke insektsprog.
+Den gamle forsker gemte en Kode i biologibog
+Sagen fører til rektor, som dækker over noget.

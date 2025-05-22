@@ -8,6 +8,7 @@ export function init() {
   audio.play();*/
 
   const startButton = document.getElementById('startButton');
+  document.getElementById('timer').textContent = 'Tid: 00:10'; // timer starter i Task1State.js
   //fadeOutAudio(1000); // Fade out any currently playing audio
   //fadeOutAudioAndPlay('critter', 5000);
   //playAudio('critter'); // Play the critter audio
