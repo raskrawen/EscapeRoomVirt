@@ -19,6 +19,11 @@ const sessionMiddleware = session({
   saveUninitialized: true
 });
 
+// fx i server.js eller et config-modul
+global.maxPlayers = 2;
+
+
+
 app.use(sessionMiddleware);
 io.use(sharedSession(sessionMiddleware, { autoSave: true }));
 
@@ -30,8 +35,22 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
+// I server.js eller routes/admin.js
+app.get('/setMaxPlayers', (req, res) => {
+  const value = parseInt(req.query.value, 10);
+  if (!isNaN(value) && value > 0) {
+    global.maxPlayers = value;
+    res.send(`maxPlayers sat til ${value}`);
+  } else {
+    res.status(400).send('Ugyldig værdi');
+  }
+});
+
+
 // Tilslut socket-handler
 setupSocketHandler(io);
+
+
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

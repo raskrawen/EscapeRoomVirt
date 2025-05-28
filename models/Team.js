@@ -7,7 +7,7 @@ class Team {
   constructor(teamId) {
     this.teamId = teamId;
     this.players = [];
-    this.maxPlayers = 2;        // Antal spillere som udløser næste state (kan justeres)
+    this.maxPlayers = global.maxPlayers; // Brug global værdi
     this.teamVisitedStates = new Set(); // Sæt til at holde styr på besøgte states. Kun en kopi af hvert navn
     this.setState(new LobbyState(this)); // Start i lobby
   }
@@ -57,7 +57,7 @@ class Team {
 
   // Et team er fuldt ved 2 spillere
   teamIsFull() {
-    return this.players.length >= 2;
+    return this.players.length >= this.maxPlayers;
   }
 
   // Send redirect-kommando til alle spillere

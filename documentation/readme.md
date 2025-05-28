@@ -11,7 +11,7 @@ git status
 
 features:
 1.4.1:
-    
+    max players can be set by http://localhost:3000/setMaxPlayers?value=4
 1.4.0:
     info page
     landing page, start.html (not a state since there is no team yet)
