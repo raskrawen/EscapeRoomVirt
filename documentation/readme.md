@@ -7,10 +7,11 @@ git status
 2. git push origin new_branch:main --force (This will overwrite the remote main branch with the contents/history of your local new_branch.)
 3. Switch to main branch. Run pull (gets the remote main to local VS code)
 
-
+betingelser: client -> socketHandler -> Team -> TaskXState
 
 features:
 1.4.1:
+    task4 implementeret.
     max players can be set by http://localhost:3000/setMaxPlayers?value=4
 1.4.0:
     info page
@@ -24,7 +25,7 @@ features:
     transition to task 2 possible.
     topBar display teamId.
     topBar in six fields.
-    timer implemented.
+    timer implemented. Sættes i Task1State.js
     refactor: remove uuid identification on reconnect.
     UUid is only availible on the client-side
 1.3.10:

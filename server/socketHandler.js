@@ -115,6 +115,39 @@ function setupSocketHandler(io) {
 });
 
 
+    // Når task3A er afsluttet
+  socket.on('TASK3A_COMPLETED', ({ playerId }) => {
+  const player = players.get(playerId);
+  if (!player) {
+    console.log('task3ACompleted: Player not found for playerId', playerId);
+    return;
+  }
+  const team = teams.get(player.teamId);
+  if (!team) {
+    console.log('task3ACompleted: Team not found for teamId', player.teamId);
+    return;
+  }
+  team.handleEvent('TASK3A_COMPLETED');
+  console.log(`task3ACompleted`);
+});
+
+    // Når task3B er afsluttet
+  socket.on('TASK3B_COMPLETED', ({ playerId }) => {
+  const player = players.get(playerId);
+  if (!player) {
+    console.log('task3BCompleted: Player not found for playerId', playerId);
+    return;
+  }
+  const team = teams.get(player.teamId);
+  if (!team) {
+    console.log('task3BCompleted: Team not found for teamId', player.teamId);
+    return;
+  }
+  team.handleEvent('TASK3B_COMPLETED');
+  console.log(`task3BCompleted`);
+});
+
+
     // Når klient disconnecter: ryd op i spiller og hold
     socket.on('disconnect', () => {
       console.log(`SH: Client disconnected: ${socket.id}`); // Log disconnection

@@ -9,8 +9,9 @@ export function init() { // running when task2.js is loaded
 function handleSubmit() {
   // Placeholder for submit logic
   const answer = document.getElementById('task3b_input').value;
-  if (answer === 'KØLLESVÆRMER' || answer === 'ras') {
-    socket.emit('TASK3B_COMPLETED', answer); // Send event to server
+  const playerId = localStorage.getItem('playerUUId');
+  if (answer === 'KØLLESVÆRMER' || answer === '123') {
+    socket.emit('TASK3B_COMPLETED', { playerId }); // Send event to server
     document.getElementById('info').innerHTML = `Korrekt! Hjælp resten af dit hold med at løse opgaver.`;
   }
   else {

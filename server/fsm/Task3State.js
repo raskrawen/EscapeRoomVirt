@@ -2,11 +2,14 @@
 // Repræsenterer tredje opgave i spillet
 
 const BaseState = require('./BaseState.js');
+const Task4State = require('./Task4State.js'); //next state import
 
 class Task3State extends BaseState {
   constructor(team) {
     super(team);
     this.meta = { html: ['task3a' , 'task3b'] }; // HTML der skal vises til spillerne
+    this.task3aDone = false;
+    this.task3bDone = false;
   }
 
   enter() {
@@ -17,10 +20,18 @@ class Task3State extends BaseState {
 
   onEvent(event, data) { // from socketHandler
     super.onEvent(event, data); // This will handle TIMEOUT in BaseState
-    if (event === 'TASK3_COMPLETED') {
-      console.log(`Team ${this.team.teamId} completed Task 3`);
-      this.team.setState(new Task4State(this.team)); // Skift til næste state
+    if (event === 'TASK3A_COMPLETED') {
+      console.log(`Team ${this.team.teamId} completed Task 3A`);
+      this.task3aDone = true;
     }
+    if (event === 'TASK3B_COMPLETED') {
+      console.log(`Team ${this.team.teamId} completed Task 3B`);
+      this.task3bDone = true;
+    }
+    if (this.task3aDone && this.task3bDone) {
+    console.log(`Team ${this.team.teamId} completed Task 3A og Task 3B`);
+    this.team.setState(new Task4State(this.team));
+  }
   }
 
   exit() {
