@@ -8,7 +8,7 @@ export function init() {
   audio.play();*/
 
   const startButton = document.getElementById('startButton');
-  document.getElementById('timer').textContent = 'Tid: 00:10'; // timer starter i Task1State.js
+  document.getElementById('timer').textContent = 'Tid: 05:00'; // timer starter i Task1State.js
   //fadeOutAudio(1000); // Fade out any currently playing audio
   //fadeOutAudioAndPlay('critter', 5000);
   //playAudio('critter'); // Play the critter audio
@@ -27,6 +27,8 @@ export function init() {
       } else { // Team is not full, proceed to join
         console.log(`Emitting joinTeam event with playerName=${playerName}, teamId=${teamId}`); // Log event data
         socket.emit('joinTeam', { playerName, teamId }); //to socketHadler
+        localStorage.setItem('playerName', playerName);
+        localStorage.setItem('teamId', teamId);
 
         // Add user feedback
         const feedbackElement = document.createElement('p');

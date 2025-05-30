@@ -18,7 +18,7 @@ export function pauseAudio() {
   }
 }
 
-export function fadeOutAudio(duration = 1000) {
+export function fadeOutAudio(duration = 10000) {
   if (!currentAudio) return;
   const step = 0.05;
   let vol = currentAudio.volume;

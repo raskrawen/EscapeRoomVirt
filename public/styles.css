@@ -117,11 +117,13 @@ input:disabled, button:disabled {
   /* Optionally, add padding or background for readability */
 }
 
-/* Task4 (AI Chat) styles */
+/* Task4 (AI Chat) styles - updated for dark chat window and visible controls */
 .task4-container {
   display: flex;
   height: 100vh;
-  background: var(--background-color, #f0f0f0);
+  background: var(--background-color, #181818);
+  align-items: flex-start; /* Align content to the top */
+  padding-top: 10px; /* Move content 10px from the top */
 }
 .task4-left {
   flex: 1 1 40%;
@@ -140,31 +142,32 @@ input:disabled, button:disabled {
   flex: 1 1 60%;
   display: flex;
   flex-direction: column;
-  background: #fff;
-  padding: 32px 24px 24px 24px;
+  background: #232323;
+  padding: 24px 24px 24px 24px; /* Reduce top padding from 32px to 24px */
   box-shadow: -2px 0 12px rgba(0,0,0,0.08);
 }
 .chat-window {
   flex: 1 1 auto;
   overflow-y: auto;
-  border: 1px solid #ccc;
+  border: 1.5px solid #444;
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 16px;
-  background: #f9f9f9;
+  background: #111;
   min-height: 200px;
   max-height: 60vh;
+  color: #fff;
 }
 .user-message {
   margin-bottom: 8px;
   text-align: right;
-  color: #333;
+  color: #fff;
 }
 .llm-message {
   margin-bottom: 8px;
   text-align: left;
-  color: #0a4d8c;
-  background: #e6f0fa;
+  color: #00eaff;
+  background: #232b36;
   border-radius: 6px;
   padding: 6px 10px;
   display: inline-block;
@@ -177,26 +180,33 @@ input:disabled, button:disabled {
   flex: 1 1 auto;
   padding: 8px;
   border-radius: 6px;
-  border: 1px solid #bbb;
+  border: 1.5px solid #00eaff;
   font-size: 1rem;
+  background: #181818;
+  color: #fff;
+}
+#chat_input:disabled {
+  background: #333;
+  color: #aaa;
 }
 #send_button {
   padding: 8px 18px;
   border-radius: 6px;
   border: none;
-  background: #0a4d8c;
-  color: #fff;
+  background: #00eaff;
+  color: #181818;
   font-weight: bold;
   cursor: pointer;
   transition: background 0.2s;
 }
 #send_button:disabled {
-  background: #aaa;
+  background: #444;
+  color: #aaa;
   cursor: not-allowed;
 }
 .chat-info {
   min-height: 1.5em;
-  color: #b00;
+  color: #ffb300;
   margin-top: 6px;
   font-size: 0.98em;
 }

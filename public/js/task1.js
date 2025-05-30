@@ -1,8 +1,10 @@
 import { socket } from './client.js'; // Import socket from client.js
+import { fadeOutAudio } from './AV/audioManager.js';
 
 export function init() { // running when task1.js is loaded
   //document.getElementById('task_content').innerHTML = 'Hello from task1.js'; // Log task1.js setup
   console.log('Setting up TASK1 view'); // Log game view setup
+  fadeOutAudio(); // Fade out audio when task1 is loaded
   socket.emit('requestPlayerInfo', localStorage.getItem('playerUUId')); // to SH
   console.log('Emitting requestPlayerInfo event'); // Log event emission
   

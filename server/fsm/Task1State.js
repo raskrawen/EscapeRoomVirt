@@ -15,7 +15,7 @@ class Task1State extends BaseState {
     console.log(`T1S: Team ${this.team.teamId} starter ${this.meta.html}`);
     this.team.broadcastRedirect(this.meta.html); // Fortæl klienterne at task1 skal vises 
     // Start the timer for the team
-    const duration = 120; // 600 = 10 minutes in seconds
+    const duration = 300; // 600 = 10 minutes in seconds
     TimerManager.startTimer(this.team.teamId, duration);
   }
 

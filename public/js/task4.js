@@ -18,14 +18,6 @@ function appendMessage(sender, text, isLLM = false) {
   chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
-function speakText(text) {
-  if ('speechSynthesis' in window) {
-    const utter = new window.SpeechSynthesisUtterance(text);
-    utter.lang = 'da-DK'; // Danish, change if needed
-    window.speechSynthesis.speak(utter);
-  }
-}
-
 function setLoading(isLoading) {
   if (isLoading) {
     infoArea.textContent = 'Vent venligst... AI svarer.';
@@ -38,12 +30,22 @@ function setLoading(isLoading) {
   }
 }
 
+let canSend = true; // Track if this client is allowed to send
+
+function setSendButtonState(enabled, text) {
+  sendButton.disabled = !enabled;
+  sendButton.textContent = text;
+  canSend = enabled;
+}
+
 function handleSend() {
+  if (!canSend) return; // Prevent sending if not allowed
   const text = chatInput.value.trim();
   if (!text) return;
-  appendMessage(playerName, text);
   setLoading(true);
-  socket.emit('llm user input', { teamId, playerName, text });
+  setSendButtonState(false, 'Vent');
+  // Send user input to server, include playerName and teamId
+  socket.emit('llm user input', { teamId, playerName, message: text });
   chatInput.value = '';
 }
 
@@ -53,9 +55,9 @@ chatInput.addEventListener('keydown', (e) => {
 });
 
 // Join team room for LLM chat
-socket.emit('joinTeamRoom', { teamId });
+socket.emit('joinTeamRoom', teamId);
 
-// Listen for LLM reply
+// Listen for LLM reply (AI message)
 socket.on('llm reply', ({ text, error }) => {
   setLoading(false);
   if (error) {
@@ -63,7 +65,15 @@ socket.on('llm reply', ({ text, error }) => {
     return;
   }
   appendMessage('AI', text, true);
-  speakText(text);
+});
+
+// Listen for user messages from other clients (broadcasted by server)
+socket.on('llm user message', ({ playerName: sender, message }) => {
+  appendMessage(sender, message, false);
+  // If the message is from another user, re-enable the send button
+  if (sender !== playerName) {
+    setSendButtonState(true, 'Send');
+  }
 });
 
 // Optional: focus input on load

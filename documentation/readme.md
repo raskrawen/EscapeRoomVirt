@@ -11,7 +11,7 @@ betingelser: client -> socketHandler -> Team -> TaskXState
 
 features:
 1.4.2:
-    
+    AI i task4.
 1.4.1:
     task4 implementeret.
     max players can be set by http://localhost:3000/setMaxPlayers?value=4
@@ -27,7 +27,7 @@ features:
     transition to task 2 possible.
     topBar display teamId.
     topBar in six fields.
-    timer implemented. Sættes i Task1State.js
+    timer implemented. Sættes i Task1State.js (og lobby.js)
     refactor: remove uuid identification on reconnect.
     UUid is only availible on the client-side
 1.3.10:
