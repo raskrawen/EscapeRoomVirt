@@ -1,5 +1,7 @@
 // start server.js by running `node server/server.js` (or node server.js)
 
+require('dotenv').config(); // Load environment variables from .env at the very top
+
 const express = require('express');
 const http = require('http');
 const socketio = require('socket.io');

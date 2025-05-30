@@ -10,6 +10,8 @@ git status
 betingelser: client -> socketHandler -> Team -> TaskXState
 
 features:
+1.4.2:
+    
 1.4.1:
     task4 implementeret.
     max players can be set by http://localhost:3000/setMaxPlayers?value=4

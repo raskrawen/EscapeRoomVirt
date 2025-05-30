@@ -4,8 +4,11 @@ const Player = require('../models/Player');
 const Team = require('../models/Team');
 const { teams, players } = require('./state');
 const TimerManager = require('./TimerManager');
+const LLM = require('./llm.js');
 
 function setupSocketHandler(io) {
+  const llm = new LLM(io);
+
   io.on('connection', (socket) => { // Håndterer socket-forbindelse
     console.log(`New client connected: ${socket.id}`); // Log connection
 
@@ -41,6 +44,16 @@ function setupSocketHandler(io) {
         team.handleEvent('teamIsFull'); //to Team.js
         console.log(`SH34: Team ${teamId} is full. Redirecting players to game.`);
       }
+    });
+
+    // Join room for teamId (should be set by client after join)
+    socket.on('joinTeamRoom', (teamId) => {
+      socket.join(teamId);
+    });
+
+    // LLM chat event
+    socket.on('llm user input', async ({ teamId, playerName, message }) => {
+      await llm.handleUserInput({ teamId, playerName, message, socket });
     });
 
     // Check if a team is full
