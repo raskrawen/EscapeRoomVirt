@@ -1,4 +1,5 @@
 // Lytter efter server-events og opdaterer klientens view.
+
 const socket = io();
 // Make sure listener is added ONCE and early
 socket.on('connect', () => {
