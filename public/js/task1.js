@@ -5,7 +5,10 @@ export function init() { // running when task1.js is loaded
   //document.getElementById('task_content').innerHTML = 'Hello from task1.js'; // Log task1.js setup
   console.log('Setting up TASK1 view'); // Log game view setup
   fadeOutAudio(); // Fade out audio when task1 is loaded
-  socket.emit('requestPlayerInfo', localStorage.getItem('playerUUId')); // to SH
+  
+  
+
+  /*socket.emit('requestPlayerInfo', localStorage.getItem('playerUUId')); // to SH
   console.log('Emitting requestPlayerInfo event'); // Log event emission
   
   socket.on('playerInfo', ({ playerName, playerId, teamId, playerNumberOnTeam }) => {
@@ -16,7 +19,7 @@ export function init() { // running when task1.js is loaded
       <p><strong>Team ID:</strong> ${teamId}</p>
       <p><strong>Player Number on Team:</strong> ${playerNumberOnTeam}</p>
     `;
-  });
+  });*/
 }
   
 document.querySelector('button#submit_button').addEventListener('click', handleSubmit);
