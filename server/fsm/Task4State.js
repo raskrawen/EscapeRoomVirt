@@ -2,7 +2,7 @@
 // Repræsenterer fjerde opgave i spillet
 
 const BaseState = require('./BaseState.js');
-const Task3State = require('./Task3State.js'); //next state import
+const Task5State = require('./Task5State.js'); //next state import
 
 class Task4State extends BaseState {
   constructor(team) {
@@ -20,7 +20,7 @@ class Task4State extends BaseState {
     super.onEvent(event, data); // This will handle TIMEOUT in BaseState
     if (event === 'TASK4_COMPLETED') {
       console.log(`Team ${this.team.teamId} completed Task 4`);
-      this.team.setState(new Task3State(this.team)); // Skift til næste state
+      this.team.setState(new Task5State(this.team)); // Skift til næste state
     }
   }
 

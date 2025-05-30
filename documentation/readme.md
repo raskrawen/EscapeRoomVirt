@@ -12,6 +12,8 @@ betingelser: client -> socketHandler -> Team -> TaskXState
 features:
 1.4.2:
     AI i task4.
+    task5
+    teamId og playername gemmes i localstorage (lobby.js) (playerUUId sættes i client.js).
 1.4.1:
     task4 implementeret.
     max players can be set by http://localhost:3000/setMaxPlayers?value=4

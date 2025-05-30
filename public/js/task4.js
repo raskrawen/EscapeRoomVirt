@@ -42,6 +42,12 @@ function handleSend() {
   if (!canSend) return; // Prevent sending if not allowed
   const text = chatInput.value.trim();
   if (!text) return;
+  // check if text contains the string 'Fiskeguf'
+  if (text.includes('Fiskeguf')) {
+    const playerId = localStorage.getItem('playerUUId');
+    socket.emit('task4Completed', { playerId }); //to socketHandler
+    return;
+  }
   setLoading(true);
   setSendButtonState(false, 'Vent');
   // Send user input to server, include playerName and teamId
@@ -81,6 +87,4 @@ window.onload = () => {
   chatInput.focus();
 };
 
-// Show initial info
-infoArea.innerHTML = 'Chat with the LLM to solve the task!';
 console.log('Setting up TASK4 LLM chat view');

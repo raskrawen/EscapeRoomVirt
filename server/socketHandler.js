@@ -106,7 +106,7 @@ function setupSocketHandler(io) {
     console.log('task1Completed: Team not found for teamId', player.teamId);
     return;
   }
-  team.handleEvent('TASK1_COMPLETED');
+  team.handleEvent('TASK1_COMPLETED'); // Handle the event in Team.js
   console.log(`task1Completed: Team ${team.teamId} transitioned to task 2.`);
 });
 
@@ -123,7 +123,7 @@ function setupSocketHandler(io) {
     console.log('task2Completed: Team not found for teamId', player.teamId);
     return;
   }
-  team.handleEvent('TASK2_COMPLETED');
+  team.handleEvent('TASK2_COMPLETED'); // Handle the event in Team.js
   console.log(`task2Completed: Team ${team.teamId} transitioned to task 3.`);
 });
 
@@ -140,7 +140,7 @@ function setupSocketHandler(io) {
     console.log('task3ACompleted: Team not found for teamId', player.teamId);
     return;
   }
-  team.handleEvent('TASK3A_COMPLETED');
+  team.handleEvent('TASK3A_COMPLETED'); // Handle the event in Team.js
   console.log(`task3ACompleted`);
 });
 
@@ -156,8 +156,24 @@ function setupSocketHandler(io) {
     console.log('task3BCompleted: Team not found for teamId', player.teamId);
     return;
   }
-  team.handleEvent('TASK3B_COMPLETED');
+  team.handleEvent('TASK3B_COMPLETED'); // Handle the event in Team.js
   console.log(`task3BCompleted`);
+});
+
+
+socket.on('task4Completed', ({ playerId }) => {
+  const player = players.get(playerId);
+  if (!player) {
+    console.log('task4Completed: Player not found for playerId', playerId);
+    return;
+  }
+  const team = teams.get(player.teamId);
+  if (!team) {
+    console.log('task4Completed: Team not found for teamId', player.teamId);
+    return;
+  }
+  team.handleEvent('TASK4_COMPLETED'); // Handle the event in Team.js
+  console.log(`SH: task4Completed: Team ${team.teamId} transitioned to task 5.`);
 });
 
 
