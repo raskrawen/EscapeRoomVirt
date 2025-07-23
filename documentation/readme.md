@@ -10,6 +10,8 @@ git status
 betingelser: client -> socketHandler -> Team -> TaskXState
 
 features:
+1.5.0:
+    Relevant for SG.
 1.4.2:
     AI i task4.
     task5
