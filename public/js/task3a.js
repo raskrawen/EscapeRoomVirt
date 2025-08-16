@@ -8,15 +8,22 @@ export function init() { // running when task2.js is loaded
   playAudio('critter'); // Play the critter audio
 }
 
+function setFeedback(msg, type = 'info') {
+  const el = document.getElementById('feedback');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = `task-feedback ${type}`; // allows styling by type
+}
+
 function handleSubmit() {
   // Placeholder for submit logic
   const answer = document.getElementById('task3a_input').value;
   const playerId = localStorage.getItem('playerUUId');
   if (answer === 'MØGBILLE' || answer === '123') {
     socket.emit('TASK3A_COMPLETED', { playerId }); // Send event to server
-    document.getElementById('info').innerHTML = `Korrekt! Vent mens resten af dit hold løser deres opgave.`;
+    setFeedback('Korrekt! Hjælp resten af dit hold med at løse jeres opgave.', 'success');
   }
   else {
-    document.getElementById('info').innerHTML = `Forkert! Prøv igen.`;
+    setFeedback('Forkert! Prøv igen.', 'error');
   }
 }

@@ -27,7 +27,7 @@ document.querySelector('button#submit_button').addEventListener('click', handleS
 function handleSubmit() {
   //const team = teams.get(teamId); // Get the team object
   console.log('Submit button clicked'); // Log submit button click
-  if (document.getElementById('task1_input').value === '123') {
+  if (document.getElementById('task1_input').value === '123' || document.getElementById('task1_input').value === 'TACTTCCCAGACTAGA') {
     console.log('Correct answer'); // Log correct answer
      // Emit task completion event to socketHandler: 
       const playerId = localStorage.getItem('playerUUId');

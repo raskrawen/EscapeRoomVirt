@@ -6,14 +6,22 @@ export function init() { // running when task2.js is loaded
   document.getElementById('submit_button').addEventListener('click', handleSubmit);
 }
 
+function setFeedback(msg, type = 'info') {
+  const el = document.getElementById('feedback');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = `task-feedback ${type}`;
+}
+
 function handleSubmit() {
   // Placeholder for submit logic
   const answer = document.getElementById('task3b_input').value;
   const playerId = localStorage.getItem('playerUUId');
   if (answer === 'KØLLESVÆRMER' || answer === '123') {
     socket.emit('TASK3B_COMPLETED', { playerId }); // Send event to server
-    document.getElementById('info').innerHTML = `Korrekt! Hjælp resten af dit hold med at løse opgaver.`;
+    setFeedback('Korrekt! Hjælp resten af dit hold med at løse opgaver.', 'success');
   }
   else {
-    document.getElementById('info').innerHTML = `Forkert! Prøv igen.`;
-  }}
+    setFeedback('Forkert! Prøv igen.', 'error');
+  }
+}

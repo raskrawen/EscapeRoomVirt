@@ -211,3 +211,24 @@ input:disabled, button:disabled {
   font-size: 0.98em;
 }
 
+/* Task feedback component (used in task3a/task3b) */
+.task-feedback {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #2a2a2a;
+  color: #eee;
+  border: 1px solid #444;
+  min-height: 1.5em;
+}
+.task-feedback.success {
+  background: #1f3d2a;
+  border-color: #2e7d32;
+  color: #c8f7c5;
+}
+.task-feedback.error {
+  background: #3d1f1f;
+  border-color: #c62828;
+  color: #ffb3b3;
+}
+
