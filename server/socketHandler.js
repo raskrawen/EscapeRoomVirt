@@ -31,6 +31,9 @@ function setupSocketHandler(io) {
         return;
       }
 
+      // Ensure this socket is in the team room (for future broadcasts)
+      try { socket.join(teamId); } catch (e) { console.warn('join room failed', e); }
+
       player.playerNumberOnTeam = team.getPlayerCount(teamId);
       team.addPlayer(player);
       
@@ -40,7 +43,17 @@ function setupSocketHandler(io) {
 
       socket.emit('displayTeamId', teamId); // Send teamId to client
       
-      if (team.teamIsFull()) {
+      // If the team is already beyond Lobby, sync this single socket to current state's view
+      const currentStateName = team.state && team.state.constructor && team.state.constructor.name;
+      if (currentStateName && currentStateName !== 'LobbyState') {
+        const view = (team.state.meta && team.state.meta.html) ? team.state.meta.html : 'lobby';
+        console.log(`SH: Sync single socket ${socket.id} to current state ${currentStateName} -> view ${view}`);
+        socket.emit('redirect', view);
+        return; // Do not process Lobby-specific logic below
+      }
+      
+      // Only from Lobby: start when team is full
+      if (team.teamIsFull() && currentStateName === 'LobbyState') {
         team.handleEvent('teamIsFull'); //to Team.js
         console.log(`SH34: Team ${teamId} is full. Redirecting players to game.`);
       }

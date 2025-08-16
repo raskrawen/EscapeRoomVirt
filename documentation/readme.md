@@ -9,8 +9,13 @@ git status
 
 betingelser: client -> socketHandler -> Team -> TaskXState
 
+timer sættes: Task1State.js linje 18 (og skal opdateres i lobby.js linje 11)
+Antal klienter sættes: server.js linje 25 (maxPlayers)
+eller: http://localhost:3000/setMaxPlayers?value=3
+
 features:
 1.5.0:
+    Når en klient reconnecter, genoptages spillet.
     Relevant for SG.
 1.4.2:
     AI i task4.

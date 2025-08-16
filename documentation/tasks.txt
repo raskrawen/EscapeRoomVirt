@@ -1,4 +1,6 @@
 
+Antal klienter: 
+
 task1: Bestem komplementær sekvens i DNA (indtast sekvens) + find en kasse/pose med: 
 * papir med genetisk kode (indtast kode for at sikre, at den er fundet)
 * lineal
