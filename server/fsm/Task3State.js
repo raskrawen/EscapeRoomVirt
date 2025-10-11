@@ -9,10 +9,24 @@ class Task3State extends BaseState {
     super(team);
     // Mapping fra playerId til html
     this.playerHtmlMap = {};
-    // Tildel html til hver spiller på teamet
     team.players.forEach((player, idx) => {
-      // Skift logik her hvis du har flere html eller vil randomisere
-      const htmlName = idx === 0 ? 'task3a' : 'task3b';
+      let htmlName;
+      switch (idx) {
+        case 0:
+          htmlName = 'task3a';
+          break;
+        case 1:
+          htmlName = 'task3b';
+          break;
+        case 2:
+          htmlName = 'task3c';
+          break;
+        case 3:
+          htmlName = 'task3d';
+          break;
+        default:
+          htmlName = 'default.html';
+      }
       this.playerHtmlMap[player.playerId] = htmlName;
     });
     this.task3aDone = false;
@@ -23,8 +37,8 @@ class Task3State extends BaseState {
     console.log(`T3S: Team ${this.team.teamId} starter Task3State med playerHtmlMap`, this.playerHtmlMap);
     // Send korrekt html til hver spiller
     this.team.players.forEach(player => {
-      const html = this.playerHtmlMap[player.playerId];
-      player.socket.emit('redirect', html);
+      const html = this.playerHtmlMap[player.playerId]; // Hent html baseret på playerId
+      player.socket.emit('redirect', html); // Fortæl klienterne at den specifikke task3 html skal vises
     });
   }
 
