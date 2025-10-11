@@ -9,7 +9,13 @@ class Team {
     this.players = [];
     this.maxPlayers = global.maxPlayers; // Brug global værdi
     this.teamVisitedStates = new Set(); // Sæt til at holde styr på besøgte states. Kun en kopi af hvert navn
+    this.completedStates = new Set(); // Sæt til at holde styr på klaret states/opgaver
     this.setState(new LobbyState(this)); // Start i lobby
+  }
+  // Tilføj et state til completedStates
+  addCompletedState(stateName) {
+    this.completedStates.add(stateName);
+    console.log('T19: Team completed states: ', this.completedStates);
   }
 
 // Sæt teamets nuværende state

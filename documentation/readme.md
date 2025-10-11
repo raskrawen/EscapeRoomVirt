@@ -16,6 +16,8 @@ Antal klienter sættes: server.js linje 25 (maxPlayers)
 eller: http://localhost:3000/setMaxPlayers?value=3
 
 features:
+1.5.1:
+    navigationsknapper i topbar
 1.5.0:
     Når en klient reconnecter, genoptages spillet.
     Mere relevant for SG.

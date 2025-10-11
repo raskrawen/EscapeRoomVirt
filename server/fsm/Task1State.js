@@ -30,6 +30,7 @@ class Task1State extends BaseState {
 
     if (event === 'TASK1_COMPLETED') {
       console.log(`Team ${this.team.teamId} completed Task 1`);
+      this.team.addCompletedState('Task1State');
       this.team.setState(new Task2State(this.team)); // Skift til næste state
     }
   }

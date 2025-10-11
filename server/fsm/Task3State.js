@@ -30,6 +30,7 @@ class Task3State extends BaseState {
     }
     if (this.task3aDone && this.task3bDone) {
     console.log(`Team ${this.team.teamId} completed Task 3A og Task 3B`);
+    this.team.addCompletedState('Task3State');
     this.team.setState(new Task4State(this.team));
   }
   }

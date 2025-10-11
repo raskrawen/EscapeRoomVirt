@@ -20,6 +20,7 @@ class Task5State extends BaseState {
     super.onEvent(event, data); // This will handle TIMEOUT in BaseState
     if (event === 'TASK5_COMPLETED') {
       console.log(`Team ${this.team.teamId} completed Task 5`);
+      this.team.addCompletedState('Task5State');
       this.team.setState(new Task3State(this.team)); // Skift til næste state
     }
   }
