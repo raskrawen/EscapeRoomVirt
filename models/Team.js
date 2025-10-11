@@ -8,13 +8,15 @@ class Team {
     this.teamId = teamId;
     this.players = [];
     this.maxPlayers = global.maxPlayers; // Brug global værdi
-    this.teamVisitedStates = new Set(); // Sæt til at holde styr på besøgte states. Kun en kopi af hvert navn
-    this.completedStates = new Set(); // Sæt til at holde styr på klaret states/opgaver
+    this.teamVisitedStates = []; // Array til at holde rækkefølge af besøgte states
+    this.completedStates = []; // Array til at holde rækkefølge af klaret states/opgaver
     this.setState(new LobbyState(this)); // Start i lobby
   }
   // Tilføj et state til completedStates
   addCompletedState(stateName) {
-    this.completedStates.add(stateName);
+    if (!this.completedStates.includes(stateName)) {
+      this.completedStates.push(stateName);
+    }
     console.log('T19: Team completed states: ', this.completedStates);
   }
 
@@ -22,7 +24,9 @@ class Team {
   setState(state) {
     if (this.state?.exit) this.state.exit();  // Kør exit på tidligere state
     this.state = state;                       // Opdater state
-    this.teamVisitedStates.add(state.constructor.name);       // ← Registrér besøgt state
+    if (!this.teamVisitedStates.includes(state.constructor.name)) {
+      this.teamVisitedStates.push(state.constructor.name); // Registrér besøgt state kun én gang
+    }
     console.log('T18: Team visited: ', this.teamVisitedStates); // Log besøgte states
     this.state.enter();                       // Kør enter på ny state
   }

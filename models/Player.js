@@ -9,9 +9,8 @@ class Player {
     this.teamId = teamId;
     this.socketId = socketId;
     this.socket = socket; // Socket.io objektet til at kommunikere med klienten
-    this.playerNumberOnTeam = -1; // initialiseret spillernummer på holdet.
-    //this.playerCurrentState = null; // Den nuværende state spilleren er i
-    //this.playerVisitedStates = new Set(); // Sæt til at holde styr på besøgte states. Kun en kopi af hvert navn
+    this.playerNumberOnTeam = -1; // initialiseret spillerantal på holdet.
+    this.currentStateIndex = 0; // Index for nuværende state i historikken
   }
 
 getPlayerId() {

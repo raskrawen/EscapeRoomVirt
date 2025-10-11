@@ -7,15 +7,25 @@ const Task4State = require('./Task4State.js'); //next state import
 class Task3State extends BaseState {
   constructor(team) {
     super(team);
-    this.meta = { html: ['task3a' , 'task3b'] }; // HTML der skal vises til spillerne
+    // Mapping fra playerId til html
+    this.playerHtmlMap = {};
+    // Tildel html til hver spiller på teamet
+    team.players.forEach((player, idx) => {
+      // Skift logik her hvis du har flere html eller vil randomisere
+      const htmlName = idx === 0 ? 'task3a' : 'task3b';
+      this.playerHtmlMap[player.playerId] = htmlName;
+    });
     this.task3aDone = false;
     this.task3bDone = false;
   }
 
   enter() {
-    console.log(`T3S: Team ${this.team.teamId} starter ${this.meta.html}`);
-    this.team.broadcastRedirect(this.meta.html); // Fortæl klienterne at task3a og b skal vises 
-    
+    console.log(`T3S: Team ${this.team.teamId} starter Task3State med playerHtmlMap`, this.playerHtmlMap);
+    // Send korrekt html til hver spiller
+    this.team.players.forEach(player => {
+      const html = this.playerHtmlMap[player.playerId];
+      player.socket.emit('redirect', html);
+    });
   }
 
   onEvent(event, data) { // from socketHandler
