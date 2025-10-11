@@ -28,7 +28,7 @@ class Team {
       this.teamVisitedStates.push(state.constructor.name); // Registrér besøgt state kun én gang
     }
     console.log('T18: Team visited: ', this.teamVisitedStates); // Log besøgte states
-    this.state.enter();      // Kør enter på ny state
+    //this.state.enter();      // Kør enter på ny state
   }
 
     // Send event til state-maskinen i det aktuelle state.

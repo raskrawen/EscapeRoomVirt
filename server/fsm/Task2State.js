@@ -34,9 +34,7 @@ class Task2State extends BaseState {
 
   enter() {
     console.log(`T2S: Team ${this.team.teamId} starter task2`);
-    /*this.team.players.forEach(player => {
-      player.socket.emit('redirect', this.meta.html);
-    });*/
+    
   }
 
   onEvent(event, data) { // from socketHandler
