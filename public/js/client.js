@@ -1,5 +1,7 @@
 // Lytter efter server-events og opdaterer klientens view.
 
+export const secretPassword = "123qwe";
+
 const socket = io();
 // Make sure listener is added ONCE and early
 socket.on('connect', () => {

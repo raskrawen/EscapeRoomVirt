@@ -23,7 +23,7 @@ const sessionMiddleware = session({
 
 // fx i server.js eller et config-modul
 global.maxPlayers = 2;
-
+//global.secretPassword = "123qwe";
 
 
 app.use(sessionMiddleware);

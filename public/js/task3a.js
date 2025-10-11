@@ -1,5 +1,6 @@
 import { socket } from './client.js'; // Import socket from client.js
 import { playAudio, pauseAudio, fadeOutAudio, fadeOutAudioAndPlay } from './AV/audioManager.js';
+import { secretPassword } from './client.js';
 
 export function init() { // running when task2.js is loaded
   //document.getElementById('info').innerHTML = 'AAAAA Hello from task3a.js'; // Log task1.js setup
@@ -19,7 +20,7 @@ function handleSubmit() {
   // Placeholder for submit logic
   const answer = document.getElementById('task3a_input').value;
   const playerId = localStorage.getItem('playerUUId');
-  if (answer === 'MØGBILLE' || answer === '123') {
+  if (answer === 'MØGBILLE' || answer === secretPassword) {
     socket.emit('TASK3A_COMPLETED', { playerId }); // Send event to server
     setFeedback('Korrekt! Hjælp resten af dit hold med at løse jeres opgave.', 'success');
   }

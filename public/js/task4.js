@@ -1,4 +1,5 @@
 import { socket } from './client.js';
+import { secretPassword } from './client.js';
 
 // DOM elements
 const chatWindow = document.getElementById('chat_window');

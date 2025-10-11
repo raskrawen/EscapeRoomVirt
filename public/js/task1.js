@@ -1,5 +1,6 @@
 import { socket } from './client.js'; // Import socket from client.js
 import { fadeOutAudio } from './AV/audioManager.js';
+import { secretPassword } from './client.js';
 
 export function init() { // running when task1.js is loaded
   //document.getElementById('task_content').innerHTML = 'Hello from task1.js'; // Log task1.js setup
@@ -27,7 +28,7 @@ document.querySelector('button#submit_button').addEventListener('click', handleS
 function handleSubmit() {
   //const team = teams.get(teamId); // Get the team object
   console.log('Submit button clicked'); // Log submit button click
-  if (document.getElementById('task1_input').value === '123' || document.getElementById('task1_input').value === 'TACTTCCCAGACTAGA') {
+  if (document.getElementById('task1_input').value === secretPassword || document.getElementById('task1_input').value === 'TACTTCCCAGACTAGA') {
     console.log('Correct answer'); // Log correct answer
      // Emit task completion event to socketHandler: 
       const playerId = localStorage.getItem('playerUUId');
