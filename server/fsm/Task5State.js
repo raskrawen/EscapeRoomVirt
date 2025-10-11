@@ -7,14 +7,13 @@ const EndState = require('./EndState.js'); //next state import
 class Task5State extends BaseState {
   constructor(team) {
     super(team);
+    this.stateNumber = 4;
     this.meta = { html: 'task5' }; // HTML der skal vises til spillerne
   }
 
   enter() {
     console.log(`T2S: Team ${this.team.teamId} starter ${this.meta.html}`);
-    this.team.players.forEach(player => {
-      player.socket.emit('redirect', this.meta.html);
-    });
+    
   }
 
   onEvent(event, data) { // from socketHandler

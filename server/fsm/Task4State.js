@@ -7,14 +7,13 @@ const Task5State = require('./Task5State.js'); //next state import
 class Task4State extends BaseState {
   constructor(team) {
     super(team);
-    this.meta = { html: 'task4' }; // HTML der skal vises til spillerne
+    this.stateNumber = 3;
+    this.meta = { html: 'task5' }; // HTML der skal vises til spillerne
   }
 
   enter() {
-    console.log(`T4S: Team ${this.team.teamId} starter ${this.meta.html}`);
-    this.team.players.forEach(player => {
-      player.socket.emit('redirect', this.meta.html);
-    });
+    console.log(`T4S: Team ${this.team.teamId} starter task4`);
+    
   }
 
   onEvent(event, data) { // from socketHandler
@@ -23,6 +22,13 @@ class Task4State extends BaseState {
       console.log(`Team ${this.team.teamId} completed Task 4`);
       this.team.addCompletedState('Task4State');
       this.team.setState(new Task5State(this.team)); // Skift til næste state
+      this.team.players.forEach(player => {
+        if (player.currentStateIndex === this.stateNumber) {
+          player.currentStateIndex += 1;
+          player.socket.emit('redirect', this.meta.html); // Fortæl klienterne at task2 skal vises
+        console.log(player.playerId + 'skiftet index til: ' + player.currentStateIndex);
+        }
+      });
     }
   }
 

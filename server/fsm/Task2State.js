@@ -7,14 +7,36 @@ const Task3State = require('./Task3State.js'); //next state import
 class Task2State extends BaseState {
   constructor(team) {
     super(team);
-    this.meta = { html: 'task2' }; // HTML der skal vises til spillerne
+    //this.meta = { html: 'task2' }; // HTML der skal vises til spillerne
+    this.stateNumber = 1;
+    this.playerHtmlMap = {};
+    team.players.forEach((player, idx) => {
+      let htmlName;
+      switch (idx) {
+        case 0:
+          htmlName = 'task3a';
+          break;
+        case 1:
+          htmlName = 'task3b';
+          break;
+        case 2:
+          htmlName = 'task3c';
+          break;
+        case 3:
+          htmlName = 'task3d';
+          break;
+        default:
+          htmlName = 'default.html';
+      }
+      this.playerHtmlMap[player.playerId] = htmlName;
+    });
   }
 
   enter() {
-    console.log(`T2S: Team ${this.team.teamId} starter ${this.meta.html}`);
-    this.team.players.forEach(player => {
+    console.log(`T2S: Team ${this.team.teamId} starter task2`);
+    /*this.team.players.forEach(player => {
       player.socket.emit('redirect', this.meta.html);
-    });
+    });*/
   }
 
   onEvent(event, data) { // from socketHandler
@@ -23,6 +45,15 @@ class Task2State extends BaseState {
       console.log(`Team ${this.team.teamId} completed Task 2`);
       this.team.addCompletedState('Task2State');
       this.team.setState(new Task3State(this.team)); // Skift til næste state
+      
+      this.team.players.forEach(player => {
+        if (player.currentStateIndex === this.stateNumber) {
+          player.currentStateIndex += 1;
+          const html = this.playerHtmlMap[player.playerId]; // Hent html baseret på playerId
+          player.socket.emit('redirect', html); // Fortæl klienterne at den specifikke task3 html skal vises
+        console.log(player.playerId + 'skiftet index til: ' + player.currentStateIndex);
+        }
+      });
     }
   }
 

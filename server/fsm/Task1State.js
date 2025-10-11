@@ -8,13 +8,14 @@ const TimerManager = require('../TimerManager.js'); // Importer TimerManager
 class Task1State extends BaseState {
   constructor(team) {
     super(team);
-    this.meta = { html: 'task1' }; // HTML der skal vises til spillerne
+    this.stateNumber = 0;
+    this.meta = { html: 'task2' }; // HTML der skal vises til spillerne
   }
 
   enter() {
-    console.log(`T1S: Team ${this.team.teamId} starter ${this.meta.html}`);
+    console.log(`T1S: Team ${this.team.teamId} starter task1`);
     this.team.players.forEach(player => {
-      player.socket.emit('redirect', this.meta.html);
+      player.socket.emit('redirect', 'task1');
     });
     // Start the timer for the team
     const duration = 300; // 600 = 10 minutes in seconds
@@ -32,8 +33,15 @@ class Task1State extends BaseState {
 
     if (event === 'TASK1_COMPLETED') {
       console.log(`Team ${this.team.teamId} completed Task 1`);
-      this.team.addCompletedState('Task1State');
-      this.team.setState(new Task2State(this.team)); // Skift til næste state
+      this.team.addCompletedState('Task1State'); 
+      this.team.setState(new Task2State(this.team)); // opret næste state
+      this.team.players.forEach(player => {
+        if (player.currentStateIndex === this.stateNumber) {
+          player.currentStateIndex += 1;
+          player.socket.emit('redirect', this.meta.html); // Fortæl klienterne at task2 skal vises
+          console.log(player.playerId + 'skiftet index til: ' + player.currentStateIndex);
+        }
+      });
     }
   }
 

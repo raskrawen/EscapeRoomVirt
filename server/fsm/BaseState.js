@@ -6,6 +6,7 @@ class BaseState {
   constructor(team) {
     this.team = team;      // Reference til det team, som state'en hører til
     this.meta = {};        // Metadata (fx HTML-filnavn til redirect)
+    //this.completedPlayers = []; // Liste over spillere der har klaret Tasken
   }
 
   // Kaldes når state aktiveres
