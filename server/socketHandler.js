@@ -101,6 +101,33 @@ function setupSocketHandler(io) {
       }
     });
 
+  // Når spilleren klikker "Frem"-knappen
+  socket.on('playerGoForward', ({ playerId }) => {
+    console.log(`SH: playerGoForward event received from socket: ${socket.id} for playerId: ${playerId}`); // Log go forward event
+    const player = players.get(playerId);
+    if (!player) {
+      console.log('SH:playerGoForward: Player not found for playerId', playerId);
+      return;
+    }
+    const team = teams.get(player.teamId);
+    if (!team) {
+      console.log('SH:playerGoForward: Team not found for teamId', player.teamId);
+      return;
+    }
+    // Kun tillad frem hvis der findes en completed state efter currentStateIndex
+    if (player.currentStateIndex < team.completedStates.length - 1) {
+      player.currentStateIndex += 1;
+      // Brug eksisterende state-objekt for den nye index
+      const stateObj = team.stateObjects[player.currentStateIndex];
+      if (stateObj && typeof stateObj.enter === 'function') {
+        console.log(`SH:playerGoForward: Sending player ${player.playerId} forward to state index ${player.currentStateIndex} og state ${stateObj.constructor.name}`);
+        stateObj.enter(player);
+      } else {
+        console.log('SH:playerGoForward: No state object found for index', player.currentStateIndex);
+      }
+    }
+  });
+
     // LLM chat event
     socket.on('llm user input', async ({ teamId, playerName, message }) => {
       console.log(`SH: llm user input received from socket: ${socket.id} for teamId: ${teamId}, playerName: ${playerName}, message: ${message}`); // Log LLM input event

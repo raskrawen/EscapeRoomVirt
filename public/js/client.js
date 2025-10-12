@@ -49,15 +49,23 @@ export async function loadTask(taskName) {
 
   const module = await import(`/js/${taskName}.js`);
   if (module.init) module.init();
-  
-  // Show/hide backButton based on view
+  // Show/hide backButton and forwardButton based on view
   const backButton = document.getElementById("backButton");
-  const hideViews = ["start", "lobby", "task1", "timeout"];
+  const hideViewsB = ["start", "lobby", "task1", "timeout"];
+  const hideViews = ["start", "lobby", "timeout"];
+  const forwardButton = document.getElementById("forwardButton");
   if (backButton) {
-    if (hideViews.includes(taskName)) {
+    if (hideViewsB.includes(taskName)) {
       backButton.style.display = "none";
     } else {
       backButton.style.display = "inline-block";
+    }
+  }
+  if (forwardButton) {
+    if (hideViews.includes(taskName)) {
+      forwardButton.style.display = "none";
+    } else {
+      forwardButton.style.display = "inline-block";
     }
   }
 }
@@ -72,6 +80,13 @@ document.addEventListener('DOMContentLoaded', () => {
     backButton.onclick = () => {
       const playerUUId = localStorage.getItem('playerUUId');
       socket.emit('playerGoBack', { playerId: playerUUId });
+    };
+  }
+  const forwardButton = document.getElementById('forwardButton');
+  if (forwardButton) {
+    forwardButton.onclick = () => {
+      const playerUUId = localStorage.getItem('playerUUId');
+      socket.emit('playerGoForward', { playerId: playerUUId });
     };
   }
 });
