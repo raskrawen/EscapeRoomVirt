@@ -19,6 +19,7 @@ features:
 1.5.2:
     LLM virker igen.
     forward navigation i topbar.
+    task3c implementeret.
 1.5.1:
     task-skift er baseret på player og ikke team.
     tilbage-knap i topbar

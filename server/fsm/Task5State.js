@@ -1,5 +1,5 @@
 // 📁 /server/fsm/Task2State.js
-// Repræsenterer anden opgave i spillet
+// Repræsenterer femte opgave i spillet
 
 const BaseState = require('./BaseState.js');
 const EndState = require('./EndState.js'); //next state import

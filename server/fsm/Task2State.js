@@ -17,7 +17,7 @@ class Task2State extends BaseState {
         case 0: htmlName = 'task3a'; break;
         case 1: htmlName = 'task3b'; break;
         case 2: htmlName = 'task3c'; break;
-        default: htmlName = 'default.html';
+        default: htmlName = 'task3a.html';
       }
       this.playerHtmlMap[player.playerId] = htmlName;
     });
