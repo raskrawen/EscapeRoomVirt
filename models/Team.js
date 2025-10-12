@@ -8,26 +8,31 @@ class Team {
     this.teamId = teamId;
     this.players = [];
     this.maxPlayers = global.maxPlayers; // Brug global værdi
-    this.teamVisitedStates = []; // Array til at holde rækkefølge af besøgte states
-    this.completedStates = []; // Array til at holde rækkefølge af klaret states/opgaver
-    this.setState(new LobbyState(this)); // Start i lobby
+  this.teamVisitedStates = []; // Array til at holde rækkefølge af besøgte states
+  this.completedStates = []; // Array til at holde rækkefølge af klaret states/opgaver
+  this.stateObjects = []; // Array til at holde Task-state-objekter i rækkefølge
+  this.setState(new LobbyState(this)); // Start i lobby
   }
   // Tilføj et state til completedStates
   addCompletedState(stateName) {
     if (!this.completedStates.includes(stateName)) {
       this.completedStates.push(stateName);
     }
-    console.log('T19: Team completed states: ', this.completedStates);
+    console.log('T: Team completed states: ', this.completedStates);
   }
 
 // Sæt teamets nuværende state
   setState(state) {
     if (this.state?.exit) this.state.exit();  // Kør exit på tidligere state
     this.state = state;                       // Opdater state
+    // Gem state-objektet hvis det ikke allerede er gemt
     if (!this.teamVisitedStates.includes(state.constructor.name)) {
-      this.teamVisitedStates.push(state.constructor.name); // Registrér besøgt state kun én gang
+      this.teamVisitedStates.push(state.constructor.name);
+      if (state.constructor.name !== 'LobbyState') { // Undgå at gemme LobbyState i stateObjects
+      this.stateObjects.push(state);
     }
-    console.log('T18: Team visited: ', this.teamVisitedStates); // Log besøgte states
+  }
+    console.log('T: Team visited: ', this.teamVisitedStates); // Log besøgte states
     this.state.enter();      // Kør enter på ny state
   }
 
@@ -42,7 +47,7 @@ class Team {
   addPlayer(player) {
       this.players.push(player);
       this.handleEvent('PLAYER_ADDED'); // Send event til state-maskinen (LobbyState)
-      console.log(`T30: Spiller ${player.playerName} tilføjet til hold ${this.teamId}`);
+      console.log(`T: Spiller ${player.playerName} tilføjet til hold ${this.teamId}`);
     }
 
   // Fjern spiller fra holdet
@@ -72,7 +77,7 @@ class Team {
 
   // Hvis alle spillere skal sendes til et State
   broadcastRedirect(html) {
-    console.log(`T54: Team ${this.teamId} sender redirect til alle spillere: ${html}`);
+    console.log(`T: Team ${this.teamId} sender redirect til alle spillere: ${html}`);
     this.players.forEach(player => {
       player.socket.emit('redirect', html);
     });

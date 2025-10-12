@@ -7,6 +7,8 @@ const TimerManager = require('./TimerManager');
 const LLM = require('./llm.js');
 
 function setupSocketHandler(io) {
+    
+
   const llm = new LLM(io);
 
   io.on('connection', (socket) => { // Håndterer socket-forbindelse
@@ -71,8 +73,36 @@ function setupSocketHandler(io) {
       socket.join(teamId);
     });
 
+
+      // Når spilleren klikker "Tilbage"-knappen
+    socket.on('playerGoBack', ({ playerId }) => {
+      console.log(`SH: playerGoBack event received from socket: ${socket.id} for playerId: ${playerId}`); // Log go back event
+      const player = players.get(playerId);
+      if (!player) {
+        console.log('SH:playerGoBack: Player not found for playerId', playerId);
+        return;
+      }
+      const team = teams.get(player.teamId);
+      if (!team) {
+        console.log('SH:playerGoBack: Team not found for teamId', player.teamId);
+        return;
+      }
+      // Kun tillad tilbage hvis currentStateIndex > 0 (Task2 og op)
+      if (player.currentStateIndex > 0) {
+        player.currentStateIndex -= 1;
+        // Brug eksisterende state-objekt for den nye index
+        const stateObj = team.stateObjects[player.currentStateIndex];
+        if (stateObj && typeof stateObj.enter === 'function') {
+          console.log(`SH:playerGoBack: Sending player ${player.playerId} back to state index ${player.currentStateIndex} og state ${stateObj.constructor.name}`);
+          stateObj.enter(player);
+        } else {
+          console.log('SH:playerGoBack: No state object found for index', player.currentStateIndex);
+        }
+      }
+    });
+
     // LLM chat event
-    socket.on('llm user input', async ({ teamId, playerName, message }) => {
+    socket.on('SH:llm user input', async ({ teamId, playerName, message }) => {
       await llm.handleUserInput({ teamId, playerName, message, socket });
     });
 
@@ -83,20 +113,20 @@ function setupSocketHandler(io) {
       //let noOfPlayers = team.getPlayerCount(); // Get number of players on the team
       //console.log(`SH: Number of players in team ${teamId}: ${noOfPlayers}`); // Log number of players
       if (team && team.teamIsFull()) {
-        console.log(`Team ${teamId} is full.`); // Log team full status
+        console.log(`SH: Team ${teamId} is full.`); // Log team full status
         callback(true); // Team is full. "true" send to client
       } else {
-        console.log(`Team ${teamId} is not full.`); // Log team not full status
+        console.log(`SH: Team ${teamId} is not full.`); // Log team not full status
         callback(false); // Team is not full. "false" send to client
       }
     });
 
     // Når klient anmoder om spillerinfo
     socket.on('requestPlayerInfo', (playerId) => {
-      console.log(`requestPlayerInfo event received from socket: ${socket.id}`); // Log requestPlayerInfo event
+      console.log(`SH: requestPlayerInfo event received from socket: ${socket.id}`); // Log requestPlayerInfo event
       console.log('SH: Player ID:', playerId); // Log player Id
       if (!playerId) {
-        console.log('Player ID is undefined or null.'); // Log player ID status
+        console.log('SH: Player ID is undefined or null.'); // Log player ID status
         return;
       }
       //const playerId = playerId;
@@ -110,7 +140,7 @@ function setupSocketHandler(io) {
           playerNumberOnTeam: player.playerNumberOnTeam
         });
       } else {
-        console.log('Player not found in players map.'); // Log player not found status
+        console.log('SH: Player not found in players map.'); // Log player not found status
       }
     });
 
@@ -118,16 +148,16 @@ function setupSocketHandler(io) {
   socket.on('task1Completed', ({ playerId }) => {
   const player = players.get(playerId);
   if (!player) {
-    console.log('task1Completed: Player not found for playerId', playerId);
+    console.log('SH: task1Completed: Player not found for playerId', playerId);
     return;
   }
   const team = teams.get(player.teamId);
   if (!team) {
-    console.log('task1Completed: Team not found for teamId', player.teamId);
+    console.log('SH: task1Completed: Team not found for teamId', player.teamId);
     return;
   }
   team.handleEvent('TASK1_COMPLETED'); // Handle the event in Team.js
-  console.log(`task1Completed: Team ${team.teamId} transitioned to task 2.`);
+  console.log(`SH: task1Completed: Team ${team.teamId} transitioned to task 2.`);
 });
 
 
@@ -135,16 +165,16 @@ function setupSocketHandler(io) {
   socket.on('task2Completed', ({ playerId }) => {
   const player = players.get(playerId);
   if (!player) {
-    console.log('task2Completed: Player not found for playerId', playerId);
+    console.log('SH: task2Completed: Player not found for playerId', playerId);
     return;
   }
   const team = teams.get(player.teamId);
   if (!team) {
-    console.log('task2Completed: Team not found for teamId', player.teamId);
+    console.log('SH: task2Completed: Team not found for teamId', player.teamId);
     return;
   }
   team.handleEvent('TASK2_COMPLETED'); // Handle the event in Team.js
-  console.log(`task2Completed: Team ${team.teamId} transitioned to task 3.`);
+  console.log(`SH: task2Completed: Team ${team.teamId} transitioned to task 3.`);
 });
 
 
@@ -152,44 +182,44 @@ function setupSocketHandler(io) {
   socket.on('TASK3A_COMPLETED', ({ playerId }) => {
   const player = players.get(playerId);
   if (!player) {
-    console.log('task3ACompleted: Player not found for playerId', playerId);
+    console.log('SH: task3ACompleted: Player not found for playerId', playerId);
     return;
   }
   const team = teams.get(player.teamId);
   if (!team) {
-    console.log('task3ACompleted: Team not found for teamId', player.teamId);
+    console.log('SH: task3ACompleted: Team not found for teamId', player.teamId);
     return;
   }
   team.handleEvent('TASK3A_COMPLETED'); // Handle the event in Team.js
-  console.log(`task3ACompleted`);
+  console.log(`SH: task3ACompleted`);
 });
 
     // Når task3B er afsluttet
   socket.on('TASK3B_COMPLETED', ({ playerId }) => {
   const player = players.get(playerId);
   if (!player) {
-    console.log('task3BCompleted: Player not found for playerId', playerId);
+    console.log('SH: task3BCompleted: Player not found for playerId', playerId);
     return;
   }
   const team = teams.get(player.teamId);
   if (!team) {
-    console.log('task3BCompleted: Team not found for teamId', player.teamId);
+    console.log('SH: task3BCompleted: Team not found for teamId', player.teamId);
     return;
   }
   team.handleEvent('TASK3B_COMPLETED'); // Handle the event in Team.js
-  console.log(`task3BCompleted`);
+  console.log(`SH: task3BCompleted`);
 });
 
 
 socket.on('task4Completed', ({ playerId }) => {
   const player = players.get(playerId);
   if (!player) {
-    console.log('task4Completed: Player not found for playerId', playerId);
+    console.log('SH: task4Completed: Player not found for playerId', playerId);
     return;
   }
   const team = teams.get(player.teamId);
   if (!team) {
-    console.log('task4Completed: Team not found for teamId', player.teamId);
+    console.log('SH: task4Completed: Team not found for teamId', player.teamId);
     return;
   }
   team.handleEvent('TASK4_COMPLETED'); // Handle the event in Team.js
@@ -213,24 +243,24 @@ socket.on('task4Completed', ({ playerId }) => {
       const team = teams.get(player.teamId);
 
       if (team) {
-      console.log(`Removing player ${player.playerId} from team, with ${team.getPlayerCount(player.teamId)} players`); // Log player removal
+      console.log(`SH: Removing player ${player.playerId} from team, with ${team.getPlayerCount(player.teamId)} players`); // Log player removal
       for (let i = 0; i < team.players.length; i++) {
         if (team.players[i].playerId === player.playerId) {
           team.players.splice(i, 1);
           break;
         }
       }
-      console.log('Players left on team:', team.getPlayerCount(player.teamId)); // Log players on team
+      console.log('SH: Players left on team:', team.getPlayerCount(player.teamId)); // Log players on team
       
 
       if (team.players.length === 0) {
-        console.log(`Team is empty. Keeping team: ${player.teamId}`); // Log team retention
+        console.log(`SH: Team is empty. Keeping team: ${player.teamId}`); // Log team retention
       }
       }
 
       // Keep player in memory but mark as disconnected
       player.socket = null;
-      console.log(`Player marked as disconnected: ${player.playerId}`); // Log player disconnection
+      console.log(`SH: Player marked as disconnected: ${player.playerId}`); // Log player disconnection
     });
   });
 }

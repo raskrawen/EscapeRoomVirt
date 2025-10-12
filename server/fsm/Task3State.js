@@ -29,7 +29,7 @@ team.players.forEach((player, idx) => {
 enter(player) {
     // Ved navigation: vis korrekt html for Task3
     const html = this.playerHtmlMap[player.playerId] || 'default.html';
-player.socket.emit('redirect', html);
+    player.socket.emit('redirect', html);
   }
 
   enter() {

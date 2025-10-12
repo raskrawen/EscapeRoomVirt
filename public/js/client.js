@@ -49,11 +49,32 @@ export async function loadTask(taskName) {
 
   const module = await import(`/js/${taskName}.js`);
   module.init();
+  
+  // Show/hide backButton based on view
+  const backButton = document.getElementById("backButton");
+  const hideViews = ["lobby", "task1", "timeout"];
+  if (backButton) {
+    if (hideViews.includes(taskName)) {
+      backButton.style.display = "none";
+    } else {
+      backButton.style.display = "inline-block";
+    }
+  }
 }
 
 // Load initial view
 loadTask('start');
 
+// Add event listener for backButton
+document.addEventListener('DOMContentLoaded', () => {
+  const backButton = document.getElementById('backButton');
+  if (backButton) {
+    backButton.onclick = () => {
+      const playerUUId = localStorage.getItem('playerUUId');
+      socket.emit('playerGoBack', { playerId: playerUUId });
+    };
+  }
+});
 
 socket.on('displayTeamId', (teamId) => {
   if (teamId) {

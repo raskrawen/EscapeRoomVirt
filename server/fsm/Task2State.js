@@ -51,7 +51,7 @@ class Task2State extends BaseState {
           player.currentStateIndex += 1;
           const html = this.playerHtmlMap[player.playerId]; // Hent html baseret på playerId
           player.socket.emit('redirect', html); // Fortæl klienterne at den specifikke task3 html skal vises
-        console.log(player.playerId + 'skiftet index til: ' + player.currentStateIndex);
+        console.log(player.playerId + ' skiftet index til: ' + player.currentStateIndex);
         }
       });
     }
