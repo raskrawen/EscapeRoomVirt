@@ -19,6 +19,7 @@ class LLM {
   }
 
   async getReply(teamId, userMessage) {
+    console.log('LLM: getReply for team', teamId, 'message:', userMessage);
     if (!this.teamConversations[teamId]) {
       this.teamConversations[teamId] = [
         { role: 'system', content: this.sysprompt },
@@ -34,6 +35,7 @@ class LLM {
       });
       const reply = completion.choices[0].message.content.trim();
       this.teamConversations[teamId].push({ role: 'assistant', content: reply });
+      console.log('LLM: reply for team', teamId, ':', reply);
       return reply;
     } catch (err) {
       return { error: err.message || 'AI fejl' };

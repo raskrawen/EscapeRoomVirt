@@ -102,7 +102,8 @@ function setupSocketHandler(io) {
     });
 
     // LLM chat event
-    socket.on('SH:llm user input', async ({ teamId, playerName, message }) => {
+    socket.on('llm user input', async ({ teamId, playerName, message }) => {
+      console.log(`SH: llm user input received from socket: ${socket.id} for teamId: ${teamId}, playerName: ${playerName}, message: ${message}`); // Log LLM input event
       await llm.handleUserInput({ teamId, playerName, message, socket });
     });
 

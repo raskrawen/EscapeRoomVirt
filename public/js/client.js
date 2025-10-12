@@ -48,7 +48,7 @@ export async function loadTask(taskName) {
   }
 
   const module = await import(`/js/${taskName}.js`);
-  module.init();
+  if (module.init) module.init();
   
   // Show/hide backButton based on view
   const backButton = document.getElementById("backButton");

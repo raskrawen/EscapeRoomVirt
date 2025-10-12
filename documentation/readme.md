@@ -16,6 +16,9 @@ Antal klienter sættes: server.js linje 25 (maxPlayers)
 eller: http://localhost:3000/setMaxPlayers?value=3
 
 features:
+1.5.2:
+    LLM virker igen.
+    forward navigation i topbar.
 1.5.1:
     task-skift er baseret på player og ikke team.
     tilbage-knap i topbar

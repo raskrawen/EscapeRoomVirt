@@ -40,6 +40,7 @@ function setSendButtonState(enabled, text) {
 }
 
 function handleSend() {
+  console.log('handleSend called, canSend:', canSend);
   if (!canSend) return; // Prevent sending if not allowed
   const text = chatInput.value.trim();
   if (!text) return;
@@ -51,7 +52,7 @@ function handleSend() {
   }
   setLoading(true);
   setSendButtonState(false, 'Vent');
-  // Send user input to server, include playerName and teamId
+  // Send user input to socketHandler.js, include playerName and teamId
   socket.emit('llm user input', { teamId, playerName, message: text });
   chatInput.value = '';
 }
