@@ -5,6 +5,7 @@ const BaseState = require('./BaseState.js');
 const Task4State = require('./Task4State.js'); //next state import
 
 class Task3State extends BaseState {
+  
   constructor(team) {
     super(team);
     this.stateNumber = 2;
@@ -12,6 +13,23 @@ class Task3State extends BaseState {
     this.meta = { html: 'task4' }; // HTML der skal vises til spillerne
     this.task3aDone = false;
     this.task3bDone = false;
+    this.playerHtmlMap = {};
+team.players.forEach((player, idx) => {
+  let htmlName;
+  switch (idx) {
+    case 0: htmlName = 'task3a'; break;
+    case 1: htmlName = 'task3b'; break;
+    case 2: htmlName = 'task3c'; break;
+    default: htmlName = 'default.html';
+  }
+  this.playerHtmlMap[player.playerId] = htmlName;
+});
+  }
+
+enter(player) {
+    // Ved navigation: vis korrekt html for Task3
+    const html = this.playerHtmlMap[player.playerId] || 'default.html';
+player.socket.emit('redirect', html);
   }
 
   enter() {

@@ -5,6 +5,7 @@ const BaseState = require('./BaseState.js');
 const Task3State = require('./Task3State.js'); //next state import
 
 class Task2State extends BaseState {
+  
   constructor(team) {
     super(team);
     //this.meta = { html: 'task2' }; // HTML der skal vises til spillerne
@@ -22,9 +23,6 @@ class Task2State extends BaseState {
         case 2:
           htmlName = 'task3c';
           break;
-        case 3:
-          htmlName = 'task3d';
-          break;
         default:
           htmlName = 'default.html';
       }
@@ -32,9 +30,13 @@ class Task2State extends BaseState {
     });
   }
 
+  enter(player) {
+    // Ved navigation: vis korrekt html for Task2
+    player.socket.emit('redirect', 'task2');
+  }
+
   enter() {
     console.log(`T2S: Team ${this.team.teamId} starter task2`);
-    
   }
 
   onEvent(event, data) { // from socketHandler

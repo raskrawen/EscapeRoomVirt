@@ -43,17 +43,22 @@ function setupSocketHandler(io) {
 
       socket.emit('displayTeamId', teamId); // Send teamId to client
       
-      
+      //RECONNECT LOGIC:
       // If the team is already beyond Lobby, sync this single socket to current state's view
       const currentStateName = team.state && team.state.constructor && team.state.constructor.name;
-      /*
+      // Reconnect/late join: If team is beyond Lobby, sync this socket to current state
       if (currentStateName && currentStateName !== 'LobbyState') {
-        const view = (team.state.meta && team.state.meta.html) ? team.state.meta.html : 'lobby';
-        console.log(`SH: Sync single socket ${socket.id} to current state ${currentStateName} -> view ${view}`);
-        socket.emit('redirect', view);
+        // If per-player view logic exists, use it
+        if (typeof team.state.enter === 'function') {
+          team.state.enter(player); // This should emit the correct view for this player
+        } else {
+          const view = (team.state.meta && team.state.meta.html) ? team.state.meta.html : 'lobby';
+          console.log(`SH: Sync single socket ${socket.id} to current state ${currentStateName} -> view ${view}`);
+          socket.emit('redirect', view);
+        }
         return; // Do not process Lobby-specific logic below
-      }*/
-      
+      }
+      console.log(`Current state for team ${teamId} is ${currentStateName}`);
       // Only from Lobby: start when team is full
       if (team.teamIsFull() && currentStateName === 'LobbyState') {
         team.handleEvent('teamIsFull'); //to Team.js

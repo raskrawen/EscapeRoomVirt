@@ -6,16 +6,22 @@ const Task2State = require('./Task2State.js'); //next state import
 const TimerManager = require('../TimerManager.js'); // Importer TimerManager
 
 class Task1State extends BaseState {
+  
   constructor(team) {
     super(team);
     this.stateNumber = 0;
     this.meta = { html: 'task2' }; // HTML der skal vises til spillerne
   }
 
+enter(player) {
+    // Ved navigation: vis korrekt html for Task1
+    player.socket.emit('redirect', 'task1');
+  }
+
   enter() {
     console.log(`T1S: Team ${this.team.teamId} starter task1`);
     this.team.players.forEach(player => {
-    player.socket.emit('redirect', 'task1');
+      player.socket.emit('redirect', 'task1');
     });
     // Start the timer for the team
     const duration = 300; // 600 = 10 minutes in seconds

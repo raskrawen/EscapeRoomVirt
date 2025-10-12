@@ -21,9 +21,9 @@ class LobbyState extends BaseState {
     console.log(`LobbyState: modtaget event ${event}`);
     if (event === 'PLAYER_ADDED') { //from Team.js
       console.log('LobbyState: Spiller tilføjet');
-    }
-    if (event === 'PLAYER_ADDED' && this.team.teamIsFull()) {
-      this.team.setState(new Task1State(this.team));
+      if (this.team.teamIsFull()) {
+        this.team.setState(new Task1State(this.team));
+      }
     }
   }
 

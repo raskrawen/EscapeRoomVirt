@@ -5,10 +5,16 @@ const BaseState = require('./BaseState.js');
 const EndState = require('./EndState.js'); //next state import
 
 class Task5State extends BaseState {
+  
   constructor(team) {
     super(team);
     this.stateNumber = 4;
     this.meta = { html: 'task5' }; // HTML der skal vises til spillerne
+  }
+
+enter(player) {
+    // Ved navigation: vis korrekt html for Task5
+    player.socket.emit('redirect', 'task5');
   }
 
   enter() {
