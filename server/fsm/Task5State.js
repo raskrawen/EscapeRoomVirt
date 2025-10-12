@@ -17,10 +17,7 @@ enter(player) {
     player.socket.emit('redirect', 'task5');
   }
 
-  enter() {
-    console.log(`T2S: Team ${this.team.teamId} starter ${this.meta.html}`);
-    
-  }
+  
 
   onEvent(event, data) { // from socketHandler
     super.onEvent(event, data); // This will handle TIMEOUT in BaseState

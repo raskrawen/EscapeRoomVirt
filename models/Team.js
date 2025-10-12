@@ -33,7 +33,7 @@ class Team {
     }
   }
     console.log('T: Team visited: ', this.teamVisitedStates); // Log besøgte states
-    this.state.enter();      // Kør enter på ny state
+    //this.state.enter();      // Kør enter på ny state
   }
 
     // Send event til state-maskinen i det aktuelle state.

@@ -10,7 +10,7 @@ class BaseState {
   }
 
   // Kaldes når state aktiveres
- enter() {}
+ 
 
   enter(player) {}
 

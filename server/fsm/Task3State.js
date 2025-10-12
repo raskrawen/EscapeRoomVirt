@@ -32,10 +32,7 @@ enter(player) {
     player.socket.emit('redirect', html);
   }
 
-  enter() {
-    console.log(`T2S: Team ${this.team.teamId} starter task3`);   // Send korrekt html til hver spiller
-    
-  }
+  
 
   onEvent(event, data) { // from socketHandler
     super.onEvent(event, data); // This will handle TIMEOUT in BaseState
@@ -54,7 +51,7 @@ enter(player) {
     this.team.players.forEach(player => {
         if (player.currentStateIndex === this.stateNumber) {
           player.currentStateIndex += 1;
-          player.socket.emit('redirect', this.meta.html); // Fortæl klienterne at task2 skal vises
+          player.socket.emit('redirect', 'task4'); // Fortæl klienterne at task4 skal vises
         console.log(player.playerId + 'skiftet index til: ' + player.currentStateIndex);
         }
       });

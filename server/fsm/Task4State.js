@@ -18,10 +18,7 @@ class Task4State extends BaseState {
     player.socket.emit('redirect', 'task4');
   }
 
-  enter() {
-    console.log(`T4S: Team ${this.team.teamId} starter task4`);
-    
-  }
+  
 
   onEvent(event, data) { // from socketHandler
     super.onEvent(event, data); // This will handle TIMEOUT in BaseState
