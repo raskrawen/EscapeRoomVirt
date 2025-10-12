@@ -13,6 +13,7 @@ class Task3State extends BaseState {
     this.meta = { html: 'task4' }; // HTML der skal vises til spillerne
     this.task3aDone = false;
     this.task3bDone = false;
+    this.task3cDone = false;
     this.playerHtmlMap = {};
 team.players.forEach((player, idx) => {
   let htmlName;
@@ -44,8 +45,12 @@ enter(player) {
       console.log(`Team ${this.team.teamId} completed Task 3B`);
       this.task3bDone = true;
     }
-    if (this.task3aDone && this.task3bDone) {
-    console.log(`Team ${this.team.teamId} completed Task 3A og Task 3B`);
+    if (event === 'TASK3C_COMPLETED') {
+      console.log(`Team ${this.team.teamId} completed Task 3C`);
+      this.task3cDone = true;
+    }
+    if (this.task3aDone && this.task3bDone && this.task3cDone) {
+    console.log(`Team ${this.team.teamId} completed Task 3A, 3B, 3C`);
     this.team.addCompletedState('Task3State');
     this.team.setState(new Task4State(this.team));
     this.team.players.forEach(player => {

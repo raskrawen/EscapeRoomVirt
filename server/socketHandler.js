@@ -115,7 +115,7 @@ function setupSocketHandler(io) {
       return;
     }
     // Kun tillad frem hvis der findes en completed state efter currentStateIndex
-    if (player.currentStateIndex < team.completedStates.length - 1) {
+    if (player.currentStateIndex < team.completedStates.length) {
       player.currentStateIndex += 1;
       // Brug eksisterende state-objekt for den nye index
       const stateObj = team.stateObjects[player.currentStateIndex];

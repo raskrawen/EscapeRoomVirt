@@ -14,17 +14,10 @@ class Task2State extends BaseState {
     team.players.forEach((player, idx) => {
       let htmlName;
       switch (idx) {
-        case 0:
-          htmlName = 'task3a';
-          break;
-        case 1:
-          htmlName = 'task3b';
-          break;
-        case 2:
-          htmlName = 'task3c';
-          break;
-        default:
-          htmlName = 'default.html';
+        case 0: htmlName = 'task3a'; break;
+        case 1: htmlName = 'task3b'; break;
+        case 2: htmlName = 'task3c'; break;
+        default: htmlName = 'default.html';
       }
       this.playerHtmlMap[player.playerId] = htmlName;
     });

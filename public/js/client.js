@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (backButton) {
     backButton.onclick = () => {
       const playerUUId = localStorage.getItem('playerUUId');
+      // emit to socket handler
       socket.emit('playerGoBack', { playerId: playerUUId });
     };
   }
@@ -86,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (forwardButton) {
     forwardButton.onclick = () => {
       const playerUUId = localStorage.getItem('playerUUId');
+      // emit to socket handler
       socket.emit('playerGoForward', { playerId: playerUUId });
     };
   }
