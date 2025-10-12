@@ -52,7 +52,7 @@ export async function loadTask(taskName) {
   
   // Show/hide backButton based on view
   const backButton = document.getElementById("backButton");
-  const hideViews = ["lobby", "task1", "timeout"];
+  const hideViews = ["start", "lobby", "task1", "timeout"];
   if (backButton) {
     if (hideViews.includes(taskName)) {
       backButton.style.display = "none";
