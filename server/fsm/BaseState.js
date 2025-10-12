@@ -23,6 +23,7 @@ class BaseState {
     if (event === 'TIMEOUT') {
     const TimeoutState = require('./TimeoutState.js');
     this.team.setState(new TimeoutState(this.team));
+    this.team.broadcastRedirect('timeout');
   }
 }
 

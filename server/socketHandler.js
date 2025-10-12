@@ -238,6 +238,23 @@ function setupSocketHandler(io) {
   console.log(`SH: task3BCompleted`);
 });
 
+  // Når task3C er afsluttet
+  socket.on('TASK3C_COMPLETED', ({ playerId }) => {
+  const player = players.get(playerId);
+  if (!player) {
+    console.log('SH: task3CCompleted: Player not found for playerId', playerId);
+    return;
+  }
+  const team = teams.get(player.teamId);
+  if (!team) {
+    console.log('SH: task3CCompleted: Team not found for teamId', player.teamId);
+    return;
+  }
+  team.handleEvent('TASK3C_COMPLETED'); // Handle the event in Team.js
+  console.log(`SH: task3CCompleted`);
+});
+
+
 
 socket.on('task4Completed', ({ playerId }) => {
   const player = players.get(playerId);
