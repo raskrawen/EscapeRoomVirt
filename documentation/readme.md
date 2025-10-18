@@ -19,6 +19,8 @@ timer sættes: Task1State.js linje 18 (og skal opdateres i lobby.js linje 11)
 Antal klienter sættes: server.js linje 25 (maxPlayers)
 eller: http://localhost:3000/setMaxPlayers?value=3
 
+Sæt .env værdien op som en congig var i Heruko, ellers crasher servern.
+
 features:
 1.5.2:
     LLM virker igen.
