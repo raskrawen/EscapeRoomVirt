@@ -1,8 +1,7 @@
 version: 1.5.3
 dato: oktober 2025
-Start server by: "nodemon server/server.js" og "node server/server.js".
-git status
-x
+* Start server by: "nodemon server/server.js" og "node server/server.js".
+
 1. Make a new branch from project.
 2. git push origin new_branch:main --force (This will overwrite the remote main branch with the contents/history of your local new_branch.)
 3. Switch to main branch. Run pull (gets the remote main to local VS code)
@@ -11,14 +10,13 @@ git fetch origin
 git reset --hard origin/main
 )
 
-betingelser: client -> socketHandler -> Team -> TaskXState
-
-Hemmeligt kodeord for at komme igennem: "123qwe" (kan ændres i client.js linje 14)
-
-Sæt .env værdien op som en congig var i Heruko, ellers crasher serveren.
-
-timer sættes: Task1State.js linje 18 (og skal opdateres i lobby.js linje 11)
-Antal klienter sættes: server.js linje 25 (maxPlayers)
+* betingelser: client -> socketHandler -> Team -> TaskXState
+* Hemmeligt kodeord for at komme igennem: "123qwe" (kan ændres i client.js linje 14)
+* Sæt .env værdien op som en congig var i Heruko, ellers crasher serveren.
+* dotenv kan resultere i at serveren ikke starter, hvis der er fejl i .env filen. Løsn: Remove-Item -Recurse -Force node_modules, package-lock.json
+npm install
+* timer sættes: Task1State.js linje 18 (og skal opdateres i lobby.js linje 11)
+* Antal klienter sættes: server.js linje 25 (maxPlayers)
 eller: http://localhost:3000/setMaxPlayers?value=3
 
 features:
