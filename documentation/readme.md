@@ -15,6 +15,8 @@ betingelser: client -> socketHandler -> Team -> TaskXState
 
 Hemmeligt kodeord for at komme igennem: "123qwe" (kan ændres i client.js linje 14)
 
+Sæt .env værdien op som en congig var i Heruko, ellers crasher serveren.
+
 timer sættes: Task1State.js linje 18 (og skal opdateres i lobby.js linje 11)
 Antal klienter sættes: server.js linje 25 (maxPlayers)
 eller: http://localhost:3000/setMaxPlayers?value=3
