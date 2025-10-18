@@ -6,8 +6,10 @@ x
 1. Make a new branch from project.
 2. git push origin new_branch:main --force (This will overwrite the remote main branch with the contents/history of your local new_branch.)
 3. Switch to main branch. Run pull (gets the remote main to local VS code)
-(4. Hvis noget fejl kan main resettes med main: git fetch origin
-git reset --hard origin/main)
+(4. Hvis noget fejl kan main resettes i branch main: 
+git fetch origin
+git reset --hard origin/main
+)
 
 betingelser: client -> socketHandler -> Team -> TaskXState
 
