@@ -1,0 +1,29 @@
+
+Antal klienter: 
+
+task1: Bestem komplementær sekvens i DNA (indtast sekvens) + find en kasse/pose med: 
+* papir med genetisk kode (indtast kode for at sikre, at den er fundet)
+* lineal
+* noget som ikke skal bruges
+* klodser til DNA model
+* ?
+
+
+task2: byg en model af DNA og mål afstanden mellem to baser (indtast afstanden i hele cm) 
+
+task3a: Find noget fysisk eller byg et puslespil
+task3b: En teoretisk opgave fx navngiv dele i en celle?
+
+task4: AI
+
+Et forsøg er gået galt.
+Dagbogs-noter.
+rekonstruer et forsøg med melorme. Forsøg med variabelkontrol -der skal en af hver ting i et glas.
+Sammengligne insektarters egenskaber. fylogenetisk træ
+Forstå/fortolke insektsprog.
+Den gamle forsker gemte en kode i biologibog
+Sagen fører til rektor, som dækker over noget.
+mikroskopi af besked fra lærer. Hvor findes præparatet?
+Tæl antal mandibler eller ben på melorm.
+Celler fra et insekt. Bestem om det er fra en bakterie, plante, dyr eller ? (fx to kerner)
+Bruge mikroskop.
