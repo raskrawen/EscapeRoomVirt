@@ -1,4 +1,4 @@
-version: 1.3.10
+version: 1.5.3
 dato: maj 2025
 Start server by: "nodemon server/server.js" og "node server/server.js".
 git status
