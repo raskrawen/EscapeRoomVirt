@@ -240,6 +240,24 @@ socket.on('task4Completed', ({ playerId }) => {
 });
 
 
+socket.on('task5Completed', ({ playerId }) => {
+  const player = players.get(playerId);
+  if (!player) {
+    console.log('SH: task5Completed: Player not found for playerId', playerId);
+    return;
+  }
+  const team = teams.get(player.teamId);
+  if (!team) {
+    console.log('SH: task5Completed: Team not found for teamId', player.teamId);
+    return;
+  }
+  team.handleEvent('TASK5_COMPLETED'); // Handle the event in Team.js
+  console.log(`SH: task5Completed: Team ${team.teamId} transitioned to task 6.`);
+});
+
+
+
+
     // Når klient disconnecter: ryd op i spiller og hold
     socket.on('disconnect', () => {
       console.log(`SH: Client disconnected: ${socket.id}`); // Log disconnection

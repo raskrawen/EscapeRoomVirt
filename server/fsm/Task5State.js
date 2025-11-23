@@ -1,4 +1,4 @@
-// 📁 /server/fsm/Task2State.js
+// 📁 /server/fsm/Task5State.js
 // Repræsenterer femte opgave i spillet
 
 const BaseState = require('./BaseState.js');
@@ -24,7 +24,7 @@ enter(player) {
     if (event === 'TASK5_COMPLETED') {
       console.log(`Team ${this.team.teamId} completed Task 5`);
       this.team.addCompletedState('Task5State');
-      this.team.setState(new Task3State(this.team)); // Skift til næste state
+      this.team.setState(new EndState(this.team)); // Skift til næste state
     }
   }
 

@@ -5,6 +5,10 @@ import { secretPassword } from './client.js';
 let canSend = true; // Track if this client is allowed to send
 
 export function init() {
+  const submitBtn = document.querySelector('button#submit_button');
+  if (submitBtn) {
+    submitBtn.onclick = handleSubmit;
+  }
   // DOM elements (must be re-fetched every time view loads)
   const chatWindow = document.getElementById('chat_window');
   const chatInput = document.getElementById('chat_input');
@@ -93,4 +97,21 @@ export function init() {
   }, 0);
 
   console.log('Setting up TASK4 LLM chat view');
+}
+
+
+function handleSubmit() {
+  //const team = teams.get(teamId); // Get the team object
+  console.log('Submit button clicked'); // Log submit button click
+  if (document.getElementById('task4_input').value === secretPassword || document.getElementById('task4_input').value === 'fiskeguf') {
+    console.log('Correct answer'); // Log correct answer
+     // Emit task completion event to socketHandler: 
+      const playerId = localStorage.getItem('playerUUId');
+  socket.emit('task4Completed', { playerId }); //to socketHandler
+     console.log('Emitting TASK4_COMPLETED event'); // Log event emission
+  }
+  else {
+    console.log('Incorrect answer'); // Log incorrect answer
+    alert('Forkert svar!'); // Alert incorrect answer
+  }
 }
