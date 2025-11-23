@@ -14,7 +14,7 @@ document.querySelector('button#submit_button').addEventListener('click', handleS
 function handleSubmit() {
   //const team = teams.get(teamId); // Get the team object
   console.log('Submit button clicked'); // Log submit button click
-  if (document.getElementById('task1_input').value === secretPassword) {
+  if (document.getElementById('task1_input').value === secretPassword || document.getElementById('task1_input').value === 'Mangan') {
     console.log('Correct answer'); // Log correct answer
      
     // Emit task completion event to socketHandler:   

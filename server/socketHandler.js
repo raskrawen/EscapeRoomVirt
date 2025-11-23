@@ -207,51 +207,19 @@ function setupSocketHandler(io) {
 
 
     // Når task3A er afsluttet
-  socket.on('TASK3A_COMPLETED', ({ playerId }) => {
+  socket.on('TASK3_COMPLETED', ({ playerId }) => {
   const player = players.get(playerId);
   if (!player) {
-    console.log('SH: task3ACompleted: Player not found for playerId', playerId);
+    console.log('SH: task3Completed: Player not found for playerId', playerId);
     return;
   }
   const team = teams.get(player.teamId);
   if (!team) {
-    console.log('SH: task3ACompleted: Team not found for teamId', player.teamId);
+    console.log('SH: task3Completed: Team not found for teamId', player.teamId);
     return;
   }
-  team.handleEvent('TASK3A_COMPLETED'); // Handle the event in Team.js
-  console.log(`SH: task3ACompleted`);
-});
-
-    // Når task3B er afsluttet
-  socket.on('TASK3B_COMPLETED', ({ playerId }) => {
-  const player = players.get(playerId);
-  if (!player) {
-    console.log('SH: task3BCompleted: Player not found for playerId', playerId);
-    return;
-  }
-  const team = teams.get(player.teamId);
-  if (!team) {
-    console.log('SH: task3BCompleted: Team not found for teamId', player.teamId);
-    return;
-  }
-  team.handleEvent('TASK3B_COMPLETED'); // Handle the event in Team.js
-  console.log(`SH: task3BCompleted`);
-});
-
-  // Når task3C er afsluttet
-  socket.on('TASK3C_COMPLETED', ({ playerId }) => {
-  const player = players.get(playerId);
-  if (!player) {
-    console.log('SH: task3CCompleted: Player not found for playerId', playerId);
-    return;
-  }
-  const team = teams.get(player.teamId);
-  if (!team) {
-    console.log('SH: task3CCompleted: Team not found for teamId', player.teamId);
-    return;
-  }
-  team.handleEvent('TASK3C_COMPLETED'); // Handle the event in Team.js
-  console.log(`SH: task3CCompleted`);
+  team.handleEvent('TASK3_COMPLETED'); // Handle the event in Team.js
+  console.log(`SH: task3Completed`);
 });
 
 

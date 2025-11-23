@@ -14,7 +14,7 @@ export function init() { // running when task2.js is loaded
 function handleSubmit() {
   //const team = teams.get(teamId); // Get the team object
   console.log('Submit button clicked'); // Log submit button click
-  if (document.getElementById('task2_input').value === secretPassword || document.getElementById('task2_input').value === 'HEV') {
+  if (document.getElementById('task2_input').value === secretPassword || document.getElementById('task2_input').value === '42') {
     console.log('Correct answer'); // Log correct answer
      // Emit task completion event to socketHandler: 
       const playerId = localStorage.getItem('playerUUId');

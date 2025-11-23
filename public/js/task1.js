@@ -6,8 +6,12 @@ export function init() { // running when task1.js is loaded
   //document.getElementById('task_content').innerHTML = 'Hello from task1.js'; // Log task1.js setup
   console.log('Setting up TASK1 view'); // Log game view setup
   fadeOutAudio(); // Fade out audio when task1 is loaded
-  
-  
+
+  // Sæt event listener på submit_button når viewet er loaded
+  const submitBtn = document.querySelector('button#submit_button');
+  if (submitBtn) {
+    submitBtn.addEventListener('click', handleSubmit);
+  }
 
   /*socket.emit('requestPlayerInfo', localStorage.getItem('playerUUId')); // to SH
   console.log('Emitting requestPlayerInfo event'); // Log event emission
@@ -23,12 +27,12 @@ export function init() { // running when task1.js is loaded
   });*/
 }
   
-document.querySelector('button#submit_button').addEventListener('click', handleSubmit);
+
 
 function handleSubmit() {
   //const team = teams.get(teamId); // Get the team object
   console.log('Submit button clicked'); // Log submit button click
-  if (document.getElementById('task1_input').value === secretPassword || document.getElementById('task1_input').value === 'TACTTCCCAGACTAGA') {
+  if (document.getElementById('task1_input').value === secretPassword || document.getElementById('task1_input').value === 'NinjaNisse') {
     console.log('Correct answer'); // Log correct answer
      // Emit task completion event to socketHandler: 
       const playerId = localStorage.getItem('playerUUId');
