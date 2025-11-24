@@ -14,3 +14,5 @@ enter(player) {
     player.socket.emit('redirect', 'end');
   }
 }
+
+module.exports = EndState;
