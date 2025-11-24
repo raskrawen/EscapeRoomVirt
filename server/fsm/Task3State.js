@@ -37,20 +37,8 @@ enter(player) {
 
   onEvent(event, data) { // from socketHandler
     super.onEvent(event, data); // This will handle TIMEOUT in BaseState
-    if (event === 'TASK3A_COMPLETED') {
-      console.log(`Team ${this.team.teamId} completed Task 3A`);
-      this.task3aDone = true;
-    }
-    if (event === 'TASK3B_COMPLETED') {
-      console.log(`Team ${this.team.teamId} completed Task 3B`);
-      this.task3bDone = true;
-    }
-    if (event === 'TASK3C_COMPLETED') {
-      console.log(`Team ${this.team.teamId} completed Task 3C`);
-      this.task3cDone = true;
-    }
-    if (this.task3aDone && this.task3bDone && this.task3cDone) {
-    console.log(`Team ${this.team.teamId} completed Task 3A, 3B, 3C`);
+    if (event === 'TASK3_COMPLETED') {
+    console.log(`T3S: Team ${this.team.teamId} completed Task 3`);
     this.team.addCompletedState('Task3State');
     this.team.setState(new Task4State(this.team));
     this.team.players.forEach(player => {

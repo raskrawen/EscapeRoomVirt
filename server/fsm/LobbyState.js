@@ -35,7 +35,7 @@ class LobbyState extends BaseState {
   
   exit() {
     console.log(`Team ${this.team.teamId} forlader lobby-state`);
-    const duration = 300; // 600 = 10 minutes in seconds
+    const duration = 1800; // 600 = 10 minutes in seconds
     TimerManager.startTimer(this.team.teamId, duration);
   }
 }

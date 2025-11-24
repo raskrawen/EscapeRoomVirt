@@ -2,10 +2,13 @@ import { socket } from './client.js'; // Import socket from client.js
 import { playAudio, pauseAudio, fadeOutAudio, fadeOutAudioAndPlay } from './AV/audioManager.js';
 import { secretPassword } from './client.js';
 
-export function init() { // running when task2.js is loaded
+export function init() { // running when task3a.js is loaded
   //document.getElementById('info').innerHTML = 'AAAAA Hello from task3a.js'; // Log task1.js setup
   console.log('Setting up TASK3 view'); // Log game view setup
-  document.getElementById('submit_button').addEventListener('click', handleSubmit);
+  const submitBtn = document.getElementById('submit_button');
+  if (submitBtn) {
+    submitBtn.addEventListener('click', handleSubmit);
+  }
   playAudio('critter'); // Play the critter audio
 }
 
@@ -20,9 +23,10 @@ function handleSubmit() {
   // Placeholder for submit logic
   const answer = document.getElementById('task3a_input').value;
   const playerId = localStorage.getItem('playerUUId');
-  if (answer === 'MØGBILLE' || answer === secretPassword) {
-    socket.emit('TASK3A_COMPLETED', { playerId }); // Send event to server
-    setFeedback('Korrekt! Hjælp resten af dit hold med at løse jeres opgave.', 'success');
+  if (answer === 'sulfat' || answer === secretPassword) {
+    setFeedback('Korrekt! ', 'success');
+    const playerId = localStorage.getItem('playerUUId');
+    socket.emit('TASK3_COMPLETED', { playerId }); // Send event to server SH
   }
   else {
     setFeedback('Forkert! Prøv igen.', 'error');

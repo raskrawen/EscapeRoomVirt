@@ -1,31 +1,30 @@
-// 📁 /server/fsm/Task5State.js
-// Repræsenterer femte opgave i spillet
+// 📁 /server/fsm/Task6State.js
+// Repræsenterer sjette opgave i spillet
 
 const BaseState = require('./BaseState.js');
 const EndState = require('./EndState.js'); //next state import
-const Task6State = require('./Task6State.js');
 
-class Task5State extends BaseState {
+class Task6State extends BaseState {
   
   constructor(team) {
     super(team);
-    this.stateNumber = 4;
-    this.meta = { html: 'task6' }; // HTML der skal vises til spillerne
+    this.stateNumber = 5;
+    this.meta = { html: 'end' }; // HTML der skal vises til spillerne
   }
 
 enter(player) {
-    // Ved navigation: vis korrekt html for Task5
-    player.socket.emit('redirect', 'task5');
+    // Ved navigation: vis korrekt html for Task6
+    player.socket.emit('redirect', 'task6');
   }
 
   
 
   onEvent(event, data) { // from socketHandler
     super.onEvent(event, data); // This will handle TIMEOUT in BaseState
-    if (event === 'TASK5_COMPLETED') {
-      console.log(`Team ${this.team.teamId} completed Task 5`);
-      this.team.addCompletedState('Task5State');
-      this.team.setState(new Task6State(this.team)); // Skift til næste state
+    if (event === 'TASK6_COMPLETED') {
+      console.log(`Team ${this.team.teamId} completed Task 6`);
+      this.team.addCompletedState('Task6State');
+      this.team.setState(new EndState(this.team)); // Skift til næste state
     this.team.players.forEach(player => {
         if (player.currentStateIndex === this.stateNumber) {
           player.currentStateIndex += 1;
@@ -37,8 +36,8 @@ enter(player) {
   }
 
   exit() {
-    console.log(`Team ${this.team.teamId} forlader Task 5`);
+    console.log(`Team ${this.team.teamId} forlader Task 6`);
   }
 }
 
-module.exports = Task5State;
+module.exports = Task6State;

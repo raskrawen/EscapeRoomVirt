@@ -22,7 +22,7 @@ const sessionMiddleware = session({
 });
 
 // fx i server.js eller et config-modul
-global.maxPlayers = 2;
+global.maxPlayers = 3;
 //global.secretPassword = "123qwe";
 
 
