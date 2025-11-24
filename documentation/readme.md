@@ -19,7 +19,7 @@ npm install
 * Antal klienter sættes: server.js linje 25 (maxPlayers)
 eller: http://localhost:3000/setMaxPlayers?value=3
 
-Sæt .env værdien op som en congig var i Heruko, ellers crasher servern.
+Sæt .env værdien op som en config var i Heruko, ellers crasher servern.
 
 features:
 1.5.3:
