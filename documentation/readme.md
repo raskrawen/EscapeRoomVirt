@@ -20,6 +20,8 @@ npm install
 eller: http://localhost:3000/setMaxPlayers?value=3
 
 features:
+1.5.4:
+
 1.5.3:
     Kemiopgaver.
     Task3 er på tre sider, men kun 3a kan indtaste koden.
