@@ -1,6 +1,6 @@
 const { players, teams } = require('../server/state');
-const Player = require('../models/Player');
-const Team = require('../models/Team');
+const Player = require('../server/models/Player');
+const Team = require('../server/models/Team');
 
 // Mock socket object
 const mockSocket = {

@@ -1,6 +1,6 @@
-// --- models/Team.js ---// Repræsenterer et hold og styrer state (FSM) og spillere.
+// --- server/models/Team.js ---// Repræsenterer et hold og styrer state (FSM) og spillere.
 // first state:
-const LobbyState = require('../server/fsm/LobbyState.js');
+const LobbyState = require('../fsm/LobbyState.js');
 
 
 class Team {

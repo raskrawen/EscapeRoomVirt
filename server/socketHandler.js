@@ -1,7 +1,7 @@
 // Håndterer socket-events og opretter spillere og teams.
 
-const Player = require('../models/Player');
-const Team = require('../models/Team');
+const Player = require('./models/Player');
+const Team = require('./models/Team');
 const { teams, players } = require('./state');
 const TimerManager = require('./TimerManager');
 
