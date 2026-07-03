@@ -13,11 +13,6 @@ function setupSocketHandler(io) {
     // Når klient sender joinTeam, opret spiller og tilføj til team
     socket.on('joinTeam', ({ playerName, teamId }) => {
       console.log(`Creating new player.`);
-      const player = new Player(playerName, teamId, socket.id, socket);
-      players.set(player.playerId, player); // Save new player in state
-      socket.emit('playerUUId', player.playerId); // Send new UUID to client
-      console.log(`Player created with UUID: ${player.playerId}`);
-
       if (!teams.has(teamId)) {
         console.log(`Creating new team with teamId=${teamId}`);
         teams.set(teamId, new Team(teamId));
@@ -29,11 +24,34 @@ function setupSocketHandler(io) {
         return;
       }
 
+      // Server-side guard: avoid race conditions where team became full after client check.
+      if (team.teamIsFull()) {
+        console.log(`SH: joinTeam rejected for teamId=${teamId}; team is full.`);
+        socket.emit('joinTeamRejected', {
+          reason: 'TEAM_FULL',
+          message: 'Dette team er optaget. Vælg et andet team id.'
+        });
+        return;
+      }
+
+      const player = new Player(playerName, teamId, socket.id, socket);
+      players.set(player.playerId, player); // Save new player in state
+      socket.emit('playerUUId', player.playerId); // Send new UUID to client
+      console.log(`Player created with UUID: ${player.playerId}`);
+
       // Ensure this socket is in the team room (for future broadcasts)
       try { socket.join(teamId); } catch (e) { console.warn('join room failed', e); }
 
       player.playerNumberOnTeam = team.getPlayerCount(teamId);
-      team.addPlayer(player);
+      const added = team.addPlayer(player);
+      if (!added) {
+        players.delete(player.playerId);
+        socket.emit('joinTeamRejected', {
+          reason: 'TEAM_FULL',
+          message: 'Dette team er optaget. Vælg et andet team id.'
+        });
+        return;
+      }
       
       console.log(`Player added to teamId: ${team.teamId}`);
       const playerCount = team.getPlayerCount(teamId);
@@ -46,6 +64,8 @@ function setupSocketHandler(io) {
       const currentStateName = team.state && team.state.constructor && team.state.constructor.name;
       // Reconnect/late join: If team is beyond Lobby, sync this socket to current state
       if (currentStateName && currentStateName !== 'LobbyState') {
+        // Keep late joiners in sync with the team's highest reached index for back/forward.
+        player.currentStateIndex = Math.max(0, team.stateObjects.length - 1);
         // If per-player view logic exists, use it
         if (typeof team.state.enter === 'function') {
           team.state.enter(player); // This should emit the correct view for this player
@@ -288,8 +308,8 @@ socket.on('task6Completed', ({ playerId }) => {
       }
 
       // Keep player in memory but mark as disconnected
-      player.socket = null;
-      console.log(`SH: Player marked as disconnected: ${player.playerId}`); // Log player disconnection
+      players.delete(player.playerId);
+      console.log(`SH: Player removed from players map: ${player.playerId}`);
     });
   });
 }

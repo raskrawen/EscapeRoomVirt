@@ -12,7 +12,7 @@ git reset --hard origin/main
 
 * betingelser: client -> socketHandler -> Team -> TaskXState
 * Hemmeligt kodeord for at komme igennem: "123qwe" (kan ændres i client.js linje 14)
-* Sæt .env værdien op som en congig var i Heruko, ellers crasher serveren.
+* Sæt .env værdien op som en config var i Heruko, ellers crasher serveren.
 * dotenv kan resultere i at serveren ikke starter, hvis der er fejl i .env filen. Løsn: Remove-Item -Recurse -Force node_modules, package-lock.json
 npm install
 * timer sættes: Task1State.js linje 18 (og skal opdateres i lobby.js linje 11)
@@ -22,6 +22,7 @@ eller: http://localhost:3000/setMaxPlayers?value=3
 features:
 1.5.4:
     LLM fjernet.
+    reconnect virker.
 1.5.3:
     Kemiopgaver.
     Task3 er på tre sider, men kun 3a kan indtaste koden.

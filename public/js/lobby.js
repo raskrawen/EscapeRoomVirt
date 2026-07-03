@@ -8,7 +8,13 @@ export function init() {
   audio.play();*/
 
   const startButton = document.getElementById('startButton');
-  document.getElementById('timer').textContent = 'Tid: 20:00'; // timer starter i Task1State.js
+  document.getElementById('timer').textContent = 'Tid: 30:00'; // timer starter i Task1State.js
+
+  socket.off('joinTeamRejected');
+  socket.on('joinTeamRejected', ({ message }) => {
+    alert(message || 'Teamet er optaget. Vælg et andet team id.');
+    startButton.disabled = false;
+  });
   //fadeOutAudio(1000); // Fade out any currently playing audio
   //fadeOutAudioAndPlay('critter', 5000);
   //playAudio('critter'); // Play the critter audio
