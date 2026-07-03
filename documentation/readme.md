@@ -1,4 +1,4 @@
-version: 1.5.3
+version: 1.5.4
 dato: oktober 2025
 * Start server by: "nodemon server/server.js" og "node server/server.js".
 
