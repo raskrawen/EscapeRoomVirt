@@ -4,8 +4,52 @@ const Player = require('./models/Player');
 const Team = require('./models/Team');
 const { teams, players } = require('./state');
 const TimerManager = require('./TimerManager');
+const AnswerValidator = require('./AnswerValidator');
+
+const COMPLETION_EVENTS_BY_TASK = {
+  task1: 'TASK1_COMPLETED',
+  task2: 'TASK2_COMPLETED',
+  task3: 'TASK3_COMPLETED',
+  task4: 'TASK4_COMPLETED',
+  task5: 'TASK5_COMPLETED',
+  task6: 'TASK6_COMPLETED'
+};
+
+function emitJoinRejected(socket) {
+  socket.emit('joinTeamRejected', {
+    reason: 'TEAM_FULL',
+    message: 'Dette team er optaget. Vælg et andet team id.'
+  });
+}
 
 function setupSocketHandler(io) {
+  const answerValidator = new AnswerValidator();
+
+  const resolvePlayerAndTeam = (playerId, logPrefix) => {
+    const player = players.get(playerId);
+    if (!player) {
+      console.log(`${logPrefix}: Player not found for playerId`, playerId);
+      return {};
+    }
+
+    const team = teams.get(player.teamId);
+    if (!team) {
+      console.log(`${logPrefix}: Team not found for teamId`, player.teamId);
+      return { player };
+    }
+
+    return { player, team };
+  };
+
+  const completeTaskForPlayer = (playerId, completionEvent, logPrefix) => {
+    const { team } = resolvePlayerAndTeam(playerId, logPrefix);
+    if (!team) {
+      return false;
+    }
+
+    team.handleEvent(completionEvent);
+    return true;
+  };
 
   io.on('connection', (socket) => { // Håndterer socket-forbindelse
     console.log(`New client connected: ${socket.id}`); // Log connection
@@ -27,10 +71,7 @@ function setupSocketHandler(io) {
       // Server-side guard: avoid race conditions where team became full after client check.
       if (team.teamIsFull()) {
         console.log(`SH: joinTeam rejected for teamId=${teamId}; team is full.`);
-        socket.emit('joinTeamRejected', {
-          reason: 'TEAM_FULL',
-          message: 'Dette team er optaget. Vælg et andet team id.'
-        });
+        emitJoinRejected(socket);
         return;
       }
 
@@ -46,10 +87,7 @@ function setupSocketHandler(io) {
       const added = team.addPlayer(player);
       if (!added) {
         players.delete(player.playerId);
-        socket.emit('joinTeamRejected', {
-          reason: 'TEAM_FULL',
-          message: 'Dette team er optaget. Vælg et andet team id.'
-        });
+        emitJoinRejected(socket);
         return;
       }
       
@@ -84,19 +122,14 @@ function setupSocketHandler(io) {
       }
     });
 
-      // Når spilleren klikker "Tilbage"-knappen
+    // Når spilleren klikker "Tilbage"-knappen
     socket.on('playerGoBack', ({ playerId }) => {
       console.log(`SH: playerGoBack event received from socket: ${socket.id} for playerId: ${playerId}`); // Log go back event
-      const player = players.get(playerId);
-      if (!player) {
-        console.log('SH:playerGoBack: Player not found for playerId', playerId);
-        return;
-      }
-      const team = teams.get(player.teamId);
+      const { player, team } = resolvePlayerAndTeam(playerId, 'SH:playerGoBack');
       if (!team) {
-        console.log('SH:playerGoBack: Team not found for teamId', player.teamId);
         return;
       }
+
       // Kun tillad tilbage hvis currentStateIndex > 0 (Task2 og op)
       if (player.currentStateIndex > 0) {
         player.currentStateIndex -= 1;
@@ -111,46 +144,35 @@ function setupSocketHandler(io) {
       }
     });
 
-  // Når spilleren klikker "Frem"-knappen
-  socket.on('playerGoForward', ({ playerId }) => {
-    console.log(`SH: playerGoForward event received from socket: ${socket.id} for playerId: ${playerId}`); // Log go forward event
-    const player = players.get(playerId);
-    if (!player) {
-      console.log('SH:playerGoForward: Player not found for playerId', playerId);
-      return;
-    }
-    const team = teams.get(player.teamId);
-    if (!team) {
-      console.log('SH:playerGoForward: Team not found for teamId', player.teamId);
-      return;
-    }
-    // Kun tillad frem hvis der findes en completed state efter currentStateIndex
-    if (player.currentStateIndex < team.completedStates.length) {
-      player.currentStateIndex += 1;
-      // Brug eksisterende state-objekt for den nye index
-      const stateObj = team.stateObjects[player.currentStateIndex];
-      if (stateObj && typeof stateObj.enter === 'function') {
-        console.log(`SH:playerGoForward: Sending player ${player.playerId} forward to state index ${player.currentStateIndex} og state ${stateObj.constructor.name}`);
-        stateObj.enter(player);
-      } else {
-        console.log('SH:playerGoForward: No state object found for index', player.currentStateIndex);
+    // Når spilleren klikker "Frem"-knappen
+    socket.on('playerGoForward', ({ playerId }) => {
+      console.log(`SH: playerGoForward event received from socket: ${socket.id} for playerId: ${playerId}`); // Log go forward event
+      const { player, team } = resolvePlayerAndTeam(playerId, 'SH:playerGoForward');
+      if (!team) {
+        return;
       }
-    }
-  });
+
+      // Kun tillad frem hvis der findes en completed state efter currentStateIndex
+      if (player.currentStateIndex < team.completedStates.length) {
+        player.currentStateIndex += 1;
+        // Brug eksisterende state-objekt for den nye index
+        const stateObj = team.stateObjects[player.currentStateIndex];
+        if (stateObj && typeof stateObj.enter === 'function') {
+          console.log(`SH:playerGoForward: Sending player ${player.playerId} forward to state index ${player.currentStateIndex} og state ${stateObj.constructor.name}`);
+          stateObj.enter(player);
+        } else {
+          console.log('SH:playerGoForward: No state object found for index', player.currentStateIndex);
+        }
+      }
+    });
 
     // Check if a team is full
     socket.on('checkTeamStatus', ({ teamId }, callback) => {
       console.log(`SH: checkTeamStatus event received: teamId=${teamId}`); // Log checkTeamStatus event
       const team = teams.get(teamId);
-      //let noOfPlayers = team.getPlayerCount(); // Get number of players on the team
-      //console.log(`SH: Number of players in team ${teamId}: ${noOfPlayers}`); // Log number of players
-      if (team && team.teamIsFull()) {
-        console.log(`SH: Team ${teamId} is full.`); // Log team full status
-        callback(true); // Team is full. "true" send to client
-      } else {
-        console.log(`SH: Team ${teamId} is not full.`); // Log team not full status
-        callback(false); // Team is not full. "false" send to client
-      }
+      const isFull = !!(team && team.teamIsFull());
+      console.log(`SH: Team ${teamId} is ${isFull ? 'full' : 'not full'}.`);
+      callback(isFull);
     });
 
     // Når klient anmoder om spillerinfo
@@ -176,104 +198,49 @@ function setupSocketHandler(io) {
       }
     });
 
-    // Når task1 er afsluttet modtages:
-  socket.on('task1Completed', ({ playerId }) => {
-  const player = players.get(playerId);
-  if (!player) {
-    console.log('SH: task1Completed: Player not found for playerId', playerId);
-    return;
-  }
-  const team = teams.get(player.teamId);
-  if (!team) {
-    console.log('SH: task1Completed: Team not found for teamId', player.teamId);
-    return;
-  }
-  team.handleEvent('TASK1_COMPLETED'); // Handle the event in Team.js
-  console.log(`SH: task1Completed: Team ${team.teamId} transitioned to task 2.`);
-});
+    socket.on('submitTaskAnswer', ({ playerId, taskKey, answer }, callback) => {
+      const done = (payload) => callback?.(payload);
 
+      const { team } = resolvePlayerAndTeam(playerId, 'SH:submitTaskAnswer');
+      if (!team) {
+        done({ valid: false, message: 'Spiller eller hold blev ikke fundet.' });
+        return;
+      }
 
-  // Når task2 er afsluttet
-  socket.on('task2Completed', ({ playerId }) => {
-  const player = players.get(playerId);
-  if (!player) {
-    console.log('SH: task2Completed: Player not found for playerId', playerId);
-    return;
-  }
-  const team = teams.get(player.teamId);
-  if (!team) {
-    console.log('SH: task2Completed: Team not found for teamId', player.teamId);
-    return;
-  }
-  team.handleEvent('TASK2_COMPLETED'); // Handle the event in Team.js
-  console.log(`SH: task2Completed: Team ${team.teamId} transitioned to task 3.`);
-});
+      const normalizedTaskKey = String(taskKey || '').trim().toLowerCase();
+      const completionEvent = COMPLETION_EVENTS_BY_TASK[normalizedTaskKey];
+      if (!completionEvent) {
+        done({ valid: false, message: 'Ugyldig opgave.' });
+        return;
+      }
 
+      const isValid = answerValidator.validate(normalizedTaskKey, answer);
+      if (!isValid) {
+        done({ valid: false, message: 'Forkert svar! Prøv igen.' });
+        return;
+      }
 
-    // Når task3A er afsluttet
-  socket.on('TASK3_COMPLETED', ({ playerId }) => {
-  const player = players.get(playerId);
-  if (!player) {
-    console.log('SH: task3Completed: Player not found for playerId', playerId);
-    return;
-  }
-  const team = teams.get(player.teamId);
-  if (!team) {
-    console.log('SH: task3Completed: Team not found for teamId', player.teamId);
-    return;
-  }
-  team.handleEvent('TASK3_COMPLETED'); // Handle the event in Team.js
-  console.log(`SH: task3Completed`);
-});
+      team.handleEvent(completionEvent);
+      done({ valid: true, message: 'Korrekt svar!' });
+    });
 
+    const legacyCompletionHandlers = [
+      { clientEvent: 'task1Completed', completionEvent: 'TASK1_COMPLETED', logPrefix: 'SH: task1Completed' },
+      { clientEvent: 'task2Completed', completionEvent: 'TASK2_COMPLETED', logPrefix: 'SH: task2Completed' },
+      { clientEvent: 'TASK3_COMPLETED', completionEvent: 'TASK3_COMPLETED', logPrefix: 'SH: task3Completed' },
+      { clientEvent: 'task4Completed', completionEvent: 'TASK4_COMPLETED', logPrefix: 'SH: task4Completed' },
+      { clientEvent: 'task5Completed', completionEvent: 'TASK5_COMPLETED', logPrefix: 'SH: task5Completed' },
+      { clientEvent: 'task6Completed', completionEvent: 'TASK6_COMPLETED', logPrefix: 'SH: task6Completed' }
+    ];
 
-
-socket.on('task4Completed', ({ playerId }) => {
-  const player = players.get(playerId);
-  if (!player) {
-    console.log('SH: task4Completed: Player not found for playerId', playerId);
-    return;
-  }
-  const team = teams.get(player.teamId);
-  if (!team) {
-    console.log('SH: task4Completed: Team not found for teamId', player.teamId);
-    return;
-  }
-  team.handleEvent('TASK4_COMPLETED'); // Handle the event in Team.js
-  console.log(`SH: task4Completed: Team ${team.teamId} transitioned to task 5.`);
-});
-
-
-socket.on('task5Completed', ({ playerId }) => {
-  const player = players.get(playerId);
-  if (!player) {
-    console.log('SH: task5Completed: Player not found for playerId', playerId);
-    return;
-  }
-  const team = teams.get(player.teamId);
-  if (!team) {
-    console.log('SH: task5Completed: Team not found for teamId', player.teamId);
-    return;
-  }
-  team.handleEvent('TASK5_COMPLETED'); // Handle the event in Team.js
-  console.log(`SH: task5Completed: Team ${team.teamId} transitioned to task 6.`);
-});
-
-
-socket.on('task6Completed', ({ playerId }) => {
-  const player = players.get(playerId);
-  if (!player) {
-    console.log('SH: task6Completed: Player not found for playerId', playerId);
-    return;
-  }
-  const team = teams.get(player.teamId);
-  if (!team) {
-    console.log('SH: task6Completed: Team not found for teamId', player.teamId);
-    return;
-  }
-  team.handleEvent('TASK6_COMPLETED'); // Handle the event in Team.js
-  console.log(`SH: task6Completed: Team ${team.teamId} transitioned to task 7.`);
-});
+    legacyCompletionHandlers.forEach(({ clientEvent, completionEvent, logPrefix }) => {
+      socket.on(clientEvent, ({ playerId }) => {
+        const completed = completeTaskForPlayer(playerId, completionEvent, logPrefix);
+        if (completed) {
+          console.log(`${logPrefix}: completion handled for event ${completionEvent}.`);
+        }
+      });
+    });
 
 
     // Når klient disconnecter: ryd op i spiller og hold
@@ -292,19 +259,13 @@ socket.on('task6Completed', ({ playerId }) => {
       const team = teams.get(player.teamId);
 
       if (team) {
-      console.log(`SH: Removing player ${player.playerId} from team, with ${team.getPlayerCount(player.teamId)} players`); // Log player removal
-      for (let i = 0; i < team.players.length; i++) {
-        if (team.players[i].playerId === player.playerId) {
-          team.players.splice(i, 1);
-          break;
-        }
-      }
-      console.log('SH: Players left on team:', team.getPlayerCount(player.teamId)); // Log players on team
-      
+        console.log(`SH: Removing player ${player.playerId} from team, with ${team.getPlayerCount(player.teamId)} players`); // Log player removal
+        team.removePlayer(player.playerId);
+        console.log('SH: Players left on team:', team.getPlayerCount(player.teamId)); // Log players on team
 
-      if (team.players.length === 0) {
-        console.log(`SH: Team is empty. Keeping team: ${player.teamId}`); // Log team retention
-      }
+        if (team.players.length === 0) {
+          console.log(`SH: Team is empty. Keeping team: ${player.teamId}`); // Log team retention
+        }
       }
 
       // Keep player in memory but mark as disconnected

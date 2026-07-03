@@ -1,6 +1,5 @@
 
 import { socket } from './client.js';
-import { secretPassword } from './client.js';
 
 export function init() {
   const submitBtn = document.querySelector('button#submit_button');
@@ -20,15 +19,15 @@ export function init() {
 function handleSubmit() {
   //const team = teams.get(teamId); // Get the team object
   console.log('Submit button clicked'); // Log submit button click
-  if (document.getElementById('task4_input').value === secretPassword || document.getElementById('task4_input').value === 'fiskeguf') {
-    console.log('Correct answer'); // Log correct answer
-     // Emit task completion event to socketHandler: 
-      const playerId = localStorage.getItem('playerUUId');
-  socket.emit('task4Completed', { playerId }); //to socketHandler
-     console.log('Emitting TASK4_COMPLETED event'); // Log event emission
-  }
-  else {
-    console.log('Incorrect answer'); // Log incorrect answer
-    alert('Forkert svar!'); // Alert incorrect answer
-  }
+  const playerId = localStorage.getItem('playerUUId');
+  const answer = document.getElementById('task4_input').value;
+
+  socket.emit('submitTaskAnswer', { playerId, taskKey: 'task4', answer }, ({ valid, message } = {}) => {
+    if (valid) {
+      console.log('Correct answer');
+      return;
+    }
+    console.log('Incorrect answer');
+    alert(message || 'Forkert svar!');
+  });
 }

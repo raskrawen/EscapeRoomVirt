@@ -1,6 +1,5 @@
 import { socket } from './client.js'; // Import socket from client.js
 import { fadeOutAudio } from './AV/audioManager.js';
-import { secretPassword } from './client.js';
 
 
 export function init() { // running when task5.js is loaded
@@ -16,15 +15,14 @@ export function init() { // running when task5.js is loaded
 function handleSubmit() {
   console.log('Submit button clicked'); // Log submit button click
   const playerId = localStorage.getItem('playerUUId');
-  const inputValue = document.getElementById('task5_input').value;
-  if (inputValue === secretPassword || inputValue === 'Mangan') {
-    console.log('Correct answer'); // Log correct answer
-    // Emit task completion event to socketHandler:   
-    socket.emit('task5Completed', { playerId });
-    console.log('Emitting TASK5_COMPLETED event'); // Log event emission
-  }
-  else {
-    console.log('Incorrect answer'); // Log incorrect answer
-    alert('Forkert svar!'); // Alert incorrect answer
-  }
+  const answer = document.getElementById('task5_input').value;
+
+  socket.emit('submitTaskAnswer', { playerId, taskKey: 'task5', answer }, ({ valid, message } = {}) => {
+    if (valid) {
+      console.log('Correct answer');
+      return;
+    }
+    console.log('Incorrect answer');
+    alert(message || 'Forkert svar!');
+  });
 }

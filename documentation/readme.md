@@ -20,6 +20,8 @@ npm install
 eller: http://localhost:3000/setMaxPlayers?value=3
 
 features:
+1.5.5:
+    kodeord tjekkes på serverside.
 1.5.4:
     LLM fjernet.
     reconnect virker.

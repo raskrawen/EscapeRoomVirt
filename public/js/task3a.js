@@ -1,6 +1,5 @@
 import { socket } from './client.js'; // Import socket from client.js
 import { playAudio, pauseAudio, fadeOutAudio, fadeOutAudioAndPlay } from './AV/audioManager.js';
-import { secretPassword } from './client.js';
 
 export function init() { // running when task3a.js is loaded
   //document.getElementById('info').innerHTML = 'AAAAA Hello from task3a.js'; // Log task1.js setup
@@ -20,15 +19,14 @@ function setFeedback(msg, type = 'info') {
 }
 
 function handleSubmit() {
-  // Placeholder for submit logic
   const answer = document.getElementById('task3a_input').value;
   const playerId = localStorage.getItem('playerUUId');
-  if (answer === 'sulfat' || answer === secretPassword) {
-    setFeedback('Korrekt! ', 'success');
-    const playerId = localStorage.getItem('playerUUId');
-    socket.emit('TASK3_COMPLETED', { playerId }); // Send event to server SH
-  }
-  else {
-    setFeedback('Forkert! Prøv igen.', 'error');
-  }
+
+  socket.emit('submitTaskAnswer', { playerId, taskKey: 'task3', answer }, ({ valid, message } = {}) => {
+    if (valid) {
+      setFeedback('Korrekt!', 'success');
+      return;
+    }
+    setFeedback(message || 'Forkert! Prøv igen.', 'error');
+  });
 }
