@@ -7,7 +7,7 @@ const Task2State = require('./Task2State.js'); //next state import
 class Task1State extends BaseState {
   
   constructor(team) {
-    super(team);
+    super(team); // Kald super constructor for at initialisere team og meta
     this.stateNumber = 0;
     this.meta = { html: 'task2' }; // HTML der skal vises til spillerne
   }

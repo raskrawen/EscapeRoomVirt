@@ -4,12 +4,8 @@ const Player = require('../models/Player');
 const Team = require('../models/Team');
 const { teams, players } = require('./state');
 const TimerManager = require('./TimerManager');
-const LLM = require('./llm.js');
 
 function setupSocketHandler(io) {
-    
-
-  const llm = new LLM(io);
 
   io.on('connection', (socket) => { // Håndterer socket-forbindelse
     console.log(`New client connected: ${socket.id}`); // Log connection
@@ -68,12 +64,6 @@ function setupSocketHandler(io) {
       }
     });
 
-    // Join room for teamId (should be set by client after join)
-    socket.on('joinTeamRoom', (teamId) => {
-      socket.join(teamId);
-    });
-
-
       // Når spilleren klikker "Tilbage"-knappen
     socket.on('playerGoBack', ({ playerId }) => {
       console.log(`SH: playerGoBack event received from socket: ${socket.id} for playerId: ${playerId}`); // Log go back event
@@ -128,12 +118,6 @@ function setupSocketHandler(io) {
     }
   });
 
-    // LLM chat event
-    socket.on('llm user input', async ({ teamId, playerName, message }) => {
-      console.log(`SH: llm user input received from socket: ${socket.id} for teamId: ${teamId}, playerName: ${playerName}, message: ${message}`); // Log LLM input event
-      await llm.handleUserInput({ teamId, playerName, message, socket });
-    });
-
     // Check if a team is full
     socket.on('checkTeamStatus', ({ teamId }, callback) => {
       console.log(`SH: checkTeamStatus event received: teamId=${teamId}`); // Log checkTeamStatus event
@@ -172,7 +156,7 @@ function setupSocketHandler(io) {
       }
     });
 
-    // Når task1 er afsluttet
+    // Når task1 er afsluttet modtages:
   socket.on('task1Completed', ({ playerId }) => {
   const player = players.get(playerId);
   if (!player) {

@@ -27,7 +27,6 @@ project-root/
 │    server.js
 │    socketHandler.js
 │    state.js
-│    llm.js
 │    fsm/
 │        BaseState.js
 │        LobbyState.js

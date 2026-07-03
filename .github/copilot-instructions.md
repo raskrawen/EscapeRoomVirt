@@ -13,7 +13,6 @@ These rules help AI coding agents work productively in this repo. Keep responses
   - Socket routing in `server/socketHandler.js`. All client events are handled here; team/player registries are in `server/state.js` (Map of teams/players).
   - Game logic uses a simple FSM pattern per team under `server/fsm/` with states like `LobbyState`, `Task1State`, `Task2State`, etc. Each state extends `BaseState` and implements `enter(player)` (per-player navigation) and `onEvent(event, data)`.
   - Team and Player models under `models/` manage membership and per-player progress (`Player.currentStateIndex`) and team history (`Team.teamVisitedStates`, `Team.completedStates`, `Team.stateObjects`).
-  - LLM integration for Task 4 via `server/llm.js` using OpenAI; events: `'llm user input'` -> `'llm reply'`.
 
 ## Navigation & state pattern (critical)
 - Team-level state transitions happen in state `onEvent(...)` methods via `team.setState(new NextState(team))`. Do NOT call `state.enter()` from `Team.setState`.
@@ -31,10 +30,8 @@ These rules help AI coding agents work productively in this repo. Keep responses
   - prod: `node server/server.js`
 - App URL: http://localhost:3000/
 - Configure players: `GET /setMaxPlayers?value=3`.
-- LLM requires `OPENAI_API_KEY` in `.env` (see `server/llm.js`). When absent, LLM replies should be guarded.
-
 ## Project conventions
-- Events: Socket event names are lower-case with spaces for LLM (e.g., `'llm user input'`) and caps for task transitions (e.g., `'TASK3A_COMPLETED'`). Mirror client/server names exactly.
+- Events: Socket event names are lower-case for client-side actions and caps for task transitions (e.g., `'TASK3A_COMPLETED'`). Mirror client/server names exactly.
 - States:
   - Implement `enter(player)` to emit per-player redirects (e.g., `player.socket.emit('redirect', 'task2')`).
   - Use `onEvent` to: log, mark completion via `team.addCompletedState('TaskXState')`, and call `team.setState(new NextState(team))`. Then loop players and advance those whose `currentStateIndex === stateNumber`.
@@ -58,7 +55,7 @@ These rules help AI coding agents work productively in this repo. Keep responses
 - Prefer per-player redirects via `player.socket.emit('redirect', '<view>')`; avoid broadcasting unless explicitly intended.
 
 ## Key files
-- `server/server.js`, `server/socketHandler.js`, `server/llm.js`.
+- `server/server.js`, `server/socketHandler.js`.
 - `server/fsm/*State.js`, `server/fsm/BaseState.js`.
 - `models/Team.js`, `models/Player.js`.
 - `public/index.html`, `public/js/client.js`, `public/views/*.html`, `public/js/*.js`.
